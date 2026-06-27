@@ -1,0 +1,2420 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2709
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fmodern\fcharset0 Courier;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs26 \cf0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 WIREFRAME SPECIFICATION\
+VERSION 2.0 FINAL\
+\
+\
+====================================================\
+DOCUMENT STATUS\
+====================================================\
+\
+Status:\
+FINAL\
+\
+Purpose:\
+\
+This document defines the complete structural wireframe architecture for the MentorMe website.\
+\
+This document is intended for:\
+\
+- UX Designers\
+- UI Designers\
+- Frontend Developers\
+- Product Managers\
+- Technical Architects\
+\
+This document defines:\
+\
+- Layout structure\
+- Information hierarchy\
+- Section composition\
+- Component placement\
+- Responsive behavior\
+- Conversion flow\
+- User journey progression\
+\
+This document does NOT define:\
+\
+- Final colors\
+- Final typography\
+- Final visual branding\
+\
+Those are governed by the UI Design System.\
+\
+====================================================\
+BRAND CONTEXT\
+====================================================\
+\
+Brand:\
+\
+MentorMe\
+\
+Tagline:\
+\
+Your Future, Mentored\
+\
+Platform Type:\
+\
+Trust-Based Conversion Platform\
+\
+Primary Objective:\
+\
+Convert qualified visitors into consultation-ready leads.\
+\
+Secondary Objective:\
+\
+Educate prospective families and students.\
+\
+Long-Term Objective:\
+\
+Support future expansion into:\
+\
+- Customer Portal\
+- Parent Portal\
+- Student Portal\
+- Package Purchase Flows\
+- Commerce Modules\
+\
+====================================================\
+GLOBAL PAGE PRINCIPLES\
+====================================================\
+\
+Principle 1\
+\
+Trust before conversion.\
+\
+Principle 2\
+\
+Education before selling.\
+\
+Principle 3\
+\
+Clarity before action.\
+\
+Principle 4\
+\
+Human connection before commitment.\
+\
+Principle 5\
+\
+Conversion through credibility.\
+\
+====================================================\
+CONTAINER SYSTEM\
+====================================================\
+\
+Maximum Content Width:\
+\
+1200px\
+\
+Desktop Padding:\
+\
+40px\
+\
+Tablet Padding:\
+\
+32px\
+\
+Mobile Padding:\
+\
+20px\
+\
+All sections must use the same content container.\
+\
+Container width must remain consistent.\
+\
+====================================================\
+VERTICAL RHYTHM\
+====================================================\
+\
+Desktop:\
+\
+120px\
+\
+Tablet:\
+\
+96px\
+\
+Mobile:\
+\
+72px\
+\
+All major sections must follow a consistent vertical rhythm.\
+\
+====================================================\
+SECTION HEADER PATTERN\
+====================================================\
+\
+All sections except:\
+\
+- Hero\
+- Footer\
+\
+must use the same structure.\
+\
+Structure:\
+\
+Optional Eyebrow\
+\
+Section Title\
+\
+Section Description\
+\
+Section Content\
+\
+Spacing:\
+\
+Eyebrow \uc0\u8594  Title\
+\
+12px\
+\
+Title \uc0\u8594  Description\
+\
+16px\
+\
+Description \uc0\u8594  Content\
+\
+48px\
+\
+====================================================\
+GRID SYSTEM\
+====================================================\
+\
+Desktop:\
+\
+12 Columns\
+\
+Tablet:\
+\
+8 Columns\
+\
+Mobile:\
+\
+4 Columns\
+\
+Gutter:\
+\
+24px\
+\
+====================================================\
+RESPONSIVE STRATEGY\
+====================================================\
+\
+Desktop:\
+\
+1440px\
+\
+Laptop:\
+\
+1280px\
+\
+Tablet:\
+\
+768px\
+\
+Mobile:\
+\
+390px\
+\
+Rules:\
+\
+Mobile First\
+\
+No Horizontal Scroll\
+\
+Touch Friendly\
+\
+Accessible\
+\
+Responsive Images\
+\
+Responsive Typography\
+\
+====================================================\
+SCROLL PSYCHOLOGY MODEL\
+====================================================\
+\
+Stage 1\
+\
+Attention\
+\
+Hero\
+\
+\uc0\u8595 \
+\
+Stage 2\
+\
+Credibility\
+\
+As Seen In\
+\
+\uc0\u8595 \
+\
+Stage 3\
+\
+Process Understanding\
+\
+Methodology\
+\
+\uc0\u8595 \
+\
+Stage 4\
+\
+Trust\
+\
+Reviews\
+\
+\uc0\u8595 \
+\
+Stage 5\
+\
+Emotional Connection\
+\
+Brand Philosophy\
+\
+\uc0\u8595 \
+\
+Stage 6\
+\
+Solution Discovery\
+\
+Services\
+\
+\uc0\u8595 \
+\
+Stage 7\
+\
+Proof\
+\
+Success Stories\
+\
+\uc0\u8595 \
+\
+Stage 8\
+\
+Leadership Trust\
+\
+Founder Message\
+\
+\uc0\u8595 \
+\
+Stage 9\
+\
+Human Trust\
+\
+Team\
+\
+\uc0\u8595 \
+\
+Stage 10\
+\
+Engagement\
+\
+Events\
+\
+\uc0\u8595 \
+\
+Stage 11\
+\
+Conversion\
+\
+Final CTA\
+\
+====================================================\
+SECTION 01\
+HEADER\
+====================================================\
+\
+Purpose:\
+\
+Navigation\
+\
+Trust\
+\
+Brand Recognition\
+\
+Primary Conversion Entry\
+\
+Position:\
+\
+Top of Page\
+\
+Behavior:\
+\
+Sticky\
+\
+Required Components:\
+\
+Logo\
+\
+Navigation\
+\
+Primary CTA\
+\
+----------------------------------------------------\
+Desktop Layout\
+----------------------------------------------------\
+\
+Area 1\
+\
+Logo\
+\
+20%\
+\
+Area 2\
+\
+Navigation\
+\
+60%\
+\
+Area 3\
+\
+Primary CTA\
+\
+20%\
+\
+----------------------------------------------------\
+Navigation Items\
+----------------------------------------------------\
+\
+About\
+\
+Services\
+\
+Results\
+\
+Team\
+\
+Events\
+\
+Contact\
+\
+All menu items must be controlled by CMS.\
+\
+No navigation item may be hardcoded.\
+\
+----------------------------------------------------\
+Primary CTA\
+----------------------------------------------------\
+\
+Single Primary CTA\
+\
+Examples:\
+\
+Book Consultation\
+\
+Get Started\
+\
+Schedule Call\
+\
+CTA must be controlled through CTA Configuration.\
+\
+----------------------------------------------------\
+Scroll Behavior\
+----------------------------------------------------\
+\
+Before Scroll:\
+\
+Transparent or light background\
+\
+After Scroll:\
+\
+Solid background\
+\
+Subtle shadow\
+\
+----------------------------------------------------\
+Mobile Layout\
+----------------------------------------------------\
+\
+Logo Left\
+\
+Hamburger Right\
+\
+Primary CTA inside mobile menu\
+\
+----------------------------------------------------\
+Mobile Menu\
+----------------------------------------------------\
+\
+Fullscreen Overlay\
+\
+Contains:\
+\
+Navigation\
+\
+Primary CTA\
+\
+Social Links\
+\
+Contact Information\
+\
+====================================================\
+SECTION 02\
+HERO SECTION\
+====================================================\
+\
+Purpose:\
+\
+Create Relevance\
+\
+Create Emotional Connection\
+\
+Drive Initial Engagement\
+\
+----------------------------------------------------\
+Layout\
+----------------------------------------------------\
+\
+Desktop:\
+\
+Two Columns\
+\
+50 / 50\
+\
+Left:\
+\
+Content\
+\
+Right:\
+\
+Hero Image\
+\
+Tablet:\
+\
+Stacked\
+\
+Mobile:\
+\
+Stacked\
+\
+----------------------------------------------------\
+Left Content Area\
+----------------------------------------------------\
+\
+Eyebrow\
+\
+Headline\
+\
+Subheadline\
+\
+Grade Selector\
+\
+CTA Group\
+\
+Trust Indicator\
+\
+----------------------------------------------------\
+Headline Rules\
+----------------------------------------------------\
+\
+Maximum:\
+\
+10 Words\
+\
+Ideal:\
+\
+6\'968 Words\
+\
+Must Focus On:\
+\
+Student Goals\
+\
+Student Outcomes\
+\
+Student Future\
+\
+Must Not Focus On:\
+\
+Company Achievements\
+\
+Internal Metrics\
+\
+Self-Promotion\
+\
+----------------------------------------------------\
+Subheadline\
+----------------------------------------------------\
+\
+Maximum Width:\
+\
+560px\
+\
+Maximum:\
+\
+3 Lines\
+\
+Purpose:\
+\
+Explain Value Proposition\
+\
+----------------------------------------------------\
+Grade Selector\
+----------------------------------------------------\
+\
+Purpose:\
+\
+Personalized Funnel Routing\
+\
+The Grade Selector is mandatory.\
+\
+Supported Grades:\
+\
+Grade 6\
+\
+Grade 7\
+\
+Grade 8\
+\
+Grade 9\
+\
+Grade 10\
+\
+Grade 11\
+\
+Grade 12\
+\
+Transfer Student\
+\
+The selector must be generated dynamically from CMS.\
+\
+Hardcoded grades are prohibited.\
+\
+----------------------------------------------------\
+Grade Selector Layout\
+----------------------------------------------------\
+\
+Desktop:\
+\
+Horizontal Row\
+\
+Tablet:\
+\
+Wrap Grid\
+\
+Mobile:\
+\
+Stacked Pills\
+\
+----------------------------------------------------\
+Grade Selector States\
+----------------------------------------------------\
+\
+Default\
+\
+Hover\
+\
+Selected\
+\
+Disabled\
+\
+Visual styling must follow the UI Design System.\
+\
+The official logo gradient must not be reused improperly.\
+\
+----------------------------------------------------\
+Grade Funnel Logic\
+----------------------------------------------------\
+\
+Grade 6\'968\
+\
+Awareness Funnel\
+\
+Primary Goal:\
+\
+Early Planning\
+\
+----------------------------------------------------\
+\
+Grade 9\
+\
+Foundation Funnel\
+\
+Primary Goal:\
+\
+Long-Term Planning\
+\
+----------------------------------------------------\
+\
+Grade 10\'9611\
+\
+Strategy Funnel\
+\
+Primary Goal:\
+\
+Profile Optimization\
+\
+----------------------------------------------------\
+\
+Grade 12\
+\
+Urgency Funnel\
+\
+Primary Goal:\
+\
+Application Support\
+\
+----------------------------------------------------\
+\
+Transfer Student\
+\
+Transfer Funnel\
+\
+Primary Goal:\
+\
+Transfer Planning\
+\
+----------------------------------------------------\
+CTA Group\
+----------------------------------------------------\
+\
+Primary CTA\
+\
+Secondary CTA\
+\
+Spacing:\
+\
+16px\
+\
+Primary CTA:\
+\
+Highest visual priority\
+\
+Secondary CTA:\
+\
+Lower visual priority\
+\
+----------------------------------------------------\
+Trust Indicator\
+----------------------------------------------------\
+\
+Position:\
+\
+Below CTA Group\
+\
+Possible Elements:\
+\
+Review Rating\
+\
+Student Count\
+\
+Acceptance Metrics\
+\
+Mini Testimonial\
+\
+Media Mention\
+\
+----------------------------------------------------\
+Hero Image\
+----------------------------------------------------\
+\
+Requirements:\
+\
+Human-Centered\
+\
+Authentic\
+\
+Mentorship-Oriented\
+\
+Emotionally Engaging\
+\
+Not Corporate\
+\
+Not Generic Stock Photography\
+\
+Aspect Ratio:\
+\
+4:5\
+\
+====================================================\
+SECTION 03\
+AS SEEN IN\
+====================================================\
+\
+Purpose:\
+\
+Instant Credibility\
+\
+Borrowed Authority\
+\
+Position:\
+\
+Immediately Below Hero\
+\
+----------------------------------------------------\
+Structure\
+----------------------------------------------------\
+\
+Section Label\
+\
+Logo Grid\
+\
+----------------------------------------------------\
+Logo Rules\
+----------------------------------------------------\
+\
+Minimum:\
+\
+6\
+\
+Recommended:\
+\
+8\
+\
+Maximum:\
+\
+Unlimited\
+\
+Each Logo Supports:\
+\
+Image\
+\
+Alt Text\
+\
+URL\
+\
+Sort Order\
+\
+Active State\
+\
+----------------------------------------------------\
+Desktop Layout\
+----------------------------------------------------\
+\
+Single Row\
+\
+Equal Distribution\
+\
+----------------------------------------------------\
+Logo Standards\
+----------------------------------------------------\
+\
+Equal Visual Weight\
+\
+Consistent Height\
+\
+Maximum Height:\
+\
+48px\
+\
+----------------------------------------------------\
+Hover Behavior\
+----------------------------------------------------\
+\
+Subtle Visual Emphasis\
+\
+No aggressive animations\
+\
+----------------------------------------------------\
+Mobile Layout\
+----------------------------------------------------\
+\
+Horizontal Scroll\
+\
+or\
+\
+Two Rows\
+\
+====================================================\
+SECTION 04\
+METHODOLOGY\
+====================================================\
+\
+Purpose:\
+\
+Explain Process\
+\
+Reduce Uncertainty\
+\
+Increase Confidence\
+\
+Answer:\
+\
+How Does MentorMe Work?\
+\
+----------------------------------------------------\
+Structure\
+----------------------------------------------------\
+\
+Section Header\
+\
+Methodology Grid\
+\
+----------------------------------------------------\
+Methodology Count\
+----------------------------------------------------\
+\
+Minimum:\
+\
+3 Steps\
+\
+Maximum:\
+\
+5 Steps\
+\
+Recommended:\
+\
+4 Steps\
+\
+----------------------------------------------------\
+Desktop Layout\
+----------------------------------------------------\
+\
+4 Equal Cards\
+\
+Single Row\
+\
+----------------------------------------------------\
+Tablet Layout\
+----------------------------------------------------\
+\
+2 \'d7 2 Grid\
+\
+----------------------------------------------------\
+Mobile Layout\
+----------------------------------------------------\
+\
+Vertical Stack\
+\
+----------------------------------------------------\
+Card Structure\
+----------------------------------------------------\
+\
+Step Number\
+\
+Icon\
+\
+Title\
+\
+Description\
+\
+----------------------------------------------------\
+Step Number\
+----------------------------------------------------\
+\
+Format:\
+\
+01\
+\
+02\
+\
+03\
+\
+04\
+\
+Visible\
+\
+Large\
+\
+Top Left\
+\
+----------------------------------------------------\
+Icon\
+----------------------------------------------------\
+\
+Fixed Size\
+\
+64px\
+\
+----------------------------------------------------\
+Description\
+----------------------------------------------------\
+\
+Maximum:\
+\
+4 Lines\
+\
+----------------------------------------------------\
+Card Behavior\
+----------------------------------------------------\
+\
+Equal Height\
+\
+Consistent Padding\
+\
+Subtle Hover Elevation\
+\
+No excessive animation\
+\
+----------------------------------------------------\
+Psychological Goal\
+----------------------------------------------------\
+\
+Visitor Must Think:\
+\
+"They have a process."\
+\
+"They know what they are doing."\
+\
+"This feels structured."\
+\
+"This feels trustworthy."\
+\
+====================================================\
+SECTION 05\
+WHY CLIENTS CHOOSE US\
+====================================================\
+\
+Purpose:\
+\
+Reinforce Trust\
+\
+Provide Social Proof\
+\
+Reduce Skepticism\
+\
+Highlight Differentiators\
+\
+----------------------------------------------------\
+Structure\
+----------------------------------------------------\
+\
+Section Header\
+\
+Featured Review\
+\
+Review Summary\
+\
+Value Proposition Cards\
+\
+----------------------------------------------------\
+Desktop Layout\
+----------------------------------------------------\
+\
+Row 1\
+\
+Featured Review\
+\
+Full Width\
+\
+----------------------------------------------------\
+\
+Row 2\
+\
+Three Value Proposition Cards\
+\
+3 Columns\
+\
+----------------------------------------------------\
+Featured Review Block\
+----------------------------------------------------\
+\
+Components:\
+\
+Review Quote\
+\
+Reviewer Name\
+\
+Reviewer Role\
+\
+Rating\
+\
+Read More CTA\
+\
+----------------------------------------------------\
+Layout\
+----------------------------------------------------\
+\
+Quote\
+\
+\uc0\u8595 \
+\
+Reviewer\
+\
+\uc0\u8595 \
+\
+Rating\
+\
+\uc0\u8595 \
+\
+CTA\
+\
+----------------------------------------------------\
+Review Length\
+----------------------------------------------------\
+\
+Maximum:\
+\
+5 Lines\
+\
+----------------------------------------------------\
+Rating Display\
+----------------------------------------------------\
+\
+Visible\
+\
+Prominent\
+\
+Trust-Oriented\
+\
+----------------------------------------------------\
+Value Proposition Cards\
+----------------------------------------------------\
+\
+Required Count:\
+\
+3\
+\
+Each Card Includes:\
+\
+Icon\
+\
+Title\
+\
+Description\
+\
+----------------------------------------------------\
+Card Purpose\
+----------------------------------------------------\
+\
+Answer:\
+\
+Why MentorMe?\
+\
+Why Trust Us?\
+\
+Why Now?\
+\
+----------------------------------------------------\
+Mobile Layout\
+----------------------------------------------------\
+\
+Review\
+\
+\uc0\u8595 \
+\
+Card 1\
+\
+\uc0\u8595 \
+\
+Card 2\
+\
+\uc0\u8595 \
+\
+Card 3\
+\
+----------------------------------------------------\
+Psychological Goal\
+----------------------------------------------------\
+\
+Visitor Must Think:\
+\
+"Other families trust them."\
+\
+"They are different."\
+\
+"They understand this process."\
+\
+====================================================\
+SECTION 06\
+BRAND PHILOSOPHY\
+====================================================\
+\
+Purpose:\
+\
+Humanize The Brand\
+\
+Build Emotional Trust\
+\
+Explain Values\
+\
+----------------------------------------------------\
+Layout\
+----------------------------------------------------\
+\
+Desktop:\
+\
+Two Columns\
+\
+45 / 55\
+\
+----------------------------------------------------\
+\
+Left:\
+\
+Image\
+\
+----------------------------------------------------\
+\
+Right:\
+\
+Title\
+\
+Content\
+\
+CTA\
+\
+----------------------------------------------------\
+Content Rules\
+----------------------------------------------------\
+\
+Must Explain:\
+\
+Mission\
+\
+Values\
+\
+Educational Philosophy\
+\
+Approach\
+\
+Must Not Explain:\
+\
+Pricing\
+\
+Packages\
+\
+Sales Offers\
+\
+----------------------------------------------------\
+Content Length\
+----------------------------------------------------\
+\
+Maximum Width:\
+\
+600px\
+\
+----------------------------------------------------\
+Image Requirements\
+----------------------------------------------------\
+\
+Human\
+\
+Authentic\
+\
+Mentorship-Oriented\
+\
+Not Corporate\
+\
+----------------------------------------------------\
+CTA\
+----------------------------------------------------\
+\
+Single CTA\
+\
+Low Pressure\
+\
+Examples:\
+\
+Learn More\
+\
+Our Approach\
+\
+Meet The Team\
+\
+----------------------------------------------------\
+Psychological Goal\
+----------------------------------------------------\
+\
+Visitor Must Think:\
+\
+"They genuinely care."\
+\
+"This feels human."\
+\
+"They have values."\
+\
+====================================================\
+SECTION 07\
+SERVICES\
+====================================================\
+\
+Purpose:\
+\
+Introduce Solutions\
+\
+Help Visitors Self-Identify\
+\
+Guide Next Steps\
+\
+----------------------------------------------------\
+Structure\
+----------------------------------------------------\
+\
+Section Header\
+\
+Service Grid\
+\
+----------------------------------------------------\
+Service Count\
+----------------------------------------------------\
+\
+Minimum:\
+\
+3\
+\
+Maximum:\
+\
+Unlimited\
+\
+Recommended:\
+\
+6\
+\
+----------------------------------------------------\
+Desktop Layout\
+----------------------------------------------------\
+\
+3 Columns\
+\
+----------------------------------------------------\
+Tablet Layout\
+----------------------------------------------------\
+\
+2 Columns\
+\
+----------------------------------------------------\
+Mobile Layout\
+----------------------------------------------------\
+\
+1 Column\
+\
+----------------------------------------------------\
+Service Card Structure\
+----------------------------------------------------\
+\
+Image\
+\
+Title\
+\
+Short Description\
+\
+CTA\
+\
+----------------------------------------------------\
+Image\
+----------------------------------------------------\
+\
+Aspect Ratio:\
+\
+16:10\
+\
+----------------------------------------------------\
+Title\
+----------------------------------------------------\
+\
+Maximum:\
+\
+2 Lines\
+\
+----------------------------------------------------\
+Description\
+----------------------------------------------------\
+\
+Maximum:\
+\
+4 Lines\
+\
+----------------------------------------------------\
+CTA\
+----------------------------------------------------\
+\
+Text CTA\
+\
+Examples:\
+\
+Explore Service\
+\
+Learn More\
+\
+View Details\
+\
+----------------------------------------------------\
+Card Behavior\
+----------------------------------------------------\
+\
+Clickable\
+\
+Accessible\
+\
+Equal Height\
+\
+Consistent Spacing\
+\
+----------------------------------------------------\
+Detail Pages\
+----------------------------------------------------\
+\
+Every Service Card must link to:\
+\
+Dedicated Service Detail Page\
+\
+----------------------------------------------------\
+Psychological Goal\
+----------------------------------------------------\
+\
+Visitor Must Think:\
+\
+"This is relevant to me."\
+\
+"They offer what I need."\
+\
+====================================================\
+SECTION 08\
+SUCCESS STORIES\
+====================================================\
+\
+Purpose:\
+\
+Provide Proof\
+\
+Show Outcomes\
+\
+Demonstrate Results\
+\
+----------------------------------------------------\
+Structure\
+----------------------------------------------------\
+\
+Section Header\
+\
+Success Story Grid\
+\
+or\
+\
+Success Story Slider\
+\
+----------------------------------------------------\
+Story Count\
+----------------------------------------------------\
+\
+Minimum:\
+\
+3\
+\
+Maximum:\
+\
+Unlimited\
+\
+----------------------------------------------------\
+Desktop Layout\
+----------------------------------------------------\
+\
+3 Cards\
+\
+Per Row\
+\
+----------------------------------------------------\
+Tablet Layout\
+----------------------------------------------------\
+\
+2 Cards\
+\
+Per Row\
+\
+----------------------------------------------------\
+Mobile Layout\
+----------------------------------------------------\
+\
+Single Column\
+\
+or\
+\
+Slider\
+\
+----------------------------------------------------\
+Story Card Structure\
+----------------------------------------------------\
+\
+Photo\
+\
+Name\
+\
+Outcome\
+\
+Story\
+\
+CTA\
+\
+----------------------------------------------------\
+Photo\
+----------------------------------------------------\
+\
+Aspect Ratio:\
+\
+1:1\
+\
+----------------------------------------------------\
+Outcome\
+----------------------------------------------------\
+\
+Highly Visible\
+\
+Positioned Near Top\
+\
+----------------------------------------------------\
+Story\
+----------------------------------------------------\
+\
+Short Summary\
+\
+Maximum:\
+\
+5 Lines\
+\
+----------------------------------------------------\
+CTA\
+----------------------------------------------------\
+\
+View Case Study\
+\
+Read Full Story\
+\
+----------------------------------------------------\
+Detail Pages\
+----------------------------------------------------\
+\
+Every Success Story must link to:\
+\
+Dedicated Case Study Detail Page\
+\
+----------------------------------------------------\
+Psychological Goal\
+----------------------------------------------------\
+\
+Visitor Must Think:\
+\
+"Students like me succeeded."\
+\
+"I can imagine similar results."\
+\
+====================================================\
+SECTION 09\
+FOUNDER MESSAGE\
+====================================================\
+\
+Purpose:\
+\
+Create Leadership Trust\
+\
+Provide Human Connection\
+\
+Build Credibility\
+\
+----------------------------------------------------\
+Layout\
+----------------------------------------------------\
+\
+Desktop:\
+\
+Two Columns\
+\
+40 / 60\
+\
+----------------------------------------------------\
+\
+Left:\
+\
+Founder Image\
+\
+----------------------------------------------------\
+\
+Right:\
+\
+Founder Content\
+\
+----------------------------------------------------\
+Founder Content Structure\
+----------------------------------------------------\
+\
+Name\
+\
+Role\
+\
+Message\
+\
+Signature\
+\
+----------------------------------------------------\
+Message Rules\
+----------------------------------------------------\
+\
+Authentic\
+\
+Personal\
+\
+Educational\
+\
+Mentorship-Oriented\
+\
+----------------------------------------------------\
+Must Not Be\
+----------------------------------------------------\
+\
+Sales Copy\
+\
+Advertising Copy\
+\
+Promotional Messaging\
+\
+----------------------------------------------------\
+Message Length\
+----------------------------------------------------\
+\
+Long Form\
+\
+Readable\
+\
+Comfortable Line Length\
+\
+----------------------------------------------------\
+Signature\
+----------------------------------------------------\
+\
+Position:\
+\
+Bottom of Message\
+\
+----------------------------------------------------\
+Image Requirements\
+----------------------------------------------------\
+\
+Professional\
+\
+Warm\
+\
+Approachable\
+\
+Authentic\
+\
+----------------------------------------------------\
+Psychological Goal\
+----------------------------------------------------\
+\
+Visitor Must Think:\
+\
+"I trust this person."\
+\
+"This feels personal."\
+\
+"There are real people behind this."\
+\
+====================================================\
+SECTION 10\
+TEAM MEMBERS\
+====================================================\
+\
+Purpose:\
+\
+Human Trust\
+\
+Expert Validation\
+\
+Relationship Building\
+\
+----------------------------------------------------\
+Structure\
+----------------------------------------------------\
+\
+Section Header\
+\
+Team Grid\
+\
+----------------------------------------------------\
+Team Count\
+----------------------------------------------------\
+\
+Minimum:\
+\
+4\
+\
+Maximum:\
+\
+Unlimited\
+\
+Recommended Initial Count:\
+\
+8\
+\
+----------------------------------------------------\
+Desktop Layout\
+----------------------------------------------------\
+\
+4 Columns\
+\
+----------------------------------------------------\
+Tablet Layout\
+----------------------------------------------------\
+\
+2 Columns\
+\
+----------------------------------------------------\
+Mobile Layout\
+----------------------------------------------------\
+\
+1 Column\
+\
+----------------------------------------------------\
+Team Card Structure\
+----------------------------------------------------\
+\
+Photo\
+\
+Name\
+\
+Role\
+\
+Short Bio\
+\
+Profile CTA\
+\
+LinkedIn CTA\
+\
+----------------------------------------------------\
+Photo\
+----------------------------------------------------\
+\
+Aspect Ratio:\
+\
+1:1\
+\
+Shape:\
+\
+Rounded Rectangle\
+\
+Professional\
+\
+Authentic\
+\
+Consistent Across Team\
+\
+----------------------------------------------------\
+Name\
+----------------------------------------------------\
+\
+Maximum:\
+\
+2 Lines\
+\
+----------------------------------------------------\
+Role\
+----------------------------------------------------\
+\
+Single Line\
+\
+Muted Emphasis\
+\
+----------------------------------------------------\
+Bio\
+----------------------------------------------------\
+\
+Maximum:\
+\
+4 Lines\
+\
+----------------------------------------------------\
+Actions\
+----------------------------------------------------\
+\
+View Profile\
+\
+LinkedIn\
+\
+----------------------------------------------------\
+Profile Pages\
+----------------------------------------------------\
+\
+Every Team Member must have:\
+\
+Dedicated Profile Page\
+\
+----------------------------------------------------\
+Psychological Goal\
+----------------------------------------------------\
+\
+Visitor Must Think:\
+\
+"There is a real team."\
+\
+"There is expertise behind the service."\
+\
+"I know who I will work with."\
+\
+====================================================\
+SECTION 11\
+EVENTS & WEBINARS\
+====================================================\
+\
+Purpose:\
+\
+Lead Nurturing\
+\
+Authority Building\
+\
+Community Engagement\
+\
+----------------------------------------------------\
+Structure\
+----------------------------------------------------\
+\
+Section Header\
+\
+Event Grid\
+\
+----------------------------------------------------\
+Event Count\
+----------------------------------------------------\
+\
+Minimum:\
+\
+3\
+\
+Maximum:\
+\
+Unlimited\
+\
+Recommended:\
+\
+4\'966\
+\
+----------------------------------------------------\
+Desktop Layout\
+----------------------------------------------------\
+\
+3 Columns\
+\
+----------------------------------------------------\
+Tablet Layout\
+----------------------------------------------------\
+\
+2 Columns\
+\
+----------------------------------------------------\
+Mobile Layout\
+----------------------------------------------------\
+\
+1 Column\
+\
+----------------------------------------------------\
+Event Card Structure\
+----------------------------------------------------\
+\
+Image\
+\
+Date Badge\
+\
+Title\
+\
+Time\
+\
+Location\
+\
+Description\
+\
+Primary CTA\
+\
+Secondary CTA\
+\
+----------------------------------------------------\
+Image\
+----------------------------------------------------\
+\
+Aspect Ratio:\
+\
+16:9\
+\
+----------------------------------------------------\
+Date Badge\
+----------------------------------------------------\
+\
+Top Left Overlay\
+\
+High Visibility\
+\
+----------------------------------------------------\
+Description\
+----------------------------------------------------\
+\
+Maximum:\
+\
+4 Lines\
+\
+----------------------------------------------------\
+Primary CTA\
+----------------------------------------------------\
+\
+Register\
+\
+----------------------------------------------------\
+Secondary CTA\
+----------------------------------------------------\
+\
+View Details\
+\
+----------------------------------------------------\
+Detail Pages\
+----------------------------------------------------\
+\
+Every Event must link to:\
+\
+Dedicated Event Detail Page\
+\
+----------------------------------------------------\
+Registration Behavior\
+----------------------------------------------------\
+\
+Supported Methods:\
+\
+Lead Form\
+\
+Calendly\
+\
+Cal.com\
+\
+External Registration URL\
+\
+----------------------------------------------------\
+Psychological Goal\
+----------------------------------------------------\
+\
+Visitor Must Think:\
+\
+"I can engage before committing."\
+\
+"I can learn more."\
+\
+"There are opportunities to connect."\
+\
+====================================================\
+SECTION 12\
+FINAL CTA\
+====================================================\
+\
+Purpose:\
+\
+Primary Conversion Zone\
+\
+Lead Generation\
+\
+Consultation Booking\
+\
+----------------------------------------------------\
+Position\
+----------------------------------------------------\
+\
+Immediately Before Footer\
+\
+----------------------------------------------------\
+Layout\
+----------------------------------------------------\
+\
+Centered\
+\
+Single Focus\
+\
+----------------------------------------------------\
+Structure\
+----------------------------------------------------\
+\
+Background Image\
+\
+Headline\
+\
+Description\
+\
+Primary CTA\
+\
+Secondary CTA\
+\
+Trust Statement\
+\
+----------------------------------------------------\
+Headline\
+----------------------------------------------------\
+\
+Largest Headline On Page\
+\
+Maximum:\
+\
+2 Lines\
+\
+----------------------------------------------------\
+Description\
+----------------------------------------------------\
+\
+Maximum Width:\
+\
+700px\
+\
+----------------------------------------------------\
+Primary CTA\
+----------------------------------------------------\
+\
+Highest Visual Priority\
+\
+Examples:\
+\
+Book Consultation\
+\
+Schedule Call\
+\
+Get Started\
+\
+----------------------------------------------------\
+Secondary CTA\
+----------------------------------------------------\
+\
+Lower Emphasis\
+\
+Examples:\
+\
+Learn More\
+\
+View Services\
+\
+----------------------------------------------------\
+Trust Statement\
+----------------------------------------------------\
+\
+Position:\
+\
+Directly Below CTA Group\
+\
+Examples:\
+\
+Trusted by Families\
+\
+Guiding Students Since Launch\
+\
+Personalized Mentorship\
+\
+----------------------------------------------------\
+Background Image\
+----------------------------------------------------\
+\
+Subtle\
+\
+Supportive\
+\
+Non-Distracting\
+\
+----------------------------------------------------\
+Psychological Goal\
+----------------------------------------------------\
+\
+Visitor Must Think:\
+\
+"I trust them."\
+\
+"I understand their process."\
+\
+"I am ready to take the next step."\
+\
+====================================================\
+SECTION 13\
+FOOTER\
+====================================================\
+\
+Purpose:\
+\
+Closure\
+\
+Navigation\
+\
+Trust Reinforcement\
+\
+Compliance\
+\
+----------------------------------------------------\
+Desktop Layout\
+----------------------------------------------------\
+\
+Four Columns\
+\
+----------------------------------------------------\
+Column 1\
+----------------------------------------------------\
+\
+Logo\
+\
+Brand Description\
+\
+----------------------------------------------------\
+Column 2\
+----------------------------------------------------\
+\
+Navigation\
+\
+----------------------------------------------------\
+Column 3\
+----------------------------------------------------\
+\
+Services\
+\
+----------------------------------------------------\
+Column 4\
+----------------------------------------------------\
+\
+Contact Information\
+\
+----------------------------------------------------\
+Bottom Footer\
+----------------------------------------------------\
+\
+Copyright\
+\
+Privacy Policy\
+\
+Terms\
+\
+Social Links\
+\
+----------------------------------------------------\
+Rules\
+----------------------------------------------------\
+\
+All footer content must be CMS-controlled.\
+\
+All links must be editable.\
+\
+All social links must be editable.\
+\
+====================================================\
+MOBILE EXPERIENCE RULES\
+====================================================\
+\
+All layouts must be designed mobile-first.\
+\
+----------------------------------------------------\
+Mobile Navigation\
+----------------------------------------------------\
+\
+Full Screen Overlay\
+\
+Accessible\
+\
+Touch Friendly\
+\
+----------------------------------------------------\
+Mobile Buttons\
+----------------------------------------------------\
+\
+Full Width\
+\
+Minimum Height:\
+\
+56px\
+\
+----------------------------------------------------\
+Mobile Forms\
+----------------------------------------------------\
+\
+Single Column\
+\
+Touch Friendly\
+\
+Accessible\
+\
+----------------------------------------------------\
+Mobile Cards\
+----------------------------------------------------\
+\
+Single Column\
+\
+Readable\
+\
+Consistent Spacing\
+\
+----------------------------------------------------\
+Mobile Typography\
+----------------------------------------------------\
+\
+No text below:\
+\
+14px\
+\
+====================================================\
+ACCESSIBILITY REQUIREMENTS\
+====================================================\
+\
+Every interactive element must support:\
+\
+Keyboard Navigation\
+\
+Visible Focus State\
+\
+ARIA Labels\
+\
+Screen Reader Compatibility\
+\
+----------------------------------------------------\
+Images\
+----------------------------------------------------\
+\
+Require CMS-Controlled Alt Text\
+\
+----------------------------------------------------\
+Buttons\
+----------------------------------------------------\
+\
+Minimum Touch Target:\
+\
+44px\
+\
+----------------------------------------------------\
+Motion\
+----------------------------------------------------\
+\
+Must Respect Reduced Motion Preferences\
+\
+====================================================\
+MULTILINGUAL REQUIREMENTS\
+====================================================\
+\
+Supported Languages:\
+\
+English\
+\
+Persian\
+\
+----------------------------------------------------\
+English\
+----------------------------------------------------\
+\
+LTR\
+\
+Inter Font\
+\
+----------------------------------------------------\
+Persian\
+----------------------------------------------------\
+\
+RTL\
+\
+Vazirmatn or IRANSansX\
+\
+----------------------------------------------------\
+Layout Rules\
+----------------------------------------------------\
+\
+All sections must render correctly in:\
+\
+LTR\
+\
+RTL\
+\
+No layout breakage is permitted.\
+\
+====================================================\
+CMS MAPPING REQUIREMENTS\
+====================================================\
+\
+Every visible wireframe element must map to CMS fields.\
+\
+Examples:\
+\
+Hero Headline\
+\uc0\u8594  CMS\
+\
+Hero Image\
+\uc0\u8594  CMS\
+\
+Methodology Steps\
+\uc0\u8594  CMS\
+\
+Services\
+\uc0\u8594  CMS\
+\
+Case Studies\
+\uc0\u8594  CMS\
+\
+Founder Message\
+\uc0\u8594  CMS\
+\
+Team Members\
+\uc0\u8594  CMS\
+\
+Events\
+\uc0\u8594  CMS\
+\
+Final CTA\
+\uc0\u8594  CMS\
+\
+Footer Content\
+\uc0\u8594  CMS\
+\
+No business-facing content may be hardcoded.\
+\
+====================================================\
+FUTURE PORTAL READINESS\
+====================================================\
+\
+Version 1 does not implement portals.\
+\
+However the architecture must remain compatible with future:\
+\
+Customer Portal\
+\
+Parent Portal\
+\
+Student Portal\
+\
+Future Routes:\
+\
+/portal\
+\
+/portal/student\
+\
+/portal/parent\
+\
+/customer\
+\
+/student\
+\
+/parent\
+\
+Future implementation must not require redesign of:\
+\
+Navigation\
+\
+Authentication\
+\
+Theme System\
+\
+CMS\
+\
+====================================================\
+FUTURE COMMERCE READINESS\
+====================================================\
+\
+Version 1 does not implement:\
+\
+Payments\
+\
+Checkout\
+\
+Subscriptions\
+\
+Orders\
+\
+Invoices\
+\
+However future implementation must support:\
+\
+Package Catalog\
+\
+Checkout\
+\
+Payment Processing\
+\
+Customer Accounts\
+\
+Subscription Billing\
+\
+Purchased Packages\
+\
+Digital Products\
+\
+Commerce expansion must not require redesign of:\
+\
+Wireframe Architecture\
+\
+Navigation Structure\
+\
+Core User Journey\
+\
+====================================================\
+ANALYTICS READINESS\
+====================================================\
+\
+The wireframe must support future analytics integration.\
+\
+Examples:\
+\
+CTA Tracking\
+\
+Lead Conversion Tracking\
+\
+Event Registration Tracking\
+\
+Scroll Depth Tracking\
+\
+Grade Funnel Tracking\
+\
+No redesign should be required for analytics implementation.\
+\
+====================================================\
+WIREFRAME ACCEPTANCE CRITERIA\
+====================================================\
+\
+The wireframe is accepted only if:\
+\
+Homepage follows the trust-flow sequence.\
+\
+All required sections exist.\
+\
+All sections are responsive.\
+\
+All sections support CMS integration.\
+\
+All sections support RTL and LTR.\
+\
+All sections support accessibility requirements.\
+\
+All sections align with:\
+\
+MASTER EXECUTION PROMPT\
+\
+MASTER WEBSITE SPECIFICATION\
+\
+UI DESIGN SYSTEM\
+\
+CMS + ADMIN PANEL + DATABASE ARCHITECTURE\
+\
+No hardcoded business content exists.\
+\
+No structural contradictions exist.\
+\
+No section breaks the conversion psychology model.\
+\
+====================================================\
+FINAL PRINCIPLE\
+====================================================\
+\
+This wireframe is not designed to maximize visual excitement.\
+\
+It is designed to maximize:\
+\
+Trust\
+\
+Clarity\
+\
+Confidence\
+\
+Understanding\
+\
+Engagement\
+\
+Conversion\
+\
+Every layout decision must support these goals.\
+\
+If a component increases:\
+\
+Trust\
+Clarity\
+Confidence\
+\
+It belongs.\
+\
+If a component increases:\
+\
+Confusion\
+Pressure\
+Cognitive Load\
+\
+It must be removed.\
+\
+====================================================\
+END OF DOCUMENT\
+\
+WIREFRAME SPECIFICATION\
+VERSION 2.0 FINAL\
+}

@@ -1,0 +1,13 @@
+# origin پشت CDN پارس‌پک: TLS در لبهٔ CDN ترمین می‌شود؛ origin روی HTTP.
+# X-Forwarded-Proto را اجباری https می‌کنیم تا اپ هیچ‌وقت http→https loop نزند
+# (همهٔ ترافیک واقعی از CDN روی https می‌آید).
+{
+	auto_https off
+}
+
+http://mentorme.ir, http://www.mentorme.ir, http://185.164.73.133 {
+	encode zstd gzip
+	reverse_proxy app:3000 {
+		header_up X-Forwarded-Proto https
+	}
+}

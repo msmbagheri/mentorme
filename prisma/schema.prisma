@@ -1,0 +1,795 @@
+// MentorMe — Prisma schema (PostgreSQL)
+// Trust-Based Lead Generation Platform. All localized primary content uses paired
+// *_en / *_fa columns (no JSON blobs). JSON is reserved for metadata, social links,
+// contact info, campaign data, audit snapshots and structured data only.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================
+// ENUMS
+// ============================================================
+
+enum Role {
+  ADMIN
+  EDITOR
+  VIEWER
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  CONVERTED
+  CLOSED
+}
+
+enum ContentStatus {
+  DRAFT
+  IN_REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+enum Locale {
+  EN
+  FA
+}
+
+enum GradeLevel {
+  GRADE_6
+  GRADE_7
+  GRADE_8
+  GRADE_9
+  GRADE_10
+  GRADE_11
+  GRADE_12
+  TRANSFER
+}
+
+enum CtaActionType {
+  OPEN_LEAD_FORM
+  OPEN_CONTACT_PAGE
+  OPEN_CALENDLY
+  OPEN_CALCOM
+  INTERNAL_URL
+  EXTERNAL_URL
+  DOWNLOAD_ASSET
+}
+
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  PUBLISH
+  ARCHIVE
+  ROLLBACK
+  LOGIN
+  PERMISSION_CHANGE
+}
+
+enum SectionGroup {
+  TRUST
+  METHOD
+  PROOF
+  HUMAN
+  CONVERSION
+  FOOTER
+}
+
+enum MenuItemType {
+  SCROLL_TO_SECTION
+  INTERNAL_PAGE
+  EXTERNAL_URL
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  DOCUMENT
+}
+
+// ============================================================
+// AUTHENTICATION
+// ============================================================
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(EDITOR)
+  image        String?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  auditLogs     AuditLog[]
+  assignedLeads Lead[]     @relation("LeadAssignee")
+
+  @@index([role])
+}
+
+model Account {
+  id                String  @id @default(uuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ============================================================
+// CONTENT CORE
+// ============================================================
+
+model Page {
+  id                  String        @id @default(uuid())
+  slug                String        @unique
+  title_en            String
+  title_fa            String
+  meta_title_en       String?
+  meta_title_fa       String?
+  meta_description_en String?       @db.Text
+  meta_description_fa String?       @db.Text
+  ogImageUrl          String?
+  canonicalUrl        String?
+  status              ContentStatus @default(DRAFT)
+  isIndexed           Boolean       @default(true)
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  homepageSections HomepageSection[]
+  seoSetting       SeoSetting?
+  heroSection      HeroSection?
+  brandPhilosophy  BrandPhilosophy?
+  founderMessage   FounderMessage?
+  finalCta         FinalCta?
+  footerSetting    FooterSetting?
+  methodologySteps MethodologyStep[]
+  successMetrics   SuccessMetric[]
+}
+
+model HomepageSection {
+  id          String       @id @default(uuid())
+  pageId      String
+  sectionType String
+  stageGroup  SectionGroup
+  orderIndex  Int          @default(0)
+  isActive    Boolean      @default(true)
+  isDeleted   Boolean      @default(false)
+  // CMS-editable section header copy (eyebrow / title / description) — bilingual,
+  // so no section label is hardcoded in the UI.
+  eyebrow_en     String?
+  eyebrow_fa     String?
+  title_en       String?
+  title_fa       String?
+  description_en String?   @db.Text
+  description_fa String?   @db.Text
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  page Page @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@unique([pageId, sectionType])
+  @@index([pageId, orderIndex])
+}
+
+model ContentVersion {
+  id         String   @id @default(uuid())
+  entityType String
+  entityId   String
+  version    Int
+  payload    Json
+  createdBy  String?
+  createdAt  DateTime @default(now())
+
+  @@unique([entityType, entityId, version])
+  @@index([entityType, entityId])
+}
+
+// ============================================================
+// HOMEPAGE CONTENT
+// ============================================================
+
+model HeroSection {
+  id              String   @id @default(uuid())
+  pageId          String   @unique
+  eyebrow_en      String?
+  eyebrow_fa      String?
+  headline_en     String
+  headline_fa     String
+  subheadline_en  String   @db.Text
+  subheadline_fa  String   @db.Text
+  primaryCtaId    String?
+  secondaryCtaId  String?
+  heroImageUrl    String?
+  heroImageAlt_en String?
+  heroImageAlt_fa String?
+  trustBadgeText_en String?
+  trustBadgeText_fa String?
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  page         Page       @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  primaryCta   CtaConfig? @relation("HeroPrimaryCta", fields: [primaryCtaId], references: [id])
+  secondaryCta CtaConfig? @relation("HeroSecondaryCta", fields: [secondaryCtaId], references: [id])
+}
+
+model AsSeenInLogo {
+  id          String   @id @default(uuid())
+  title_en    String
+  title_fa    String?
+  imageUrl    String
+  altText_en  String?
+  altText_fa  String?
+  url         String?
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([sortOrder])
+}
+
+model MethodologyStep {
+  id             String   @id @default(uuid())
+  pageId         String
+  stepNumber     Int
+  icon           String?
+  title_en       String
+  title_fa       String
+  description_en String   @db.Text
+  description_fa String   @db.Text
+  sortOrder      Int      @default(0)
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  page Page @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@index([pageId, sortOrder])
+}
+
+model Testimonial {
+  id            String   @id @default(uuid())
+  name          String
+  role_en       String?
+  role_fa       String?
+  company       String?
+  content_en    String   @db.Text
+  content_fa    String   @db.Text
+  rating        Int      @default(5)
+  avatarUrl     String?
+  avatarAlt_en  String?
+  avatarAlt_fa  String?
+  isFeatured    Boolean  @default(false)
+  sortOrder     Int      @default(0)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([isFeatured])
+  @@index([sortOrder])
+}
+
+model ValueProposition {
+  id             String   @id @default(uuid())
+  icon           String?
+  title_en       String
+  title_fa       String
+  description_en String   @db.Text
+  description_fa String   @db.Text
+  sortOrder      Int      @default(0)
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([sortOrder])
+}
+
+model BrandPhilosophy {
+  id          String   @id @default(uuid())
+  pageId      String   @unique
+  eyebrow_en  String?
+  eyebrow_fa  String?
+  title_en    String
+  title_fa    String
+  content_en  String   @db.Text
+  content_fa  String   @db.Text
+  imageUrl    String?
+  imageAlt_en String?
+  imageAlt_fa String?
+  ctaId       String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  page Page       @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  cta  CtaConfig? @relation("BrandPhilosophyCta", fields: [ctaId], references: [id])
+}
+
+model SuccessMetric {
+  id             String   @id @default(uuid())
+  pageId         String
+  metricValue    String
+  metricLabel_en String
+  metricLabel_fa String
+  sortOrder      Int      @default(0)
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  page Page @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@index([pageId, sortOrder])
+}
+
+model FounderMessage {
+  id          String   @id @default(uuid())
+  pageId      String   @unique
+  name_en     String
+  name_fa     String
+  title_en    String
+  title_fa    String
+  message_en  String   @db.Text
+  message_fa  String   @db.Text
+  photoUrl    String?
+  photoAlt_en String?
+  photoAlt_fa String?
+  signatureUrl String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  page Page @relation(fields: [pageId], references: [id], onDelete: Cascade)
+}
+
+model FinalCta {
+  id                 String   @id @default(uuid())
+  pageId             String   @unique
+  eyebrow_en         String?
+  eyebrow_fa         String?
+  headline_en        String
+  headline_fa        String
+  subheadline_en     String?  @db.Text
+  subheadline_fa     String?  @db.Text
+  trustStatement_en  String?
+  trustStatement_fa  String?
+  primaryCtaId       String?
+  secondaryCtaId     String?
+  backgroundImageUrl String?
+  isActive           Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  page         Page       @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  primaryCta   CtaConfig? @relation("FinalCtaPrimary", fields: [primaryCtaId], references: [id])
+  secondaryCta CtaConfig? @relation("FinalCtaSecondary", fields: [secondaryCtaId], references: [id])
+}
+
+model FooterSetting {
+  id           String   @id @default(uuid())
+  pageId       String?  @unique
+  tagline_en   String?
+  tagline_fa   String?
+  description_en String? @db.Text
+  description_fa String? @db.Text
+  copyright_en String?
+  copyright_fa String?
+  address_en   String?  @db.Text
+  address_fa   String?  @db.Text
+  contactEmail String?
+  contactPhone String?
+  businessHours_en String?
+  businessHours_fa String?
+  socialLinks  Json?
+  footerMenuId String?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  page Page? @relation(fields: [pageId], references: [id], onDelete: Cascade)
+}
+
+// ============================================================
+// CONTENT TYPES (detail pages + independent SEO)
+// ============================================================
+
+model Service {
+  id                   String        @id @default(uuid())
+  slug                 String        @unique
+  title_en             String
+  title_fa             String
+  shortDescription_en  String        @db.Text
+  shortDescription_fa  String        @db.Text
+  fullDescription_en   String        @db.Text
+  fullDescription_fa   String        @db.Text
+  imageUrl             String?
+  imageAlt_en          String?
+  imageAlt_fa          String?
+  ctaId                String?
+  metaTitle_en         String?
+  metaTitle_fa         String?
+  metaDescription_en   String?       @db.Text
+  metaDescription_fa   String?       @db.Text
+  status               ContentStatus @default(PUBLISHED)
+  isFeatured           Boolean       @default(false)
+  isActive             Boolean       @default(true)
+  sortOrder            Int           @default(0)
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+
+  cta CtaConfig? @relation("ServiceCta", fields: [ctaId], references: [id])
+
+  @@index([isFeatured])
+  @@index([status])
+  @@index([sortOrder])
+}
+
+model CaseStudy {
+  id                 String        @id @default(uuid())
+  slug               String        @unique
+  name               String
+  title_en           String
+  title_fa           String
+  outcomeBadge_en    String
+  outcomeBadge_fa    String
+  story_en           String        @db.Text
+  story_fa           String        @db.Text
+  fullStory_en       String?       @db.Text
+  fullStory_fa       String?       @db.Text
+  university         String?
+  imageUrl           String?
+  imageAlt_en        String?
+  imageAlt_fa        String?
+  ctaId              String?
+  metaTitle_en       String?
+  metaTitle_fa       String?
+  metaDescription_en String?       @db.Text
+  metaDescription_fa String?       @db.Text
+  status             ContentStatus @default(PUBLISHED)
+  isFeatured         Boolean       @default(false)
+  isActive           Boolean       @default(true)
+  sortOrder          Int           @default(0)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  cta CtaConfig? @relation("CaseStudyCta", fields: [ctaId], references: [id])
+
+  @@index([isFeatured])
+  @@index([status])
+  @@index([sortOrder])
+}
+
+model TeamCategory {
+  id        String   @id @default(uuid())
+  slug      String   @unique
+  title_en  String
+  title_fa  String
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members TeamMember[]
+
+  @@index([sortOrder])
+}
+
+model TeamMember {
+  id            String   @id @default(uuid())
+  categoryId    String
+  slug          String   @unique
+  name_en       String
+  name_fa       String
+  role_en       String
+  role_fa       String
+  bio_en        String   @db.Text
+  bio_fa        String   @db.Text
+  fullBio_en    String?  @db.Text
+  fullBio_fa    String?  @db.Text
+  photoUrl      String?
+  photoAlt_en   String?
+  photoAlt_fa   String?
+  linkedinUrl   String?
+  email         String?
+  location      String?
+  specialtyTags Json?
+  isFeatured    Boolean  @default(true)
+  isActive      Boolean  @default(true)
+  sortOrder     Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  category TeamCategory @relation(fields: [categoryId], references: [id])
+
+  @@index([categoryId])
+  @@index([sortOrder])
+}
+
+model Event {
+  id                  String      @id @default(uuid())
+  slug                String      @unique
+  title_en            String
+  title_fa            String
+  shortDescription_en String      @db.Text
+  shortDescription_fa String      @db.Text
+  content_en          String      @db.Text
+  content_fa          String      @db.Text
+  imageUrl            String?
+  imageAlt_en         String?
+  imageAlt_fa         String?
+  location_en         String?
+  location_fa         String?
+  startDate           DateTime
+  endDate             DateTime?
+  timezone            String?
+  registrationUrl     String?
+  registrationCtaId   String?
+  capacity            Int?
+  eventStatus         EventStatus @default(DRAFT)
+  isFeatured          Boolean     @default(false)
+  metaTitle_en        String?
+  metaTitle_fa        String?
+  metaDescription_en  String?     @db.Text
+  metaDescription_fa  String?     @db.Text
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+
+  cta           CtaConfig?          @relation("EventCta", fields: [registrationCtaId], references: [id])
+  registrations EventRegistration[]
+
+  @@index([eventStatus])
+  @@index([startDate])
+  @@index([isFeatured])
+}
+
+model EventRegistration {
+  id        String   @id @default(uuid())
+  eventId   String
+  firstName String
+  lastName  String
+  email     String
+  phone     String?
+  notes     String?  @db.Text
+  createdAt DateTime @default(now())
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId])
+}
+
+// ============================================================
+// OPERATIONS
+// ============================================================
+
+model Lead {
+  id           String      @id @default(uuid())
+  firstName    String
+  lastName     String
+  email        String
+  phone        String?
+  grade        GradeLevel?
+  country      String?
+  source       String?
+  campaignData Json?
+  status       LeadStatus  @default(NEW)
+  notes        String?     @db.Text
+  assignedToId String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  assignedTo User?          @relation("LeadAssignee", fields: [assignedToId], references: [id])
+  activities LeadActivity[]
+
+  @@index([status])
+  @@index([assignedToId])
+  @@index([createdAt])
+}
+
+model LeadActivity {
+  id           String   @id @default(uuid())
+  leadId       String
+  activityType String
+  description  String   @db.Text
+  createdBy    String?
+  createdAt    DateTime @default(now())
+
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@index([leadId])
+}
+
+model AuditLog {
+  id         String      @id @default(uuid())
+  userId     String?
+  action     AuditAction
+  entityType String?
+  entityId   String?
+  details    String      @db.Text
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime    @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([entityType, entityId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+// ============================================================
+// CMS
+// ============================================================
+
+model Menu {
+  id           String   @id @default(uuid())
+  internalName String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  items MenuItem[]
+}
+
+model MenuItem {
+  id            String       @id @default(uuid())
+  menuId        String
+  label_en      String
+  label_fa      String
+  type          MenuItemType
+  internalUrl   String?
+  externalUrl   String?
+  sectionAnchor String?
+  sortOrder     Int          @default(0)
+  isActive      Boolean      @default(true)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  menu Menu @relation(fields: [menuId], references: [id], onDelete: Cascade)
+
+  @@index([menuId, sortOrder])
+}
+
+model GradeOption {
+  id            String     @id @default(uuid())
+  grade         GradeLevel @unique
+  label_en      String
+  label_fa      String
+  ctaLabel_en   String?
+  ctaLabel_fa   String?
+  funnelMode    String?
+  leadSource    String?
+  sortOrder     Int        @default(0)
+  isActive      Boolean    @default(true)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  @@index([sortOrder])
+}
+
+model CtaConfig {
+  id           String        @id @default(uuid())
+  internalName String        @unique
+  label_en     String
+  label_fa     String
+  actionType   CtaActionType
+  internalUrl  String?
+  externalUrl  String?
+  calendlyUrl  String?
+  calcomUrl    String?
+  assetUrl     String?
+  isActive     Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  heroPrimary     HeroSection[]     @relation("HeroPrimaryCta")
+  heroSecondary   HeroSection[]     @relation("HeroSecondaryCta")
+  brandPhilosophy BrandPhilosophy[] @relation("BrandPhilosophyCta")
+  finalPrimary    FinalCta[]        @relation("FinalCtaPrimary")
+  finalSecondary  FinalCta[]        @relation("FinalCtaSecondary")
+  services        Service[]         @relation("ServiceCta")
+  caseStudies     CaseStudy[]       @relation("CaseStudyCta")
+  events          Event[]           @relation("EventCta")
+}
+
+model ThemeSetting {
+  id                 String   @id @default(uuid())
+  brandName          String
+  tagline_en         String
+  tagline_fa         String
+  primaryLogoUrl     String?
+  darkLogoUrl        String?
+  mobileLogoUrl      String?
+  faviconUrl         String?
+  primaryColor       String?
+  accentColor        String?
+  ctaGradientStart   String?
+  ctaGradientEnd     String?
+  socialLinks        Json?
+  contactInformation Json?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model SeoSetting {
+  id                 String   @id @default(uuid())
+  pageId             String   @unique
+  metaTitle_en       String?
+  metaTitle_fa       String?
+  metaDescription_en String?  @db.Text
+  metaDescription_fa String?  @db.Text
+  canonicalUrl       String?
+  ogImageUrl         String?
+  noIndex            Boolean  @default(false)
+  noFollow           Boolean  @default(false)
+  structuredData     Json?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  page Page @relation(fields: [pageId], references: [id], onDelete: Cascade)
+}
+
+model MediaAsset {
+  id         String    @id @default(uuid())
+  fileName   String
+  fileUrl    String
+  mediaType  MediaType
+  mimeType   String?
+  fileSize   Int?
+  width      Int?
+  height     Int?
+  altText_en String?
+  altText_fa String?
+  createdBy  String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@index([mediaType])
+  @@index([createdAt])
+}

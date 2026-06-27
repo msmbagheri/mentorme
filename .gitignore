@@ -1,0 +1,28 @@
+node_modules
+.next
+out
+build
+.env
+.env*.local
+.env.production
+.env.local-test
+*.tsbuildinfo
+next-env.d.ts
+public/uploads/*
+!public/uploads/.gitkeep
+.DS_Store
+npm-debug.log*
+
+# e2e
+playwright-report
+test-results
+/.playwright
+
+# secrets / certificates — NEVER commit
+certificates.zip
+*.zip
+*.pem
+*.key
+*.pfx
+*.p12
+certs/

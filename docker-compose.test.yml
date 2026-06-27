@@ -1,0 +1,13 @@
+# Local test override: publish the app port, skip Caddy, and point every service at
+# the local-test env so creds match the db container. NOT for the server.
+# Run:
+#   docker compose -f docker-compose.yml -f docker-compose.test.yml --env-file .env.local-test up -d --build db migrate app
+services:
+  migrate:
+    env_file: .env.local-test
+  seed:
+    env_file: .env.local-test
+  app:
+    env_file: .env.local-test
+    ports:
+      - "3100:3000"

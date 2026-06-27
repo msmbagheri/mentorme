@@ -1,0 +1,2557 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2709
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\froman\fcharset0 Times-Roman;\f1\fmodern\fcharset0 Courier;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\fs24 \cf0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs26 \cf0 FINAL MASTER IMPLEMENTATION PROMPT\
+VERSION 2.0 FINAL\
+\
+====================================================\
+DOCUMENT STATUS\
+====================================================\
+\
+Status:\
+FINAL\
+\
+Priority:\
+ABSOLUTE HIGHEST\
+\
+Purpose:\
+Final Execution Controller for Complete MentorMe Codebase Generation\
+\
+This document is the final controlling prompt.\
+\
+It converts the following approved specification documents into a complete, working, production-ready codebase:\
+\
+1. MASTER EXECUTION PROMPT \'97 VERSION 2.0 FINAL\
+2. MASTER WEBSITE SPECIFICATION \'97 VERSION 2.0 FINAL\
+3. WIREFRAME SPECIFICATION \'97 VERSION 2.0 FINAL\
+4. UI DESIGN SYSTEM SPECIFICATION \'97 VERSION 2.0 FINAL\
+5. CMS + ADMIN PANEL + DATABASE ARCHITECTURE \'97 VERSION 2.0 FINAL\
+\
+====================================================\
+ABSOLUTE EXECUTION LOCK\
+====================================================\
+\
+You must deliver a complete operational codebase.\
+\
+You must not deliver a plan.\
+\
+You must not deliver a summary.\
+\
+You must not deliver architecture-only output.\
+\
+You must not deliver pseudocode.\
+\
+You must not deliver placeholders.\
+\
+You must not deliver mocked features.\
+\
+You must not deliver partial implementation.\
+\
+You must not skip complex features.\
+\
+You must not replace implementation with explanation.\
+\
+If the output is incomplete, it is rejected.\
+\
+====================================================\
+FINAL PRODUCT OBJECTIVE\
+====================================================\
+\
+Build the complete MentorMe platform.\
+\
+Brand:\
+MentorMe\
+\
+Tagline:\
+Your Future, Mentored\
+\
+Platform Type:\
+Trust-Based Lead Generation Platform\
+\
+Version 1 Scope:\
+Production-ready website + CMS + Admin Panel + Lead Management System.\
+\
+Future-Ready Scope:\
+Architecture must support later Commerce, Package Purchase, Customer Portal, Parent Portal, Student Portal, Subscription, Invoice, and Payment expansion without redesign.\
+\
+====================================================\
+CONFLICT RESOLUTION ORDER\
+====================================================\
+\
+If any conflict exists, resolve it using this priority order:\
+\
+1. MASTER EXECUTION PROMPT\
+2. FINAL MASTER IMPLEMENTATION PROMPT\
+3. CMS + ADMIN PANEL + DATABASE ARCHITECTURE\
+4. MASTER WEBSITE SPECIFICATION\
+5. WIREFRAME SPECIFICATION\
+6. UI DESIGN SYSTEM SPECIFICATION\
+\
+When this document explicitly defines a rule, follow this document.\
+\
+====================================================\
+MANDATORY TECHNOLOGY STACK\
+====================================================\
+\
+Use exactly:\
+\
+Frontend:\
+- Next.js 15+\
+- App Router\
+- React 19\
+- TypeScript strict mode\
+- Tailwind CSS v4\
+- Shadcn UI\
+- Lucide React\
+\
+Backend:\
+- Next.js Route Handlers\
+- Server Actions where appropriate\
+- PostgreSQL\
+- Prisma ORM\
+- Zod validation\
+\
+Authentication:\
+- Auth.js / NextAuth v5\
+- Credentials provider\
+- Role-Based Access Control\
+\
+Security:\
+- bcrypt or argon2 password hashing\
+- server-side permission checks\
+- rate limiting\
+- security headers\
+\
+Performance:\
+- React Server Components\
+- ISR\
+- revalidate = 60\
+- Next.js Image\
+- service-layer data loading\
+\
+Observability:\
+- Sentry-ready structure\
+- structured logging with Pino or Winston\
+\
+====================================================\
+MANDATORY VERSION 1 PUBLIC ROUTES\
+====================================================\
+\
+Implement all of the following routes:\
+\
+/en\
+/fa\
+\
+/en/contact\
+/fa/contact\
+\
+/en/services/[slug]\
+/fa/services/[slug]\
+\
+/en/case-studies/[slug]\
+/fa/case-studies/[slug]\
+\
+/en/team/[slug]\
+/fa/team/[slug]\
+\
+/en/events/[slug]\
+/fa/events/[slug]\
+\
+No route may be a placeholder.\
+\
+Each route must load real database content.\
+\
+Each route must support English and Persian.\
+\
+Each route must include SEO metadata.\
+\
+Each route must handle not-found states.\
+\
+====================================================\
+MANDATORY HOMEPAGE ORDER\
+====================================================\
+\
+The homepage must render these sections in this exact order:\
+\
+1. Header\
+2. Hero\
+3. As Seen In\
+4. Methodology\
+5. Why Clients Choose Us\
+6. Brand Philosophy\
+7. Services\
+8. Success Stories\
+9. Founder Message\
+10. Team Members\
+11. Events & Webinars\
+12. Final CTA\
+13. Footer\
+\
+This order is mandatory.\
+\
+The Admin Panel must not allow breaking this trust-flow order.\
+\
+====================================================\
+PROJECT STRUCTURE REQUIREMENT\
+====================================================\
+\
+Generate the following project structure:\
+\
+src/\
+  app/\
+    layout.tsx\
+    globals.css\
+    middleware.ts\
+    sitemap.ts\
+    robots.ts\
+    not-found.tsx\
+    error.tsx\
+\
+    api/\
+      auth/[...nextauth]/route.ts\
+      homepage/route.ts\
+      services/route.ts\
+      services/[slug]/route.ts\
+      case-studies/route.ts\
+      case-studies/[slug]/route.ts\
+      team/route.ts\
+      team/[slug]/route.ts\
+      events/route.ts\
+      events/[slug]/route.ts\
+      leads/route.ts\
+      media/route.ts\
+      admin/\
+        leads/route.ts\
+        content/route.ts\
+        menu/route.ts\
+        theme/route.ts\
+        seo/route.ts\
+        users/route.ts\
+\
+    (site)/\
+      [locale]/\
+        layout.tsx\
+        page.tsx\
+        contact/page.tsx\
+        services/[slug]/page.tsx\
+        case-studies/[slug]/page.tsx\
+        team/[slug]/page.tsx\
+        events/[slug]/page.tsx\
+\
+    (admin)/\
+      admin/\
+        layout.tsx\
+        login/page.tsx\
+        page.tsx\
+        homepage/page.tsx\
+        services/page.tsx\
+        case-studies/page.tsx\
+        testimonials/page.tsx\
+        team/page.tsx\
+        events/page.tsx\
+        leads/page.tsx\
+        media/page.tsx\
+        menus/page.tsx\
+        ctas/page.tsx\
+        theme/page.tsx\
+        seo/page.tsx\
+        users/page.tsx\
+        audit-logs/page.tsx\
+        settings/page.tsx\
+\
+  components/\
+    site/\
+      Header.tsx\
+      Footer.tsx\
+      LeadForm.tsx\
+      GradeSelector.tsx\
+      CtaButton.tsx\
+      LocaleSwitcher.tsx\
+      renderers/\
+        SectionRegistry.tsx\
+        HeroSection.tsx\
+        AsSeenInSection.tsx\
+        MethodologySection.tsx\
+        WhyChooseUsSection.tsx\
+        BrandPhilosophySection.tsx\
+        ServicesSection.tsx\
+        SuccessStoriesSection.tsx\
+        FounderMessageSection.tsx\
+        TeamSection.tsx\
+        EventsSection.tsx\
+        FinalCtaSection.tsx\
+\
+    admin/\
+      AdminSidebar.tsx\
+      AdminHeader.tsx\
+      DashboardCards.tsx\
+      HomepageBuilder.tsx\
+      ContentEditor.tsx\
+      LeadTable.tsx\
+      LeadDetail.tsx\
+      MediaLibrary.tsx\
+      MenuManager.tsx\
+      CtaManager.tsx\
+      ThemeEditor.tsx\
+      SeoEditor.tsx\
+      UserManager.tsx\
+      AuditLogTable.tsx\
+\
+    ui/\
+      shadcn components\
+\
+  lib/\
+    db.ts\
+    auth.ts\
+    permissions.ts\
+    security.ts\
+    rate-limit.ts\
+    seo.ts\
+    i18n.ts\
+    logger.ts\
+    storage.ts\
+    api-response.ts\
+    utils.ts\
+    validation/\
+      auth.schema.ts\
+      lead.schema.ts\
+      cms.schema.ts\
+      menu.schema.ts\
+      cta.schema.ts\
+      theme.schema.ts\
+      seo.schema.ts\
+      media.schema.ts\
+\
+  services/\
+    content.service.ts\
+    homepage.service.ts\
+    lead.service.ts\
+    menu.service.ts\
+    cta.service.ts\
+    theme.service.ts\
+    seo.service.ts\
+    media.service.ts\
+    user.service.ts\
+    audit.service.ts\
+\
+  types/\
+    cms.ts\
+    lead.ts\
+    menu.ts\
+    cta.ts\
+    theme.ts\
+    seo.ts\
+    locale.ts\
+    api.ts\
+\
+prisma/\
+  schema.prisma\
+  seed.ts\
+\
+public/\
+  assets/\
+    placeholders/\
+\
+====================================================\
+IMPLEMENTATION RULES\
+====================================================\
+\
+All public-facing content must come from the database.\
+\
+No homepage business copy may be hardcoded.\
+\
+No navigation items may be hardcoded.\
+\
+No CTA behavior may be hardcoded.\
+\
+No grade list may be hardcoded in UI components.\
+\
+No logo may be hardcoded.\
+\
+No SEO metadata may be static-only.\
+\
+Use database-backed Theme Settings.\
+\
+Use database-backed Menu Items.\
+\
+Use database-backed CTA Configuration.\
+\
+Use database-backed Grade Options.\
+\
+Use database-backed Homepage Sections.\
+\
+====================================================\
+DATA FLOW RULE\
+====================================================\
+\
+Public rendering must follow this exact flow:\
+\
+Database\
+\uc0\u8594  Service Layer\
+\uc0\u8594  DTO Transformation\
+\uc0\u8594  Zod Validation\
+\uc0\u8594  React Server Component\
+\uc0\u8594  Section Renderer\
+\
+Prisma access is allowed only in the service layer.\
+\
+Public visual components must not query Prisma directly.\
+\
+====================================================\
+REGISTRY PATTERN REQUIREMENT\
+====================================================\
+\
+Homepage sections must render using a registry pattern.\
+\
+Required:\
+\
+const sectionRegistry = \{\
+  hero: HeroSection,\
+  as_seen_in: AsSeenInSection,\
+  methodology: MethodologySection,\
+  why_choose_us: WhyChooseUsSection,\
+  brand_philosophy: BrandPhilosophySection,\
+  services: ServicesSection,\
+  success_stories: SuccessStoriesSection,\
+  founder_message: FounderMessageSection,\
+  team: TeamSection,\
+  events: EventsSection,\
+  final_cta: FinalCtaSection\
+\}\
+\
+Do not use one giant switch statement.\
+\
+\
+====================================================\
+DATABASE IMPLEMENTATION CONTRACT\
+====================================================\
+\
+Generate a complete production-ready Prisma schema.\
+\
+The schema must be executable.\
+\
+The schema must pass:\
+\
+npx prisma generate\
+\
+npx prisma migrate dev\
+\
+npx prisma db seed\
+\
+without modification.\
+\
+====================================================\
+REQUIRED ENUMS\
+====================================================\
+\
+enum Role \{\
+  ADMIN\
+  EDITOR\
+  VIEWER\
+\}\
+\
+enum LeadStatus \{\
+  NEW\
+  CONTACTED\
+  QUALIFIED\
+  CONVERTED\
+  CLOSED\
+\}\
+\
+enum ContentStatus \{\
+  DRAFT\
+  IN_REVIEW\
+  PUBLISHED\
+  ARCHIVED\
+\}\
+\
+enum Locale \{\
+  EN\
+  FA\
+\}\
+\
+enum GradeLevel \{\
+  GRADE_6\
+  GRADE_7\
+  GRADE_8\
+  GRADE_9\
+  GRADE_10\
+  GRADE_11\
+  GRADE_12\
+  TRANSFER\
+\}\
+\
+enum CtaActionType \{\
+  OPEN_LEAD_FORM\
+  OPEN_CONTACT_PAGE\
+  OPEN_CALENDLY\
+  OPEN_CALCOM\
+  INTERNAL_URL\
+  EXTERNAL_URL\
+  DOWNLOAD_ASSET\
+\}\
+\
+enum EventStatus \{\
+  DRAFT\
+  PUBLISHED\
+  ARCHIVED\
+\}\
+\
+enum AuditAction \{\
+  CREATE\
+  UPDATE\
+  DELETE\
+  PUBLISH\
+  ARCHIVE\
+  ROLLBACK\
+  LOGIN\
+  PERMISSION_CHANGE\
+\}\
+\
+====================================================\
+REQUIRED DATABASE MODELS\
+====================================================\
+\
+Authentication:\
+\
+- User\
+- Account\
+- Session\
+- VerificationToken\
+\
+Content Core:\
+\
+- Page\
+- HomepageSection\
+- ContentVersion\
+\
+Homepage Content:\
+\
+- HeroSection\
+- AsSeenInLogo\
+- MethodologyStep\
+- Testimonial\
+- ValueProposition\
+- BrandPhilosophy\
+- SuccessMetric\
+- FounderMessage\
+- FinalCta\
+- FooterSetting\
+\
+Content Types:\
+\
+- Service\
+- CaseStudy\
+- TeamCategory\
+- TeamMember\
+- Event\
+\
+Operations:\
+\
+- Lead\
+- LeadActivity\
+- AuditLog\
+\
+CMS:\
+\
+- Menu\
+- MenuItem\
+- GradeOption\
+- CtaConfig\
+- ThemeSetting\
+- SeoSetting\
+- MediaAsset\
+\
+====================================================\
+DATABASE FIELD RULES\
+====================================================\
+\
+Every major content model must include:\
+\
+id\
+\
+createdAt\
+\
+updatedAt\
+\
+isActive\
+\
+====================================================\
+\
+Every localized content model must include:\
+\
+title_en\
+title_fa\
+\
+or\
+\
+headline_en\
+headline_fa\
+\
+or\
+\
+content_en\
+content_fa\
+\
+depending on purpose.\
+\
+====================================================\
+\
+Primary content localization must not use JSON blobs.\
+\
+====================================================\
+\
+Allowed localization pattern:\
+\
+title_en\
+title_fa\
+\
+description_en\
+description_fa\
+\
+content_en\
+content_fa\
+\
+meta_title_en\
+meta_title_fa\
+\
+meta_description_en\
+meta_description_fa\
+\
+====================================================\
+GRADE OPTION SYSTEM\
+====================================================\
+\
+Implement GradeOption model.\
+\
+Admin must control:\
+\
+- enable/disable\
+- sort order\
+- CTA label\
+- CTA target\
+- funnel mode\
+- lead source mapping\
+\
+Required grades:\
+\
+Grade 6\
+\
+Grade 7\
+\
+Grade 8\
+\
+Grade 9\
+\
+Grade 10\
+\
+Grade 11\
+\
+Grade 12\
+\
+Transfer Student\
+\
+====================================================\
+SEED DATA REQUIREMENTS\
+====================================================\
+\
+Generate a complete working seed file.\
+\
+====================================================\
+\
+Seed Users:\
+\
+Admin\
+\
+Editor\
+\
+Viewer\
+\
+====================================================\
+\
+Seed Theme:\
+\
+MentorMe\
+\
+Your Future, Mentored\
+\
+====================================================\
+\
+Seed Homepage Content:\
+\
+Hero\
+\
+As Seen In\
+\
+Methodology\
+\
+Testimonials\
+\
+Value Propositions\
+\
+Brand Philosophy\
+\
+Services\
+\
+Success Stories\
+\
+Founder Message\
+\
+Team\
+\
+Events\
+\
+Final CTA\
+\
+Footer\
+\
+====================================================\
+\
+Seed Services:\
+\
+Minimum:\
+\
+6\
+\
+====================================================\
+\
+Seed Case Studies:\
+\
+Minimum:\
+\
+6\
+\
+====================================================\
+\
+Seed Team Members:\
+\
+Minimum:\
+\
+8\
+\
+====================================================\
+\
+Seed Events:\
+\
+Minimum:\
+\
+4\
+\
+====================================================\
+\
+Seed Leads:\
+\
+Minimum:\
+\
+10\
+\
+====================================================\
+\
+All seed content must be realistic.\
+\
+All seed content must be editable through CMS.\
+\
+====================================================\
+AUTHENTICATION IMPLEMENTATION\
+====================================================\
+\
+Implement:\
+\
+Auth.js / NextAuth v5\
+\
+Credentials Provider\
+\
+RBAC\
+\
+====================================================\
+\
+Seeded Accounts:\
+\
+Admin\
+\
+editor\
+\
+viewer\
+\
+====================================================\
+\
+Passwords must be hashed.\
+\
+Plain text passwords are prohibited.\
+\
+====================================================\
+RBAC REQUIREMENTS\
+====================================================\
+\
+ADMIN\
+\
+Full Access\
+\
+====================================================\
+\
+EDITOR\
+\
+Content\
+\
+Media\
+\
+Leads\
+\
+SEO\
+\
+Menus\
+\
+CTAs\
+\
+Theme\
+\
+====================================================\
+\
+EDITOR must not:\
+\
+Manage Users\
+\
+Manage Roles\
+\
+====================================================\
+\
+VIEWER\
+\
+Read Only\
+\
+====================================================\
+MIDDLEWARE REQUIREMENTS\
+====================================================\
+\
+Protect:\
+\
+/admin/*\
+\
+====================================================\
+\
+Verify:\
+\
+Authenticated Session\
+\
+Role Permissions\
+\
+Locale Routing\
+\
+====================================================\
+\
+Support:\
+\
+/en\
+\
+/fa\
+\
+====================================================\
+API IMPLEMENTATION CONTRACT\
+====================================================\
+\
+All APIs must be implemented.\
+\
+Mock APIs are prohibited.\
+\
+Placeholder APIs are prohibited.\
+\
+====================================================\
+PUBLIC APIs\
+====================================================\
+\
+GET\
+\
+/api/homepage\
+\
+====================================================\
+\
+GET\
+\
+/api/services\
+\
+====================================================\
+\
+GET\
+\
+/api/services/[slug]\
+\
+====================================================\
+\
+GET\
+\
+/api/case-studies\
+\
+====================================================\
+\
+GET\
+\
+/api/case-studies/[slug]\
+\
+====================================================\
+\
+GET\
+\
+/api/team\
+\
+====================================================\
+\
+GET\
+\
+/api/team/[slug]\
+\
+====================================================\
+\
+GET\
+\
+/api/events\
+\
+====================================================\
+\
+GET\
+\
+/api/events/[slug]\
+\
+====================================================\
+\
+POST\
+\
+/api/leads\
+\
+====================================================\
+ADMIN APIs\
+====================================================\
+\
+Content\
+\
+Menu\
+\
+Theme\
+\
+SEO\
+\
+Users\
+\
+Leads\
+\
+Media\
+\
+====================================================\
+\
+Each API must support:\
+\
+Validation\
+\
+Authentication\
+\
+Authorization\
+\
+Error Handling\
+\
+Logging\
+\
+====================================================\
+API RESPONSE STANDARD\
+====================================================\
+\
+Success:\
+\
+\{\
+  "status": "success",\
+  "data": \{\}\
+\}\
+\
+====================================================\
+\
+Error:\
+\
+\{\
+  "status": "error",\
+  "error": \{\
+    "code": "",\
+    "message": "",\
+    "timestamp": "",\
+    "details": []\
+  \}\
+\}\
+\
+====================================================\
+ZOD VALIDATION REQUIREMENTS\
+====================================================\
+\
+Create schemas for:\
+\
+Authentication\
+\
+Users\
+\
+Leads\
+\
+Services\
+\
+Case Studies\
+\
+Events\
+\
+Menus\
+\
+CTAs\
+\
+Theme\
+\
+SEO\
+\
+Media\
+\
+Homepage Content\
+\
+====================================================\
+LEAD CAPTURE SYSTEM\
+====================================================\
+\
+Lead submission must save actual database records.\
+\
+====================================================\
+\
+Required Lead Fields:\
+\
+Student Name\
+\
+Parent Name\
+\
+Email\
+\
+Phone\
+\
+Grade\
+\
+Notes\
+\
+Source\
+\
+Campaign Data\
+\
+Status\
+\
+====================================================\
+\
+Required Validation:\
+\
+Email\
+\
+Phone\
+\
+Required Fields\
+\
+====================================================\
+\
+Rate Limiting:\
+\
+3 submissions\
+\
+per IP\
+\
+per hour\
+\
+====================================================\
+\
+Use server-side enforcement.\
+\
+====================================================\
+LEAD PIPELINE\
+====================================================\
+\
+NEW\
+\
+\uc0\u8595 \
+\
+CONTACTED\
+\
+\uc0\u8595 \
+\
+QUALIFIED\
+\
+\uc0\u8595 \
+\
+CONVERTED\
+\
+\uc0\u8595 \
+\
+CLOSED\
+\
+====================================================\
+\
+Admin must be able to update lead status.\
+\pard\pardeftab720\partightenfactor0
+\cf0 \
+====================================================\
+PUBLIC WEBSITE IMPLEMENTATION CONTRACT\
+====================================================\
+\
+Build a complete production-ready public website.\
+\
+The website must be fully functional.\
+\
+Placeholder sections are prohibited.\
+\
+Mock content rendering is prohibited.\
+\
+====================================================\
+MULTILINGUAL ARCHITECTURE\
+====================================================\
+\
+Supported Languages:\
+\
+English\
+\
+Persian\
+\
+====================================================\
+\
+Routes:\
+\
+/en\
+\
+/fa\
+\
+====================================================\
+\
+Requirements:\
+\
+Dynamic Locale Switching\
+\
+Localized Metadata\
+\
+Localized URLs\
+\
+Localized Content\
+\
+Localized Navigation\
+\
+Localized CTA Labels\
+\
+Localized SEO\
+\
+====================================================\
+\
+RTL Support:\
+\
+Required\
+\
+====================================================\
+\
+LTR Support:\
+\
+Required\
+\
+====================================================\
+\
+Use:\
+\
+dir="rtl"\
+\
+dir="ltr"\
+\
+====================================================\
+HOMEPAGE IMPLEMENTATION\
+====================================================\
+\
+The homepage must be generated from database content.\
+\
+Homepage content must never be hardcoded.\
+\
+====================================================\
+\
+Render sections in exact order:\
+\
+Header\
+\
+Hero\
+\
+As Seen In\
+\
+Methodology\
+\
+Why Clients Choose Us\
+\
+Brand Philosophy\
+\
+Services\
+\
+Success Stories\
+\
+Founder Message\
+\
+Team Members\
+\
+Events & Webinars\
+\
+Final CTA\
+\
+Footer\
+\
+====================================================\
+\
+Section visibility must be CMS-controlled.\
+\
+Section content must be CMS-controlled.\
+\
+====================================================\
+HEADER IMPLEMENTATION\
+====================================================\
+\
+Features:\
+\
+Logo\
+\
+Navigation\
+\
+CTA Button\
+\
+Locale Switcher\
+\
+====================================================\
+\
+Requirements:\
+\
+Sticky Header\
+\
+Mobile Menu\
+\
+CMS Navigation\
+\
+Theme-Based Branding\
+\
+====================================================\
+HERO IMPLEMENTATION\
+====================================================\
+\
+Features:\
+\
+Eyebrow\
+\
+Headline\
+\
+Subheadline\
+\
+Grade Selector\
+\
+Primary CTA\
+\
+Secondary CTA\
+\
+Trust Indicator\
+\
+Hero Image\
+\
+====================================================\
+\
+Grade Selector must load from GradeOption model.\
+\
+====================================================\
+\
+Grade Selector must support:\
+\
+Desktop\
+\
+Tablet\
+\
+Mobile\
+\
+====================================================\
+\
+Grade Selector selection must:\
+\
+Store analytics event\
+\
+Associate lead source\
+\
+Support future funnel routing\
+\
+====================================================\
+AS SEEN IN IMPLEMENTATION\
+====================================================\
+\
+Render:\
+\
+CMS-managed logo collection\
+\
+====================================================\
+\
+Support:\
+\
+Clickable logos\
+\
+Sort order\
+\
+Active state\
+\
+====================================================\
+METHODOLOGY IMPLEMENTATION\
+====================================================\
+\
+Render:\
+\
+3\'965 dynamic steps\
+\
+====================================================\
+\
+Support:\
+\
+CMS ordering\
+\
+CMS visibility\
+\
+====================================================\
+\
+Use card-based layout.\
+\
+====================================================\
+WHY CLIENTS CHOOSE US IMPLEMENTATION\
+====================================================\
+\
+Render:\
+\
+Featured testimonial\
+\
+Review summary\
+\
+Value proposition cards\
+\
+====================================================\
+\
+Review data must be database-driven.\
+\
+====================================================\
+BRAND PHILOSOPHY IMPLEMENTATION\
+====================================================\
+\
+Render:\
+\
+Image\
+\
+Title\
+\
+Content\
+\
+CTA\
+\
+====================================================\
+\
+All content must be CMS-controlled.\
+\
+====================================================\
+SERVICES IMPLEMENTATION\
+====================================================\
+\
+Homepage:\
+\
+Featured Services\
+\
+====================================================\
+\
+Service Detail Pages:\
+\
+Required\
+\
+====================================================\
+\
+Each service page must support:\
+\
+SEO\
+\
+CTA\
+\
+Lead Capture\
+\
+Related Services\
+\
+Structured Data\
+\
+====================================================\
+SUCCESS STORIES IMPLEMENTATION\
+====================================================\
+\
+Homepage:\
+\
+Featured Case Studies\
+\
+====================================================\
+\
+Case Study Detail Pages:\
+\
+Required\
+\
+====================================================\
+\
+Each case study page must support:\
+\
+SEO\
+\
+Related Stories\
+\
+Lead Capture\
+\
+Structured Data\
+\
+====================================================\
+FOUNDER MESSAGE IMPLEMENTATION\
+====================================================\
+\
+Render:\
+\
+Founder Photo\
+\
+Founder Name\
+\
+Founder Title\
+\
+Founder Message\
+\
+Signature\
+\
+====================================================\
+\
+Must be database-driven.\
+\
+====================================================\
+TEAM IMPLEMENTATION\
+====================================================\
+\
+Homepage:\
+\
+Featured Team Members\
+\
+====================================================\
+\
+Profile Pages:\
+\
+Required\
+\
+====================================================\
+\
+Each profile page must support:\
+\
+SEO\
+\
+Social Links\
+\
+Team Category\
+\
+Biography\
+\
+====================================================\
+EVENT IMPLEMENTATION\
+====================================================\
+\
+Homepage:\
+\
+Featured Events\
+\
+====================================================\
+\
+Event Detail Pages:\
+\
+Required\
+\
+====================================================\
+\
+Each Event Page Must Support:\
+\
+Registration\
+\
+SEO\
+\
+Structured Data\
+\
+Date & Time\
+\
+Location\
+\
+====================================================\
+FINAL CTA IMPLEMENTATION\
+====================================================\
+\
+Render:\
+\
+Headline\
+\
+Description\
+\
+CTA\
+\
+Trust Statement\
+\
+Background Image\
+\
+====================================================\
+\
+All fields CMS-controlled.\
+\
+====================================================\
+FOOTER IMPLEMENTATION\
+====================================================\
+\
+Render:\
+\
+Logo\
+\
+Brand Description\
+\
+Navigation\
+\
+Services\
+\
+Contact Information\
+\
+Social Links\
+\
+Legal Links\
+\
+====================================================\
+\
+All content CMS-controlled.\
+\
+====================================================\
+CONTACT PAGE IMPLEMENTATION\
+====================================================\
+\
+Implement complete contact page.\
+\
+====================================================\
+\
+Features:\
+\
+Contact Form\
+\
+Contact Information\
+\
+Map Placeholder Area\
+\
+Business Hours\
+\
+Primary CTA\
+\
+====================================================\
+\
+Contact Form Submissions:\
+\
+Must create Lead records.\
+\
+====================================================\
+SEO IMPLEMENTATION CONTRACT\
+====================================================\
+\
+Implement complete SEO layer.\
+\
+====================================================\
+\
+Required:\
+\
+Metadata API\
+\
+Open Graph\
+\
+Twitter Cards\
+\
+Canonical URLs\
+\
+Structured Data\
+\
+Sitemap\
+\
+Robots\
+\
+====================================================\
+STRUCTURED DATA\
+====================================================\
+\
+Generate dynamically:\
+\
+Organization\
+\
+WebPage\
+\
+Service\
+\
+Event\
+\
+FAQPage\
+\
+AggregateRating\
+\
+ProfilePage\
+\
+Article\
+\
+====================================================\
+SITEMAP IMPLEMENTATION\
+====================================================\
+\
+Implement:\
+\
+src/app/sitemap.ts\
+\
+====================================================\
+\
+Must include:\
+\
+Homepage\
+\
+Services\
+\
+Case Studies\
+\
+Team Profiles\
+\
+Events\
+\
+====================================================\
+\
+Generate dynamically from database.\
+\
+====================================================\
+ROBOTS IMPLEMENTATION\
+====================================================\
+\
+Implement:\
+\
+src/app/robots.ts\
+\
+====================================================\
+\
+Disallow:\
+\
+/admin/*\
+\
+====================================================\
+ADMIN PANEL IMPLEMENTATION CONTRACT\
+====================================================\
+\
+Build a complete operational Admin Panel.\
+\
+====================================================\
+\
+Admin Route:\
+\
+/admin\
+\
+====================================================\
+\
+Must be protected.\
+\
+====================================================\
+\
+Must support RBAC.\
+\
+====================================================\
+ADMIN DASHBOARD\
+====================================================\
+\
+Widgets:\
+\
+Lead Summary\
+\
+Recent Leads\
+\
+Upcoming Events\
+\
+Content Summary\
+\
+System Status\
+\
+Quick Actions\
+\
+====================================================\
+HOMEPAGE BUILDER\
+====================================================\
+\
+Implement Homepage Builder.\
+\
+====================================================\
+\
+Capabilities:\
+\
+Edit Content\
+\
+Enable/Disable Sections\
+\
+Manage Ordering Metadata\
+\
+Manage CTA Assignments\
+\
+Manage Images\
+\
+Manage Localized Content\
+\
+====================================================\
+\
+Homepage Builder must preserve trust-flow order.\
+\
+Admin may disable sections.\
+\
+Admin may not violate section sequence.\
+\
+====================================================\
+CONTENT MANAGEMENT MODULES\
+====================================================\
+\
+Services\
+\
+Case Studies\
+\
+Testimonials\
+\
+Team Members\
+\
+Events\
+\
+====================================================\
+\
+Each Module Must Support:\
+\
+Create\
+\
+Edit\
+\
+Delete\
+\
+Archive\
+\
+Publish\
+\
+Preview\
+\
+====================================================\
+MENU MANAGEMENT\
+====================================================\
+\
+Implement complete menu manager.\
+\
+====================================================\
+\
+Capabilities:\
+\
+Add Items\
+\
+Edit Items\
+\
+Delete Items\
+\
+Reorder Items\
+\
+Localization\
+\
+====================================================\
+CTA MANAGEMENT\
+====================================================\
+\
+Implement complete CTA manager.\
+\
+====================================================\
+\
+Capabilities:\
+\
+Create CTA\
+\
+Edit CTA\
+\
+Deactivate CTA\
+\
+Assign CTA\
+\
+====================================================\
+THEME MANAGER\
+====================================================\
+\
+Implement complete theme manager.\
+\
+====================================================\
+\
+Editable:\
+\
+Brand Name\
+\
+Tagline\
+\
+Logos\
+\
+Colors\
+\
+CTA Gradient\
+\
+Contact Information\
+\
+Social Links\
+\
+====================================================\
+SEO MANAGER\
+====================================================\
+\
+Implement complete SEO manager.\
+\
+====================================================\
+\
+Editable:\
+\
+Meta Titles\
+\
+Meta Descriptions\
+\
+Canonical URLs\
+\
+OG Images\
+\
+Indexing Rules\
+\
+====================================================\
+MEDIA LIBRARY\
+====================================================\
+\
+Implement complete media library.\
+\
+====================================================\
+\
+Capabilities:\
+\
+Upload\
+\
+Delete\
+\
+Search\
+\
+Filter\
+\
+Preview\
+\
+Copy URL\
+\
+====================================================\
+\
+Supported:\
+\
+Images\
+\
+Videos\
+\
+Documents\
+\
+====================================================\
+USER MANAGEMENT\
+====================================================\
+\
+Implement complete user management.\
+\
+====================================================\
+\
+Admin Only\
+\
+====================================================\
+\
+Capabilities:\
+\
+Create User\
+\
+Edit User\
+\
+Deactivate User\
+\
+Assign Role\
+\
+====================================================\
+AUDIT LOG VIEWER\
+====================================================\
+\
+Implement complete audit log module.\
+\
+====================================================\
+\
+Display:\
+\
+User\
+\
+Action\
+\
+Entity\
+\
+Timestamp\
+\
+Details\
+\
+====================================================\
+\
+Support filtering.\
+\
+\
+====================================================\
+CONTENT VERSIONING IMPLEMENTATION\
+====================================================\
+\
+Implement functional content versioning.\
+\
+Versioning must not be conceptual.\
+\
+Required:\
+\
+ContentVersion model\
+\
+Version snapshot creation\
+\
+Version history retrieval\
+\
+Rollback support\
+\
+Audit log entry creation\
+\
+Cache revalidation after rollback\
+\
+====================================================\
+PUBLISHING WORKFLOW IMPLEMENTATION\
+====================================================\
+\
+Content lifecycle:\
+\
+DRAFT\
+\
+\uc0\u8595 \
+\
+IN_REVIEW\
+\
+\uc0\u8595 \
+\
+PUBLISHED\
+\
+\uc0\u8595 \
+\
+ARCHIVED\
+\
+Publishing must:\
+\
+Create ContentVersion snapshot\
+\
+Create AuditLog entry\
+\
+Update public content\
+\
+Trigger revalidation\
+\
+====================================================\
+AUDIT LOG IMPLEMENTATION\
+====================================================\
+\
+Implement audit logging for:\
+\
+Create\
+\
+Update\
+\
+Delete\
+\
+Publish\
+\
+Archive\
+\
+Rollback\
+\
+Login\
+\
+Permission Change\
+\
+Lead Status Change\
+\
+User Management Actions\
+\
+====================================================\
+\
+Audit log entries must include:\
+\
+User\
+\
+Action\
+\
+Entity Type\
+\
+Entity ID\
+\
+Timestamp\
+\
+Details\
+\
+IP Address where available\
+\
+User Agent where available\
+\
+====================================================\
+SECURITY IMPLEMENTATION\
+====================================================\
+\
+Security must be implemented, not described.\
+\
+Required:\
+\
+Authentication\
+\
+Authorization\
+\
+RBAC\
+\
+Password Hashing\
+\
+Rate Limiting\
+\
+Input Validation\
+\
+Security Headers\
+\
+Session Protection\
+\
+Protected Admin Routes\
+\
+Server-Side Permission Checks\
+\
+====================================================\
+SECURITY HEADERS\
+====================================================\
+\
+Implement support for:\
+\
+Content-Security-Policy\
+\
+X-Frame-Options\
+\
+X-Content-Type-Options\
+\
+Referrer-Policy\
+\
+Permissions-Policy\
+\
+Strict-Transport-Security\
+\
+====================================================\
+RATE LIMITING\
+====================================================\
+\
+Implement rate limiting for:\
+\
+Lead submissions\
+\
+Authentication attempts\
+\
+Media uploads\
+\
+Admin APIs where appropriate\
+\
+Lead limit:\
+\
+3 submissions per IP per hour\
+\
+====================================================\
+MEDIA STORAGE IMPLEMENTATION\
+====================================================\
+\
+Implement media storage through a storage abstraction layer.\
+\
+Required file:\
+\
+src/lib/storage.ts\
+\
+====================================================\
+\
+Version 1 may use:\
+\
+Local Storage\
+\
+====================================================\
+\
+Architecture must remain compatible with:\
+\
+AWS S3\
+\
+Cloudflare R2\
+\
+Supabase Storage\
+\
+====================================================\
+\
+Frontend components must never depend directly on storage provider implementation.\
+\
+====================================================\
+PERFORMANCE IMPLEMENTATION\
+====================================================\
+\
+Implement:\
+\
+ISR\
+\
+revalidate = 60\
+\
+React Server Components\
+\
+Server-side data loading\
+\
+Lazy loading\
+\
+Next.js Image\
+\
+Font optimization\
+\
+Code splitting\
+\
+====================================================\
+\
+Homepage must not use client-side fetch for CMS content.\
+\
+====================================================\
+OBSERVABILITY IMPLEMENTATION\
+====================================================\
+\
+Implement structure for:\
+\
+Sentry\
+\
+Structured Logging\
+\
+Operational Diagnostics\
+\
+====================================================\
+\
+Required:\
+\
+src/lib/logger.ts\
+\
+====================================================\
+\
+Logging must support:\
+\
+Authentication Events\
+\
+Lead Events\
+\
+Publishing Events\
+\
+System Errors\
+\
+Permission Changes\
+\
+====================================================\
+THEME AND DESIGN SYSTEM IMPLEMENTATION\
+====================================================\
+\
+Implement the UI Design System through:\
+\
+CSS variables\
+\
+Tailwind theme tokens\
+\
+Reusable UI components\
+\
+Database-driven theme settings\
+\
+====================================================\
+\
+Required:\
+\
+No hardcoded logos\
+\
+No hardcoded brand colors\
+\
+No misuse of logo gradient\
+\
+CTA gradient must use CTA tokens only\
+\
+====================================================\
+ACCESSIBILITY IMPLEMENTATION\
+====================================================\
+\
+Implement:\
+\
+Semantic HTML\
+\
+ARIA labels\
+\
+Visible focus states\
+\
+Skip to main content\
+\
+Keyboard navigation\
+\
+Reduced motion support\
+\
+Accessible forms\
+\
+Alt text\
+\
+Minimum 44px touch targets\
+\
+====================================================\
+RESPONSIVE IMPLEMENTATION\
+====================================================\
+\
+Support:\
+\
+1440px desktop\
+\
+1280px laptop\
+\
+768px tablet\
+\
+390px mobile\
+\
+====================================================\
+\
+Rules:\
+\
+Mobile first\
+\
+No horizontal scroll\
+\
+RTL safe\
+\
+LTR safe\
+\
+Accessible touch targets\
+\
+====================================================\
+FUTURE COMMERCE READINESS\
+====================================================\
+\
+Version 1 does not implement:\
+\
+Payments\
+\
+Checkout\
+\
+Invoices\
+\
+Subscriptions\
+\
+Orders\
+\
+Package Purchases\
+\
+====================================================\
+\
+However architecture must support future:\
+\
+Package Catalog\
+\
+Checkout Flow\
+\
+Payment Processing\
+\
+Invoice Generation\
+\
+Subscription Billing\
+\
+Customer Dashboard\
+\
+Parent Dashboard\
+\
+Student Dashboard\
+\
+Digital Product Delivery\
+\
+Order Management\
+\
+====================================================\
+\
+Do not make architectural choices that block future commerce.\
+\
+====================================================\
+FUTURE PORTAL READINESS\
+====================================================\
+\
+Version 1 does not implement:\
+\
+Customer Portal\
+\
+Parent Portal\
+\
+Student Portal\
+\
+====================================================\
+\
+However architecture must support future routes:\
+\
+/portal\
+\
+/portal/student\
+\
+/portal/parent\
+\
+/customer\
+\
+/student\
+\
+/parent\
+\
+====================================================\
+\
+Do not make architectural choices that block future portal implementation.\
+\
+====================================================\
+ENVIRONMENT FILE REQUIREMENTS\
+====================================================\
+\
+Provide:\
+\
+.env.example\
+\
+Required variables:\
+\
+DATABASE_URL\
+\
+NEXTAUTH_SECRET\
+\
+NEXTAUTH_URL\
+\
+UPLOAD_DIR\
+\
+PUBLIC_SITE_URL\
+\
+CALENDLY_URL\
+\
+CALCOM_URL\
+\
+SENTRY_DSN\
+\
+LOG_LEVEL\
+\
+====================================================\
+PACKAGE JSON REQUIREMENTS\
+====================================================\
+\
+package.json must include:\
+\
+dev\
+\
+build\
+\
+start\
+\
+lint\
+\
+prisma:generate\
+\
+prisma:migrate\
+\
+prisma:seed\
+\
+====================================================\
+FINAL OUTPUT STRUCTURE\
+====================================================\
+\
+The final answer must be delivered in this order:\
+\
+PART 1:\
+Project Overview and File Tree\
+\
+PART 2:\
+package.json, configuration files, environment files\
+\
+PART 3:\
+Prisma schema\
+\
+PART 4:\
+Seed script\
+\
+PART 5:\
+Core libraries\
+\
+PART 6:\
+Validation schemas\
+\
+PART 7:\
+Services\
+\
+PART 8:\
+Authentication and middleware\
+\
+PART 9:\
+Public website pages\
+\
+PART 10:\
+Public website components\
+\
+PART 11:\
+Admin panel pages\
+\
+PART 12:\
+Admin components\
+\
+PART 13:\
+API routes\
+\
+PART 14:\
+SEO, sitemap, robots\
+\
+PART 15:\
+Setup and deployment instructions\
+\
+PART 16:\
+Verification checklist\
+\
+If output limits prevent completing the project in one response, continue in clearly numbered parts until the full codebase is delivered.\
+\
+Do not stop early.\
+\
+Do not summarize missing files.\
+\
+Do not say "implementation omitted".\
+\
+Do not say "similar pattern".\
+\
+Do not use ellipses to skip code.\
+\
+====================================================\
+FINAL VERIFICATION CHECKLIST\
+====================================================\
+\
+Before final delivery, verify:\
+\
+npm install works\
+\
+npm run dev works\
+\
+npm run build works\
+\
+npx prisma generate works\
+\
+npx prisma migrate dev works\
+\
+npx prisma db seed works\
+\
+====================================================\
+\
+Verify:\
+\
+Admin login works\
+\
+RBAC works\
+\
+Middleware protects /admin\
+\
+Homepage renders from database\
+\
+No homepage text is hardcoded\
+\
+English route works\
+\
+Persian route works\
+\
+RTL works\
+\
+LTR works\
+\
+Contact form saves lead\
+\
+Lead rate limiting works\
+\
+Admin can view leads\
+\
+Admin can update lead status\
+\
+CSV export works\
+\
+Excel export works\
+\
+Menu management works\
+\
+CTA management works\
+\
+Grade management works\
+\
+Theme management works\
+\
+SEO management works\
+\
+Media library works\
+\
+Services CRUD works\
+\
+Case studies CRUD works\
+\
+Testimonials CRUD works\
+\
+Team CRUD works\
+\
+Events CRUD works\
+\
+Audit logs work\
+\
+Content versioning works\
+\
+Rollback works\
+\
+Sitemap works\
+\
+Robots works\
+\
+Structured data works\
+\
+Responsive layout works\
+\
+Accessibility basics work\
+\
+====================================================\
+\
+Verify absence of:\
+\
+TODO comments\
+\
+Placeholder logic\
+\
+Fake implementation\
+\
+Mock CMS\
+\
+Static Admin\
+\
+Hardcoded homepage content\
+\
+Hardcoded menu\
+\
+Hardcoded CTA behavior\
+\
+Hardcoded grade list\
+\
+Incomplete Prisma schema\
+\
+Missing seed data\
+\
+Missing route handlers\
+\
+Missing setup instructions\
+\
+====================================================\
+FINAL ACCEPTANCE RULE\
+====================================================\
+\
+Only deliver the final project after passing the full verification checklist.\
+\
+If anything is missing:\
+\
+Stop.\
+\
+Fix it.\
+\
+Re-audit.\
+\
+Then deliver.\
+\
+====================================================\
+END OF DOCUMENT\
+\
+FINAL MASTER IMPLEMENTATION PROMPT\
+VERSION 2.0 FINAL\
+\pard\pardeftab720\partightenfactor0
+\cf0 \
+}

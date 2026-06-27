@@ -1,0 +1,12 @@
+# MentorMe reverse proxy with automatic HTTPS (Let's Encrypt).
+# Requires mentorme.ir / www.mentorme.ir A-records to point at this server (already set).
+
+# Redirect www → apex.
+www.mentorme.ir {
+	redir https://mentorme.ir{uri} permanent
+}
+
+mentorme.ir {
+	encode zstd gzip
+	reverse_proxy app:3000
+}

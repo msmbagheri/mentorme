@@ -1,0 +1,2374 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2709
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fmodern\fcharset0 Courier;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs26 \cf0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 CMS + ADMIN PANEL + DATABASE ARCHITECTURE\
+VERSION 2.0 FINAL\
+\
+\
+====================================================\
+DOCUMENT STATUS\
+====================================================\
+\
+Status:\
+\
+FINAL\
+\
+Priority:\
+\
+HIGH\
+\
+Purpose:\
+\
+Authoritative CMS, Admin Panel, Database, API, and Data Architecture Specification\
+\
+Brand:\
+\
+MentorMe\
+\
+Tagline:\
+\
+Your Future, Mentored\uc0\u8235 !\uc0\u8236 \
+\
+This document defines the operational backend architecture for the MentorMe platform.\
+\
+This document must remain fully aligned with:\
+\
+MASTER EXECUTION PROMPT\
+\
+MASTER WEBSITE SPECIFICATION\
+\
+WIREFRAME SPECIFICATION\
+\
+UI DESIGN SYSTEM SPECIFICATION\
+\
+FINAL MASTER IMPLEMENTATION PROMPT\
+\
+====================================================\
+1. SYSTEM PHILOSOPHY\
+====================================================\
+\
+This system is not a simple website.\
+\
+This system is a Content-Driven Conversion Platform.\
+\
+This system is a Growth System.\
+\
+This system must support:\
+\
+- Trust-based lead generation\
+- Dynamic CMS content\
+- Admin-managed website structure\
+- Multilingual content\
+- RTL and LTR rendering\
+- Lead capture\
+- Lead management\
+- Theme management\
+- CTA management\
+- Grade funnel management\
+- SEO management\
+- Media management\
+- Audit logging\
+- Content versioning\
+- Future commerce expansion\
+- Future customer portal expansion\
+- Future parent portal expansion\
+- Future student portal expansion\
+\
+The system must allow non-developers to manage all website content without breaking the user experience.\
+\
+No public-facing business content may be hardcoded in frontend components.\
+\
+====================================================\
+2. CORE ARCHITECTURE PRINCIPLES\
+====================================================\
+\
+The architecture is divided into four primary layers:\
+\
+1. Presentation Layer\
+\
+2. Service Layer\
+\
+3. Content and Business Logic Layer\
+\
+4. Database Layer\
+\
+----------------------------------------------------\
+2.1 PRESENTATION LAYER\
+----------------------------------------------------\
+\
+The Presentation Layer includes:\
+\
+- Public website pages\
+- Homepage\
+- Contact page\
+- Service detail pages\
+- Case study detail pages\
+- Team profile pages\
+- Event detail pages\
+- Admin panel UI\
+- CMS interfaces\
+- Form interfaces\
+- Media interfaces\
+- Future portal interfaces\
+- Future commerce interfaces\
+\
+Rules:\
+\
+- Presentation components must not query Prisma directly.\
+- Presentation components must not contain hardcoded business content.\
+- Presentation components must receive validated DTOs.\
+- Presentation components must support RTL and LTR.\
+- Presentation components must follow the UI Design System.\
+- Public homepage section order must remain aligned with the Wireframe Specification.\
+\
+----------------------------------------------------\
+2.2 SERVICE LAYER\
+----------------------------------------------------\
+\
+The Service Layer is responsible for:\
+\
+- Data fetching\
+- DTO transformation\
+- Business logic\
+- Permission checks\
+- Validation coordination\
+- Cache invalidation\
+- Content publishing actions\
+- Lead processing\
+- Media processing\
+- Theme resolution\
+- CTA resolution\
+- Grade funnel resolution\
+\
+All public rendering must follow this flow:\
+\
+Database\
+\uc0\u8594  Service Layer\
+\uc0\u8594  DTO Validation\
+\uc0\u8594  React Server Component\
+\uc0\u8594  Renderer\
+\
+Direct database access inside visual components is prohibited.\
+\
+----------------------------------------------------\
+2.3 CONTENT AND BUSINESS LOGIC LAYER\
+----------------------------------------------------\
+\
+This layer includes:\
+\
+- CMS content rules\
+- Homepage section order rules\
+- CTA behavior rules\
+- Grade funnel behavior\
+- Lead lifecycle rules\
+- Content lifecycle rules\
+- SEO rules\
+- Admin permissions\
+- Audit log rules\
+- Versioning rules\
+\
+The business logic layer must prevent Admin users from accidentally breaking the trust-based conversion flow.\
+\
+----------------------------------------------------\
+2.4 DATABASE LAYER\
+----------------------------------------------------\
+\
+The Database Layer must provide:\
+\
+- PostgreSQL storage\
+- Prisma ORM schema\
+- Strict relational integrity\
+- UUID primary keys\
+- Dedicated bilingual fields\
+- Explicit relations\
+- Audit logs\
+- Content version snapshots\
+- Future commerce readiness\
+- Future portal readiness\
+\
+====================================================\
+3. MULTILINGUAL CONTENT RULE\
+====================================================\
+\
+Primary editable content must always use dedicated bilingual fields.\
+\
+Allowed primary content pattern:\
+\
+title_en\
+\
+title_fa\
+\
+headline_en\
+\
+headline_fa\
+\
+description_en\
+\
+description_fa\
+\
+content_en\
+\
+content_fa\
+\
+cta_label_en\
+\
+cta_label_fa\
+\
+alt_text_en\
+\
+alt_text_fa\
+\
+meta_title_en\
+\
+meta_title_fa\
+\
+meta_description_en\
+\
+meta_description_fa\
+\
+JSON blobs are prohibited for primary editable content.\
+\
+JSON fields are allowed only for:\
+\
+- metadata\
+- social links\
+- campaign data\
+- audit snapshots\
+- technical configuration\
+- analytics configuration\
+- optional structured settings\
+- non-primary flexible data\
+\
+JSON fields are prohibited for:\
+\
+- titles\
+- headlines\
+- descriptions\
+- body content\
+- CTA labels\
+- SEO titles\
+- SEO descriptions\
+- primary localized website content\
+\
+====================================================\
+4. DATABASE ENGINE AND ORM\
+====================================================\
+\
+Database Engine:\
+\
+PostgreSQL\
+\
+ORM:\
+\
+Prisma ORM\
+\
+Required Database Principles:\
+\
+- UUID primary keys\
+- Strict relational integrity\
+- Explicit relations\
+- Dedicated bilingual fields\
+- Soft delete where appropriate\
+- Audit trail for admin actions\
+- Version snapshots for important content updates\
+- CMS-friendly data structures\
+- Future-safe expansion model\
+\
+====================================================\
+5. PRISMA SCHEMA CONTRACT\
+====================================================\
+\
+The final implementation must include a complete working Prisma schema.\
+\
+The schema must not be documentation-only.\
+\
+It must be capable of passing:\
+\
+npx prisma generate\
+\
+npx prisma migrate dev\
+\
+npx prisma db seed\
+\
+without errors.\
+\
+====================================================\
+5.1 DATASOURCE AND GENERATOR\
+====================================================\
+\
+datasource db \{\
+  provider = "postgresql"\
+  url      = env("DATABASE_URL")\
+\}\
+\
+generator client \{\
+  provider = "prisma-client-js"\
+\}\
+\
+====================================================\
+5.2 REQUIRED ENUMS\
+====================================================\
+\
+enum Role \{\
+  ADMIN\
+  EDITOR\
+  VIEWER\
+\}\
+\
+enum Grade \{\
+  GRADE_6\
+  GRADE_7\
+  GRADE_8\
+  GRADE_9\
+  GRADE_10\
+  GRADE_11\
+  GRADE_12\
+  TRANSFER\
+\}\
+\
+enum LeadStatus \{\
+  NEW\
+  CONTACTED\
+  QUALIFIED\
+  CONVERTED\
+  CLOSED\
+\}\
+\
+enum ContentStatus \{\
+  DRAFT\
+  IN_REVIEW\
+  PUBLISHED\
+  ARCHIVED\
+\}\
+\
+enum SectionGroup \{\
+  TRUST\
+  METHOD\
+  PROOF\
+  HUMAN\
+  CONVERSION\
+  FOOTER\
+\}\
+\
+enum CtaActionType \{\
+  OPEN_LEAD_FORM\
+  OPEN_CONTACT_PAGE\
+  OPEN_CALENDLY\
+  OPEN_CALCOM\
+  INTERNAL_URL\
+  EXTERNAL_URL\
+  DOWNLOAD_ASSET\
+\}\
+\
+enum MenuItemType \{\
+  SCROLL_TO_SECTION\
+  INTERNAL_PAGE\
+  EXTERNAL_URL\
+\}\
+\
+enum MediaType \{\
+  IMAGE\
+  VIDEO\
+  DOCUMENT\
+\}\
+\
+enum EventStatus \{\
+  DRAFT\
+  PUBLISHED\
+  ARCHIVED\
+\}\
+\
+enum AuditAction \{\
+  CREATE\
+  UPDATE\
+  DELETE\
+  PUBLISH\
+  ARCHIVE\
+  ROLLBACK\
+  LOGIN\
+  PERMISSION_CHANGE\
+\}\
+\
+====================================================\
+5.3 AUTHENTICATION AND USER MODELS\
+====================================================\
+\
+model User \{\
+  id            String      @id @default(uuid())\
+  name          String\
+  email         String      @unique\
+  passwordHash  String\
+  role          Role        @default(EDITOR)\
+  image         String?\
+  isActive      Boolean     @default(true)\
+\
+  createdAt     DateTime    @default(now())\
+  updatedAt     DateTime    @updatedAt\
+\
+  accounts      Account[]\
+  sessions      Session[]\
+  auditLogs     AuditLog[]\
+\}\
+\
+model Account \{\
+  id                 String  @id @default(uuid())\
+  userId             String\
+  type               String\
+  provider           String\
+  providerAccountId  String\
+  refresh_token      String?\
+  access_token       String?\
+  expires_at         Int?\
+  token_type         String?\
+  scope              String?\
+  id_token           String?\
+  session_state      String?\
+\
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)\
+\
+  @@unique([provider, providerAccountId])\
+\}\
+\
+model Session \{\
+  id            String   @id @default(uuid())\
+  sessionToken  String   @unique\
+  userId        String\
+  expires       DateTime\
+\
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)\
+\}\
+\
+model VerificationToken \{\
+  identifier String\
+  token      String   @unique\
+  expires    DateTime\
+\
+  @@unique([identifier, token])\
+\}\
+\
+Rules:\
+\
+- Passwords must be hashed.\
+- Plain-text password storage is prohibited.\
+- Admin routes must be protected.\
+- RBAC must be enforced server-side.\
+- Viewer role must remain read-only.\
+- Editor role must not manage users.\
+- Admin role has full access.\
+\
+====================================================\
+5.4 AUDIT AND VERSIONING MODELS\
+====================================================\
+\
+model AuditLog \{\
+  id          String      @id @default(uuid())\
+  userId      String?\
+  action      AuditAction\
+  entityType  String?\
+  entityId    String?\
+  details     String      @db.Text\
+  ipAddress   String?\
+  userAgent   String?\
+  createdAt   DateTime    @default(now())\
+\
+  user User? @relation(fields: [userId], references: [id])\
+\}\
+\
+model ContentVersion \{\
+  id          String   @id @default(uuid())\
+  entityType  String\
+  entityId    String\
+  version     Int\
+  payload     Json\
+  createdAt   DateTime @default(now())\
+  createdBy   String?\
+\}\
+\
+Audit logging must track:\
+\
+- Create\
+- Update\
+- Delete\
+- Publish\
+- Archive\
+- Rollback\
+- Login\
+- Permission changes\
+\
+Versioning must support:\
+\
+- Content snapshots\
+- Publishing history\
+- Rollback readiness\
+- Audit traceability\
+\
+====================================================\
+5.5 PAGE AND HOMEPAGE STRUCTURE MODELS\
+====================================================\
+\
+model Page \{\
+  id                    String        @id @default(uuid())\
+  slug                  String        @unique\
+\
+  title_en              String\
+  title_fa              String\
+\
+  meta_title_en         String?\
+  meta_title_fa         String?\
+\
+  meta_description_en   String?       @db.Text\
+  meta_description_fa   String?       @db.Text\
+\
+  ogImageUrl            String?\
+  canonicalUrl          String?\
+  status                ContentStatus @default(DRAFT)\
+  isIndexed             Boolean       @default(true)\
+\
+  createdAt             DateTime      @default(now())\
+  updatedAt             DateTime      @updatedAt\
+\
+  homepageSections      HomepageSection[]\
+  seoSetting            SeoSetting?\
+\}\
+\
+model HomepageSection \{\
+  id          String       @id @default(uuid())\
+  pageId      String\
+  sectionType String\
+  stageGroup  SectionGroup\
+  orderIndex  Int          @default(0)\
+  isActive    Boolean      @default(true)\
+  isDeleted   Boolean      @default(false)\
+\
+  createdAt   DateTime     @default(now())\
+  updatedAt   DateTime     @updatedAt\
+\
+  page Page @relation(fields: [pageId], references: [id], onDelete: Cascade)\
+\
+  @@unique([pageId, sectionType])\
+\}\
+\
+Required Homepage Section Types:\
+\
+hero\
+\
+as_seen_in\
+\
+methodology\
+\
+why_choose_us\
+\
+brand_philosophy\
+\
+services\
+\
+success_stories\
+\
+founder_message\
+\
+team\
+\
+events\
+\
+final_cta\
+\
+footer\
+\
+Homepage section order is mandatory.\
+\
+The Admin Panel may allow visibility control, but it must not allow breaking the required trust-flow order.\
+\
+====================================================\
+6. CONTENT MODELS\
+====================================================\
+\
+All homepage content must be editable.\
+\
+All content must support:\
+\
+- English\
+- Persian\
+- SEO\
+- Media Assets\
+- CTA Configuration\
+- Publishing Workflow\
+- Versioning\
+- Audit Logging\
+\
+No business-facing content may be hardcoded.\
+\
+====================================================\
+6.1 HERO SECTION\
+====================================================\
+\
+model HeroSection \{\
+  id                       String   @id @default(uuid())\
+  pageId                   String   @unique\
+\
+  eyebrow_en               String?\
+  eyebrow_fa               String?\
+\
+  headline_en              String\
+  headline_fa              String\
+\
+  subheadline_en           String   @db.Text\
+  subheadline_fa           String   @db.Text\
+\
+  primaryCtaId             String?\
+  secondaryCtaId           String?\
+\
+  heroImageUrl             String?\
+  heroImageAlt_en          String?\
+  heroImageAlt_fa          String?\
+\
+  trustBadgeText_en        String?\
+  trustBadgeText_fa        String?\
+\
+  isActive                 Boolean  @default(true)\
+\
+  createdAt                DateTime @default(now())\
+  updatedAt                DateTime @updatedAt\
+\}\
+\
+Rules:\
+\
+- Hero content must support multilingual rendering.\
+- Hero CTA labels must resolve through CtaConfig.\
+- Hero images must support alt text.\
+- Hero image must be CMS-controlled.\
+- Hero content must support future A/B testing.\
+\
+====================================================\
+6.2 AS SEEN IN\
+====================================================\
+\
+model AsSeenInLogo \{\
+  id              String   @id @default(uuid())\
+\
+  title_en        String\
+  title_fa        String?\
+\
+  imageUrl        String\
+\
+  altText_en      String?\
+  altText_fa      String?\
+\
+  url             String?\
+\
+  sortOrder       Int      @default(0)\
+\
+  isActive        Boolean  @default(true)\
+\
+  createdAt       DateTime @default(now())\
+  updatedAt       DateTime @updatedAt\
+\}\
+\
+Behavior:\
+\
+If URL exists:\
+\
+Clickable\
+\
+If URL does not exist:\
+\
+Non-clickable\
+\
+====================================================\
+6.3 METHODOLOGY\
+====================================================\
+\
+model MethodologyStep \{\
+  id              String   @id @default(uuid())\
+\
+  pageId          String\
+\
+  stepNumber      Int\
+\
+  icon            String?\
+\
+  title_en        String\
+  title_fa        String\
+\
+  description_en  String   @db.Text\
+  description_fa  String   @db.Text\
+\
+  sortOrder       Int      @default(0)\
+\
+  isActive        Boolean  @default(true)\
+\
+  createdAt       DateTime @default(now())\
+  updatedAt       DateTime @updatedAt\
+\}\
+\
+Rules:\
+\
+- Minimum 3 steps\
+- Maximum 5 steps\
+- Sort order controlled by CMS\
+- Step numbers auto-generated\
+\
+====================================================\
+6.4 TESTIMONIALS\
+====================================================\
+\
+model Testimonial \{\
+  id              String   @id @default(uuid())\
+\
+  name            String\
+\
+  role_en         String?\
+  role_fa         String?\
+\
+  company         String?\
+\
+  content_en      String   @db.Text\
+  content_fa      String   @db.Text\
+\
+  rating          Int\
+\
+  avatarUrl       String?\
+\
+  avatarAlt_en    String?\
+  avatarAlt_fa    String?\
+\
+  isFeatured      Boolean  @default(false)\
+\
+  sortOrder       Int      @default(0)\
+\
+  isActive        Boolean  @default(true)\
+\
+  createdAt       DateTime @default(now())\
+  updatedAt       DateTime @updatedAt\
+\}\
+\
+====================================================\
+6.5 VALUE PROPOSITIONS\
+====================================================\
+\
+model ValueProposition \{\
+  id              String   @id @default(uuid())\
+\
+  icon            String?\
+\
+  title_en        String\
+  title_fa        String\
+\
+  description_en  String   @db.Text\
+  description_fa  String   @db.Text\
+\
+  sortOrder       Int      @default(0)\
+\
+  isActive        Boolean  @default(true)\
+\
+  createdAt       DateTime @default(now())\
+  updatedAt       DateTime @updatedAt\
+\}\
+\
+Rules:\
+\
+Homepage must display exactly three active value propositions.\
+\
+====================================================\
+6.6 BRAND PHILOSOPHY\
+====================================================\
+\
+model BrandPhilosophy \{\
+  id              String   @id @default(uuid())\
+\
+  pageId          String   @unique\
+\
+  eyebrow_en      String?\
+  eyebrow_fa      String?\
+\
+  title_en        String\
+  title_fa        String\
+\
+  content_en      String   @db.Text\
+  content_fa      String   @db.Text\
+\
+  imageUrl        String?\
+\
+  imageAlt_en     String?\
+  imageAlt_fa     String?\
+\
+  ctaId           String?\
+\
+  isActive        Boolean  @default(true)\
+\
+  createdAt       DateTime @default(now())\
+  updatedAt       DateTime @updatedAt\
+\}\
+\
+====================================================\
+6.7 SERVICES\
+====================================================\
+\
+model Service \{\
+  id                    String   @id @default(uuid())\
+\
+  slug                  String   @unique\
+\
+  title_en              String\
+  title_fa              String\
+\
+  shortDescription_en   String   @db.Text\
+  shortDescription_fa   String   @db.Text\
+\
+  fullDescription_en    String   @db.Text\
+  fullDescription_fa    String   @db.Text\
+\
+  imageUrl              String?\
+\
+  imageAlt_en           String?\
+  imageAlt_fa           String?\
+\
+  ctaId                 String?\
+\
+  metaTitle_en          String?\
+  metaTitle_fa          String?\
+\
+  metaDescription_en    String? @db.Text\
+  metaDescription_fa    String? @db.Text\
+\
+  isFeatured            Boolean @default(false)\
+\
+  isActive              Boolean @default(true)\
+\
+  sortOrder             Int @default(0)\
+\
+  createdAt             DateTime @default(now())\
+  updatedAt             DateTime @updatedAt\
+\}\
+\
+Rules:\
+\
+- Every service requires a dedicated detail page.\
+- Homepage displays featured services only.\
+- Service pages support independent SEO.\
+\
+====================================================\
+6.8 SUCCESS METRICS\
+====================================================\
+\
+model SuccessMetric \{\
+  id              String   @id @default(uuid())\
+\
+  pageId          String\
+\
+  metricValue     String\
+\
+  metricLabel_en  String\
+  metricLabel_fa  String\
+\
+  sortOrder       Int @default(0)\
+\
+  isActive        Boolean @default(true)\
+\
+  createdAt       DateTime @default(now())\
+  updatedAt       DateTime @updatedAt\
+\}\
+\
+====================================================\
+6.9 CASE STUDIES\
+====================================================\
+\
+model CaseStudy \{\
+  id                    String   @id @default(uuid())\
+\
+  slug                  String   @unique\
+\
+  name                  String\
+\
+  title_en              String\
+  title_fa              String\
+\
+  outcomeBadge_en       String\
+  outcomeBadge_fa       String\
+\
+  story_en              String   @db.Text\
+  story_fa              String   @db.Text\
+\
+  fullStory_en          String?  @db.Text\
+  fullStory_fa          String?  @db.Text\
+\
+  imageUrl              String?\
+\
+  imageAlt_en           String?\
+  imageAlt_fa           String?\
+\
+  ctaId                 String?\
+\
+  metaTitle_en          String?\
+  metaTitle_fa          String?\
+\
+  metaDescription_en    String? @db.Text\
+  metaDescription_fa    String? @db.Text\
+\
+  isFeatured            Boolean @default(false)\
+\
+  isActive              Boolean @default(true)\
+\
+  sortOrder             Int @default(0)\
+\
+  createdAt             DateTime @default(now())\
+  updatedAt             DateTime @updatedAt\
+\}\
+\
+Rules:\
+\
+- Every case study requires a dedicated detail page.\
+- Every featured story may appear on homepage.\
+- Case studies must support SEO.\
+\
+====================================================\
+6.10 FOUNDER MESSAGE\
+====================================================\
+\
+model FounderMessage \{\
+  id              String   @id @default(uuid())\
+\
+  pageId          String   @unique\
+\
+  name_en         String\
+  name_fa         String\
+\
+  title_en        String\
+  title_fa        String\
+\
+  message_en      String   @db.Text\
+  message_fa      String   @db.Text\
+\
+  photoUrl        String?\
+\
+  photoAlt_en     String?\
+  photoAlt_fa     String?\
+\
+  signatureUrl    String?\
+\
+  isActive        Boolean @default(true)\
+\
+  createdAt       DateTime @default(now())\
+  updatedAt       DateTime @updatedAt\
+\}\
+\
+====================================================\
+6.11 TEAM CATEGORIES\
+====================================================\
+\
+model TeamCategory \{\
+  id              String       @id @default(uuid())\
+\
+  slug            String       @unique\
+\
+  title_en        String\
+  title_fa        String\
+\
+  sortOrder       Int          @default(0)\
+\
+  isActive        Boolean      @default(true)\
+\
+  createdAt       DateTime     @default(now())\
+  updatedAt       DateTime     @updatedAt\
+\
+  members         TeamMember[]\
+\}\
+\
+====================================================\
+6.12 TEAM MEMBERS\
+====================================================\
+\
+model TeamMember \{\
+  id              String       @id @default(uuid())\
+\
+  categoryId      String\
+\
+  slug            String       @unique\
+\
+  name_en         String\
+  name_fa         String\
+\
+  role_en         String\
+  role_fa         String\
+\
+  bio_en          String       @db.Text\
+  bio_fa          String       @db.Text\
+\
+  fullBio_en      String?      @db.Text\
+  fullBio_fa      String?      @db.Text\
+\
+  photoUrl        String?\
+\
+  photoAlt_en     String?\
+  photoAlt_fa     String?\
+\
+  linkedinUrl     String?\
+\
+  email           String?\
+\
+  location        String?\
+\
+  specialtyTags   Json?\
+\
+  isActive        Boolean      @default(true)\
+\
+  sortOrder       Int          @default(0)\
+\
+  createdAt       DateTime     @default(now())\
+  updatedAt       DateTime     @updatedAt\
+\
+  category TeamCategory @relation(\
+    fields: [categoryId],\
+    references: [id]\
+  )\
+\}\
+\
+Rules:\
+\
+- Every team member requires a dedicated profile page.\
+- Team member ordering controlled via CMS.\
+\
+====================================================\
+7. EVENTS ARCHITECTURE\
+====================================================\
+\
+Events are a core lead nurturing mechanism.\
+\
+Events must support:\
+\
+- Webinars\
+- Workshops\
+- Information Sessions\
+- Parent Events\
+- Student Events\
+- Online Events\
+- Offline Events\
+\
+====================================================\
+7.1 EVENTS\
+====================================================\
+\
+model Event \{\
+  id                    String        @id @default(uuid())\
+\
+  slug                  String        @unique\
+\
+  title_en              String\
+  title_fa              String\
+\
+  shortDescription_en   String        @db.Text\
+  shortDescription_fa   String        @db.Text\
+\
+  content_en            String        @db.Text\
+  content_fa            String        @db.Text\
+\
+  imageUrl              String?\
+\
+  imageAlt_en           String?\
+  imageAlt_fa           String?\
+\
+  location_en           String?\
+  location_fa           String?\
+\
+  startDate             DateTime\
+  endDate               DateTime?\
+\
+  timezone              String?\
+\
+  registrationUrl       String?\
+\
+  capacity              Int?\
+\
+  eventStatus           EventStatus   @default(DRAFT)\
+\
+  isFeatured            Boolean       @default(false)\
+\
+  metaTitle_en          String?\
+  metaTitle_fa          String?\
+\
+  metaDescription_en    String?       @db.Text\
+  metaDescription_fa    String?       @db.Text\
+\
+  createdAt             DateTime      @default(now())\
+  updatedAt             DateTime      @updatedAt\
+\}\
+\
+Rules:\
+\
+- Every event requires a dedicated detail page.\
+- Events must support independent SEO.\
+- Events must support registration workflows.\
+- Events must support future calendar integrations.\
+\
+====================================================\
+7.2 EVENT REGISTRATIONS\
+====================================================\
+\
+model EventRegistration \{\
+  id                String   @id @default(uuid())\
+\
+  eventId           String\
+\
+  firstName         String\
+  lastName          String\
+\
+  email             String\
+  phone             String?\
+\
+  notes             String? @db.Text\
+\
+  createdAt         DateTime @default(now())\
+\
+  event Event @relation(\
+    fields: [eventId],\
+    references: [id],\
+    onDelete: Cascade\
+  )\
+\}\
+\
+====================================================\
+8. LEAD MANAGEMENT SYSTEM\
+====================================================\
+\
+Lead management is a core business function.\
+\
+All lead capture points must flow into a centralized lead system.\
+\
+Sources include:\
+\
+- Homepage CTA\
+- Contact Forms\
+- Event Registrations\
+- Service Pages\
+- Case Studies\
+- Calendly Flows\
+- Future Commerce Flows\
+\
+====================================================\
+8.1 LEADS\
+====================================================\
+\
+model Lead \{\
+  id                String      @id @default(uuid())\
+\
+  firstName         String\
+  lastName          String\
+\
+  email             String\
+  phone             String?\
+\
+  grade             Grade?\
+\
+  country           String?\
+\
+  source            String?\
+\
+  status            LeadStatus  @default(NEW)\
+\
+  notes             String?     @db.Text\
+\
+  assignedToId      String?\
+\
+  createdAt         DateTime    @default(now())\
+  updatedAt         DateTime    @updatedAt\
+\}\
+\
+====================================================\
+8.2 LEAD TIMELINE\
+====================================================\
+\
+model LeadActivity \{\
+  id                String      @id @default(uuid())\
+\
+  leadId            String\
+\
+  activityType      String\
+\
+  description       String      @db.Text\
+\
+  createdAt         DateTime    @default(now())\
+\}\
+\
+Lead timeline examples:\
+\
+- Lead Created\
+- Email Sent\
+- Phone Call\
+- Consultation Scheduled\
+- Lead Qualified\
+- Lead Converted\
+- Lead Closed\
+\
+====================================================\
+8.3 LEAD ASSIGNMENT\
+====================================================\
+\
+Future-ready lead ownership model:\
+\
+- Unassigned\
+- Assigned to Counselor\
+- Assigned to Team Member\
+- Assigned to Admin\
+\
+Lead ownership must be editable from Admin.\
+\
+====================================================\
+9. CTA MANAGEMENT SYSTEM\
+====================================================\
+\
+All CTA behavior must be centralized.\
+\
+Hardcoded CTA actions are prohibited.\
+\
+====================================================\
+9.1 CTA CONFIGURATION\
+====================================================\
+\
+model CtaConfig \{\
+  id                    String          @id @default(uuid())\
+\
+  internalName          String          @unique\
+\
+  label_en              String\
+  label_fa              String\
+\
+  actionType            CtaActionType\
+\
+  internalUrl           String?\
+\
+  externalUrl           String?\
+\
+  calendlyUrl           String?\
+\
+  calcomUrl             String?\
+\
+  isActive              Boolean         @default(true)\
+\
+  createdAt             DateTime        @default(now())\
+  updatedAt             DateTime        @updatedAt\
+\}\
+\
+Examples:\
+\
+Book Consultation\
+\
+Get Started\
+\
+Schedule Call\
+\
+Register\
+\
+View Details\
+\
+====================================================\
+10. MENU MANAGEMENT SYSTEM\
+====================================================\
+\
+All menus must be CMS-driven.\
+\
+====================================================\
+10.1 MENUS\
+====================================================\
+\
+model Menu \{\
+  id                String      @id @default(uuid())\
+\
+  internalName      String      @unique\
+\
+  createdAt         DateTime    @default(now())\
+  updatedAt         DateTime    @updatedAt\
+\
+  items             MenuItem[]\
+\}\
+\
+====================================================\
+10.2 MENU ITEMS\
+====================================================\
+\
+model MenuItem \{\
+  id                String        @id @default(uuid())\
+\
+  menuId            String\
+\
+  label_en          String\
+  label_fa          String\
+\
+  type              MenuItemType\
+\
+  internalUrl       String?\
+\
+  externalUrl       String?\
+\
+  sectionAnchor     String?\
+\
+  sortOrder         Int           @default(0)\
+\
+  isActive          Boolean       @default(true)\
+\
+  createdAt         DateTime      @default(now())\
+  updatedAt         DateTime      @updatedAt\
+\
+  menu Menu @relation(\
+    fields: [menuId],\
+    references: [id],\
+    onDelete: Cascade\
+  )\
+\}\
+\
+====================================================\
+11. SEO MANAGEMENT SYSTEM\
+====================================================\
+\
+SEO must be fully manageable.\
+\
+====================================================\
+11.1 SEO SETTINGS\
+====================================================\
+\
+model SeoSetting \{\
+  id                      String   @id @default(uuid())\
+\
+  pageId                  String   @unique\
+\
+  metaTitle_en            String?\
+  metaTitle_fa            String?\
+\
+  metaDescription_en      String? @db.Text\
+  metaDescription_fa      String? @db.Text\
+\
+  canonicalUrl            String?\
+\
+  ogImageUrl              String?\
+\
+  noIndex                 Boolean  @default(false)\
+\
+  noFollow                Boolean  @default(false)\
+\
+  structuredData          Json?\
+\
+  createdAt               DateTime @default(now())\
+  updatedAt               DateTime @updatedAt\
+\}\
+\
+====================================================\
+11.2 STRUCTURED DATA\
+====================================================\
+\
+System must support:\
+\
+- Organization Schema\
+- WebPage Schema\
+- Service Schema\
+- Event Schema\
+- FAQPage Schema\
+- AggregateRating Schema\
+- Article Schema\
+- ProfilePage Schema\
+\
+Structured data generation must be dynamic.\
+\
+====================================================\
+12. MEDIA LIBRARY\
+====================================================\
+\
+Media must be centralized.\
+\
+Media must not be scattered across content records.\
+\
+====================================================\
+12.1 MEDIA ASSETS\
+====================================================\
+\
+model MediaAsset \{\
+  id                String      @id @default(uuid())\
+\
+  fileName          String\
+\
+  fileUrl           String\
+\
+  mediaType         MediaType\
+\
+  mimeType          String?\
+\
+  fileSize          Int?\
+\
+  width             Int?\
+  height            Int?\
+\
+  altText_en        String?\
+  altText_fa        String?\
+\
+  createdAt         DateTime    @default(now())\
+  updatedAt         DateTime    @updatedAt\
+\}\
+\
+====================================================\
+12.2 STORAGE ABSTRACTION\
+====================================================\
+\
+Supported Providers:\
+\
+- Local Storage\
+- AWS S3\
+- Cloudflare R2\
+- Supabase Storage\
+\
+Frontend components must never depend directly on provider implementation.\
+\
+Storage replacement must not require UI changes.\
+\
+====================================================\
+13. THEME MANAGEMENT SYSTEM\
+====================================================\
+\
+Theme configuration must be centralized.\
+\
+====================================================\
+13.1 THEME SETTINGS\
+====================================================\
+\
+model ThemeSetting \{\
+  id                      String   @id @default(uuid())\
+\
+  brandName               String\
+\
+  tagline_en              String\
+  tagline_fa              String\
+\
+  primaryLogoUrl          String?\
+  darkLogoUrl             String?\
+  mobileLogoUrl           String?\
+  faviconUrl              String?\
+\
+  primaryColor            String?\
+  accentColor             String?\
+\
+  ctaGradientStart        String?\
+  ctaGradientEnd          String?\
+\
+  socialLinks             Json?\
+\
+  contactInformation      Json?\
+\
+  createdAt               DateTime @default(now())\
+  updatedAt               DateTime @updatedAt\
+\}\
+\
+Rules:\
+\
+- Rebranding must not require code changes.\
+- Theme updates must be global.\
+- Theme updates must be CMS-controlled.\
+\
+====================================================\
+14. ADMIN PANEL ARCHITECTURE\
+====================================================\
+\
+The Admin Panel is the operational control center of the MentorMe platform.\
+\
+The Admin Panel must be:\
+\
+- Secure\
+- Fast\
+- Role-Based\
+- Scalable\
+- Auditable\
+- Multilingual Ready\
+\
+The Admin Panel must follow the UI Design System.\
+\
+====================================================\
+14.1 ADMIN INFORMATION ARCHITECTURE\
+====================================================\
+\
+Dashboard\
+\
+Pages\
+\
+Homepage\
+\
+Services\
+\
+Case Studies\
+\
+Testimonials\
+\
+Team Members\
+\
+Events\
+\
+Leads\
+\
+Media Library\
+\
+Menus\
+\
+CTA Manager\
+\
+Theme Manager\
+\
+SEO\
+\
+Users\
+\
+Audit Logs\
+\
+Settings\
+\
+====================================================\
+14.2 DASHBOARD\
+====================================================\
+\
+Purpose:\
+\
+Operational Visibility\
+\
+Required Widgets:\
+\
+Lead Overview\
+\
+Recent Leads\
+\
+Lead Status Breakdown\
+\
+Upcoming Events\
+\
+Published Content Summary\
+\
+Recent Content Activity\
+\
+System Status\
+\
+Quick Actions\
+\
+Dashboard widgets must be modular.\
+\
+====================================================\
+14.3 HOMEPAGE MANAGER\
+====================================================\
+\
+Homepage management must provide control over:\
+\
+Hero\
+\
+As Seen In\
+\
+Methodology\
+\
+Why Clients Choose Us\
+\
+Brand Philosophy\
+\
+Services\
+\
+Success Stories\
+\
+Founder Message\
+\
+Team\
+\
+Events\
+\
+Final CTA\
+\
+Footer\
+\
+Rules:\
+\
+Homepage order must remain aligned with:\
+\
+MASTER WEBSITE SPECIFICATION\
+\
+Homepage trust-flow order must not be breakable.\
+\
+====================================================\
+14.4 CONTENT WORKFLOW\
+====================================================\
+\
+Supported Workflow:\
+\
+Draft\
+\
+\uc0\u8595 \
+\
+Review\
+\
+\uc0\u8595 \
+\
+Published\
+\
+\uc0\u8595 \
+\
+Archived\
+\
+Content publishing must support:\
+\
+Preview\
+\
+Publish\
+\
+Unpublish\
+\
+Archive\
+\
+Rollback\
+\
+====================================================\
+14.5 ROLE PERMISSIONS\
+====================================================\
+\
+ADMIN\
+\
+Full Access\
+\
+----------------------------------------------------\
+\
+EDITOR\
+\
+Content Management\
+\
+Media Management\
+\
+Lead Management\
+\
+SEO Management\
+\
+No User Management\
+\
+----------------------------------------------------\
+\
+VIEWER\
+\
+Read Only\
+\
+No Content Changes\
+\
+No Publishing Rights\
+\
+====================================================\
+15. API ARCHITECTURE\
+====================================================\
+\
+All APIs must be implemented.\
+\
+Placeholder APIs are prohibited.\
+\
+====================================================\
+15.1 PUBLIC API ENDPOINTS\
+====================================================\
+\
+GET\
+\
+/api/homepage\
+\
+----------------------------------------------------\
+\
+GET\
+\
+/api/services\
+\
+----------------------------------------------------\
+\
+GET\
+\
+/api/services/[slug]\
+\
+----------------------------------------------------\
+\
+GET\
+\
+/api/case-studies\
+\
+----------------------------------------------------\
+\
+GET\
+\
+/api/case-studies/[slug]\
+\
+----------------------------------------------------\
+\
+GET\
+\
+/api/team\
+\
+----------------------------------------------------\
+\
+GET\
+\
+/api/team/[slug]\
+\
+----------------------------------------------------\
+\
+GET\
+\
+/api/events\
+\
+----------------------------------------------------\
+\
+GET\
+\
+/api/events/[slug]\
+\
+----------------------------------------------------\
+\
+POST\
+\
+/api/leads\
+\
+====================================================\
+15.2 ADMIN API ENDPOINTS\
+====================================================\
+\
+GET\
+\
+/api/admin/leads\
+\
+PATCH\
+\
+/api/admin/leads\
+\
+----------------------------------------------------\
+\
+POST\
+\
+/api/admin/content\
+\
+PATCH\
+\
+/api/admin/content\
+\
+DELETE\
+\
+/api/admin/content\
+\
+----------------------------------------------------\
+\
+POST\
+\
+/api/admin/menu\
+\
+PATCH\
+\
+/api/admin/menu\
+\
+DELETE\
+\
+/api/admin/menu\
+\
+----------------------------------------------------\
+\
+POST\
+\
+/api/admin/theme\
+\
+PATCH\
+\
+/api/admin/theme\
+\
+----------------------------------------------------\
+\
+POST\
+\
+/api/admin/seo\
+\
+PATCH\
+\
+/api/admin/seo\
+\
+----------------------------------------------------\
+\
+POST\
+\
+/api/media\
+\
+DELETE\
+\
+/api/media\
+\
+====================================================\
+15.3 API RESPONSE CONTRACT\
+====================================================\
+\
+SUCCESS\
+\
+\{\
+  "status": "success",\
+  "data": \{\}\
+\}\
+\
+----------------------------------------------------\
+\
+ERROR\
+\
+\{\
+  "status": "error",\
+  "error": \{\
+    "code": "ERROR_CODE",\
+    "message": "Human Readable Message",\
+    "timestamp": "ISO_DATE",\
+    "details": []\
+  \}\
+\}\
+\
+====================================================\
+16. VALIDATION ARCHITECTURE\
+====================================================\
+\
+Validation Library:\
+\
+Zod\
+\
+Validation is mandatory.\
+\
+====================================================\
+16.1 REQUIRED VALIDATION AREAS\
+====================================================\
+\
+Authentication\
+\
+Users\
+\
+Leads\
+\
+Services\
+\
+Case Studies\
+\
+Events\
+\
+Homepage Content\
+\
+Menus\
+\
+Theme Settings\
+\
+SEO Settings\
+\
+Media Uploads\
+\
+CTA Configuration\
+\
+====================================================\
+17. SECURITY ARCHITECTURE\
+====================================================\
+\
+Security is mandatory.\
+\
+====================================================\
+17.1 AUTHENTICATION\
+====================================================\
+\
+Framework:\
+\
+NextAuth.js v5 (Auth.js)\
+\
+Requirements:\
+\
+Secure Sessions\
+\
+Role Enforcement\
+\
+Session Validation\
+\
+Server-Side Protection\
+\
+====================================================\
+17.2 PASSWORD SECURITY\
+====================================================\
+\
+Passwords must be:\
+\
+Hashed\
+\
+Salted\
+\
+Never stored in plain text\
+\
+====================================================\
+17.3 AUTHORIZATION\
+====================================================\
+\
+RBAC is mandatory.\
+\
+Permissions must be enforced:\
+\
+Server Side\
+\
+API Side\
+\
+Admin Side\
+\
+====================================================\
+17.4 SECURITY HEADERS\
+====================================================\
+\
+Required Support:\
+\
+Content-Security-Policy\
+\
+X-Frame-Options\
+\
+X-Content-Type-Options\
+\
+Referrer-Policy\
+\
+Permissions-Policy\
+\
+Strict-Transport-Security\
+\
+====================================================\
+17.5 RATE LIMITING\
+====================================================\
+\
+Required Areas:\
+\
+Lead Submission\
+\
+Authentication\
+\
+Media Uploads\
+\
+Admin APIs\
+\
+====================================================\
+18. OBSERVABILITY\
+====================================================\
+\
+Required Systems:\
+\
+Error Monitoring\
+\
+Performance Monitoring\
+\
+Structured Logging\
+\
+====================================================\
+18.1 ERROR TRACKING\
+====================================================\
+\
+Sentry\
+\
+====================================================\
+18.2 LOGGING\
+====================================================\
+\
+Supported:\
+\
+Pino\
+\
+or\
+\
+Winston\
+\
+====================================================\
+\
+Required Log Types:\
+\
+Authentication Events\
+\
+Lead Events\
+\
+Publishing Events\
+\
+System Errors\
+\
+Permission Changes\
+\
+====================================================\
+19. CACHING ARCHITECTURE\
+====================================================\
+\
+Homepage:\
+\
+ISR\
+\
+====================================================\
+\
+Revalidation Window:\
+\
+60 Seconds\
+\
+====================================================\
+\
+Publishing Actions Must Trigger:\
+\
+revalidatePath()\
+\
+or\
+\
+revalidateTag()\
+\
+====================================================\
+19.1 FUTURE CACHE SUPPORT\
+====================================================\
+\
+Redis\
+\
+Edge Cache\
+\
+Distributed Cache\
+\
+====================================================\
+20. SEED DATA REQUIREMENTS\
+====================================================\
+\
+The project must include working seed data.\
+\
+====================================================\
+20.1 REQUIRED SEEDED CONTENT\
+====================================================\
+\
+Admin User\
+\
+Editor User\
+\
+Viewer User\
+\
+Theme Settings\
+\
+Homepage Content\
+\
+Logos\
+\
+Methodology Steps\
+\
+Testimonials\
+\
+Value Propositions\
+\
+Services\
+\
+Case Studies\
+\
+Founder Message\
+\
+Team Members\
+\
+Events\
+\
+Menus\
+\
+CTA Configurations\
+\
+SEO Settings\
+\
+Sample Leads\
+\
+====================================================\
+20.2 DEFAULT SEEDED USERS\
+====================================================\
+\
+Admin\
+\
+email:\
+\
+admin@example.com\
+\
+password:\
+\
+Admin12345!\
+\
+----------------------------------------------------\
+\
+Editor\
+\
+email:\
+\
+editor@example.com\
+\
+password:\
+\
+Editor12345!\
+\
+----------------------------------------------------\
+\
+Viewer\
+\
+email:\
+\
+viewer@example.com\
+\
+password:\
+\
+Viewer12345!\
+\
+Passwords must be hashed during seeding.\
+\
+====================================================\
+21. FUTURE PORTAL ARCHITECTURE\
+====================================================\
+\
+Version 1 does not implement:\
+\
+Customer Portal\
+\
+Parent Portal\
+\
+Student Portal\
+\
+====================================================\
+\
+However the database and CMS must remain compatible with future:\
+\
+/portal\
+\
+/portal/student\
+\
+/portal/parent\
+\
+/customer\
+\
+/student\
+\
+/parent\
+\
+====================================================\
+21.1 FUTURE PORTAL MODELS (RESERVED)\
+====================================================\
+\
+Reserved For Future:\
+\
+Student\
+\
+Parent\
+\
+Consultation\
+\
+PortalNotification\
+\
+PortalDocument\
+\
+PortalTask\
+\
+PortalMessage\
+\
+PortalActivity\
+\
+No redesign should be required later.\
+\
+====================================================\
+22. FUTURE COMMERCE ARCHITECTURE\
+====================================================\
+\
+Version 1 does not implement:\
+\
+Checkout\
+\
+Payments\
+\
+Invoices\
+\
+Subscriptions\
+\
+Orders\
+\
+====================================================\
+\
+However architecture must remain compatible with future:\
+\
+Package Catalog\
+\
+Checkout\
+\
+Order Management\
+\
+Payment Processing\
+\
+Invoices\
+\
+Subscription Billing\
+\
+Customer Accounts\
+\
+Purchased Services\
+\
+Digital Products\
+\
+====================================================\
+22.1 FUTURE COMMERCE MODELS (RESERVED)\
+====================================================\
+\
+Reserved For Future:\
+\
+Product\
+\
+Package\
+\
+Order\
+\
+Invoice\
+\
+Payment\
+\
+Subscription\
+\
+DiscountCode\
+\
+CustomerAccount\
+\
+PurchasedService\
+\
+No redesign should be required later.\
+\
+====================================================\
+23. DEPLOYMENT REQUIREMENTS\
+====================================================\
+\
+The final implementation must include:\
+\
+.env.example\
+\
+Installation Guide\
+\
+Migration Guide\
+\
+Seed Guide\
+\
+Deployment Guide\
+\
+====================================================\
+23.1 SUPPORTED DEPLOYMENTS\
+====================================================\
+\
+Vercel\
+\
+AWS\
+\
+Docker Environments\
+\
+====================================================\
+24. ACCEPTANCE CRITERIA\
+====================================================\
+\
+The architecture is accepted only if:\
+\
+npx prisma generate works\
+\
+npx prisma migrate dev works\
+\
+npx prisma db seed works\
+\
+npm run dev works\
+\
+npm run build works\
+\
+====================================================\
+\
+No Prisma Errors\
+\
+No TypeScript Errors\
+\
+No Routing Errors\
+\
+No Missing Models\
+\
+No Missing APIs\
+\
+No Missing Admin Pages\
+\
+====================================================\
+\
+CMS Works\
+\
+Lead Management Works\
+\
+Theme Management Works\
+\
+Menu Management Works\
+\
+SEO Management Works\
+\
+Media Library Works\
+\
+Audit Logging Works\
+\
+RBAC Works\
+\
+Multilingual Content Works\
+\
+====================================================\
+\
+Homepage Content Is Database Driven\
+\
+No Business Content Is Hardcoded\
+\
+====================================================\
+25. FINAL ARCHITECTURAL PRINCIPLE\
+====================================================\
+\
+This CMS is not a page editor.\
+\
+This CMS is not a blog system.\
+\
+This CMS is not a simple admin dashboard.\
+\
+====================================================\
+\
+This CMS is the operational backbone of the MentorMe platform.\
+\
+It must allow non-technical users to:\
+\
+Manage Content\
+\
+Manage Leads\
+\
+Manage SEO\
+\
+Manage Branding\
+\
+Manage Menus\
+\
+Manage CTAs\
+\
+Manage Media\
+\
+Manage Events\
+\
+Manage Team Members\
+\
+Manage Services\
+\
+Manage Case Studies\
+\
+Without requiring developer intervention.\
+\
+====================================================\
+\
+Every architectural decision must support:\
+\
+Trust\
+\
+Clarity\
+\
+Scalability\
+\
+Maintainability\
+\
+Auditability\
+\
+Future Expansion\
+\
+====================================================\
+\
+If a design decision reduces:\
+\
+Trust\
+\
+Maintainability\
+\
+Scalability\
+\
+Future Readiness\
+\
+It must be rejected.\
+\
+====================================================\
+END OF DOCUMENT\
+\
+CMS + ADMIN PANEL + DATABASE ARCHITECTURE\
+VERSION 2.0 FINAL}

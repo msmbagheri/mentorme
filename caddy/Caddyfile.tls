@@ -1,0 +1,24 @@
+{
+	auto_https off
+}
+
+# HTTP: سرو چالش ACME (text/plain، بدون ریدایرکت) + ریدایرکت بقیه به HTTPS
+http://mentorme.ir, http://www.mentorme.ir, http://185.164.73.133 {
+	handle /.well-known/acme-challenge/* {
+		root * /srv/acme
+		header Content-Type text/plain
+		file_server
+	}
+	handle {
+		redir https://{host}{uri} permanent
+	}
+}
+
+# HTTPS origin
+https://mentorme.ir, https://www.mentorme.ir {
+	tls /certs/fullchain.pem /certs/privkey.pem
+	encode zstd gzip
+	reverse_proxy app:3000 {
+		header_up X-Forwarded-Proto https
+	}
+}

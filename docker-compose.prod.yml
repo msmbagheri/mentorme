@@ -1,0 +1,76 @@
+# MentorMe — production stack for the VPS, run under Podman via the docker-compat socket.
+# Uses PRE-LOADED images (no build on the server; docker.com is unreachable from Iran).
+# Images are produced locally (`docker save`) and imported with `podman load`.
+#
+# Deploy (from /opt/mentorme on the server):
+#   export DOCKER_HOST=unix:///run/podman/podman.sock
+#   docker compose --env-file .env.production -f docker-compose.prod.yml up -d
+#   docker compose --env-file .env.production -f docker-compose.prod.yml --profile seed run --rm seed   # first deploy only
+
+services:
+  db:
+    image: postgres:16-bookworm
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  migrate:
+    image: mentorme-migrate:latest
+    env_file: .env.production
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  # One-off seeding — does NOT run automatically. Run on first deploy only.
+  seed:
+    image: mentorme-migrate:latest
+    env_file: .env.production
+    command: ["npx", "prisma", "db", "seed"]
+    profiles: ["seed"]
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  app:
+    image: mentorme-app:latest
+    env_file: .env.production
+    expose:
+      - "3000"
+    volumes:
+      - uploads:/app/public/uploads
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro,Z
+      - ./acme:/srv/acme:Z          # ACME HTTP-01 challenge webroot (cert issued off-box)
+      - ./certs:/certs:ro,Z         # manual LE cert + key for origin :443
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - app
+
+volumes:
+  db-data:
+  uploads:
+  caddy-data:
+  caddy-config:
