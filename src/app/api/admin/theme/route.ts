@@ -37,6 +37,10 @@ async function save(req: NextRequest) {
     accentColor: data.accentColor ?? null,
     ctaGradientStart: data.ctaGradientStart ?? null,
     ctaGradientEnd: data.ctaGradientEnd ?? null,
+    fontFamilyLatin: data.fontFamilyLatin ?? null,
+    fontFamilyPersian: data.fontFamilyPersian ?? null,
+    fontUrlLatin: data.fontUrlLatin ?? null,
+    fontUrlPersian: data.fontUrlPersian ?? null,
     socialLinks: (data.socialLinks ?? undefined) as Prisma.InputJsonValue | undefined,
     contactInformation: (data.contactInformation ?? undefined) as
       | Prisma.InputJsonValue

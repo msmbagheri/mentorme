@@ -1,50 +1,32 @@
 {
   "permissions": {
+    "defaultMode": "acceptEdits",
     "allow": [
-      "Bash(ssh:*)",
-      "Bash(scp:*)",
-      "Bash(rsync:*)",
-      "Bash(ssh-keygen:*)",
-      "Bash(ssh-copy-id:*)",
-      "Bash(docker:*)",
-      "Bash(docker compose:*)",
-      "Bash(curl:*)",
-      "Bash(wget:*)",
-      "Bash(dig:*)",
-      "Bash(nslookup:*)",
-      "Bash(host:*)",
-      "Bash(ping:*)",
-      "Bash(python3:*)",
-      "Bash(npm run *)",
-      "Bash(npx prisma*)",
-      "Bash(npx tsc*)",
-      "Bash(openssl rand*)",
-      "Bash(ls:*)",
-      "Bash(cat:*)",
-      "Bash(head:*)",
-      "Bash(tail:*)",
-      "Bash(grep:*)",
-      "Bash(rg:*)",
-      "Bash(find:*)",
-      "Bash(echo:*)",
-      "Bash(sed:*)",
-      "Bash(awk:*)",
-      "Bash(which:*)",
-      "Bash(test:*)",
-      "Bash(true)",
-      "Bash(sleep:*)"
+      "Bash",
+      "Edit",
+      "Write",
+      "Read",
+      "WebFetch",
+      "WebSearch"
     ],
     "ask": [
-      "Bash(rm -rf:*)",
-      "Bash(rm -fr:*)",
+      "Bash(docker system prune:*)",
+      "Bash(docker volume rm:*)",
+      "Bash(docker volume prune:*)",
+      "Bash(git push:*)"
+    ],
+    "deny": [
+      "Bash(rm -rf /:*)",
+      "Bash(rm -rf /)",
+      "Bash(rm -rf ~:*)",
+      "Bash(rm -fr /:*)",
       "Bash(sudo rm:*)",
       "Bash(mkfs:*)",
       "Bash(dd:*)",
       "Bash(shutdown:*)",
       "Bash(reboot:*)",
-      "Bash(docker system prune:*)",
-      "Bash(docker volume rm:*)",
-      "Bash(docker volume prune:*)"
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)"
     ]
   }
 }

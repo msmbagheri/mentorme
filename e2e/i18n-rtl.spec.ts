@@ -24,8 +24,14 @@ test.describe("Internationalization (EN/FA) + RTL", () => {
 
   test("locale switcher toggles EN <-> FA", async ({ page }) => {
     await page.goto("/en");
-    // The switcher is a <button> with a Persian aria-label on the EN page.
-    const toFa = page.getByRole("button", { name: "تغییر زبان به فارسی" }).first();
+    // The switcher is a <button> with a Persian aria-label on the EN page. On
+    // mobile it lives inside the hamburger overlay, so open that first if needed.
+    const anySwitcher = page.getByRole("button", { name: "تغییر زبان به فارسی" }).first();
+    if (!(await anySwitcher.isVisible())) {
+      await page.locator('[aria-controls="mobile-menu"]').click();
+      await expect(page.locator("#mobile-menu")).toBeVisible();
+    }
+    const toFa = page.getByRole("button", { name: "تغییر زبان به فارسی" }).filter({ visible: true }).first();
     await expect(toFa).toBeVisible();
     await toFa.click();
     await expect(page).toHaveURL(/\/fa(\/|$)/);

@@ -27,6 +27,10 @@ interface ThemeState {
   accentColor: string;
   ctaGradientStart: string;
   ctaGradientEnd: string;
+  fontFamilyLatin: string;
+  fontFamilyPersian: string;
+  fontUrlLatin: string;
+  fontUrlPersian: string;
   socialLinks: SocialLink[];
   contactInformation: { email: string; phone: string; address: string; hours: string };
 }
@@ -61,6 +65,10 @@ export function ThemeEditor({
           accentColor: state.accentColor || null,
           ctaGradientStart: state.ctaGradientStart || null,
           ctaGradientEnd: state.ctaGradientEnd || null,
+          fontFamilyLatin: state.fontFamilyLatin || null,
+          fontFamilyPersian: state.fontFamilyPersian || null,
+          fontUrlLatin: state.fontUrlLatin || null,
+          fontUrlPersian: state.fontUrlPersian || null,
           socialLinks: state.socialLinks.filter((s) => s.platform && s.url),
           contactInformation: state.contactInformation,
         }),
@@ -122,6 +130,46 @@ export function ThemeEditor({
             <ColorField label="Accent" value={state.accentColor} onChange={(v) => set("accentColor", v)} disabled={!canWrite} />
             <ColorField label="CTA gradient start" value={state.ctaGradientStart} onChange={(v) => set("ctaGradientStart", v)} disabled={!canWrite} />
             <ColorField label="CTA gradient end" value={state.ctaGradientEnd} onChange={(v) => set("ctaGradientEnd", v)} disabled={!canWrite} />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex-row items-center justify-between">
+            <CardTitle className="text-h4">Typography</CardTitle>
+            {canWrite ? (
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() =>
+                  setState((p) => ({
+                    ...p,
+                    fontFamilyPersian: "Vazirmatn",
+                    fontUrlPersian:
+                      "https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css",
+                  }))
+                }
+              >
+                Use Vazirmatn (FA)
+              </Button>
+            ) : null}
+          </CardHeader>
+          <CardContent className="grid gap-4 sm:grid-cols-2">
+            <Field label="Latin font family (en)" htmlFor="font-latin" hint="e.g. Inter, Poppins">
+              <Input id="font-latin" dir="ltr" value={state.fontFamilyLatin} disabled={!canWrite}
+                onChange={(e) => set("fontFamilyLatin", e.target.value)} placeholder="Inter" />
+            </Field>
+            <Field label="Persian font family (fa)" htmlFor="font-fa" hint="e.g. Vazirmatn, IRANSansX">
+              <Input id="font-fa" dir="ltr" value={state.fontFamilyPersian} disabled={!canWrite}
+                onChange={(e) => set("fontFamilyPersian", e.target.value)} placeholder="Vazirmatn" />
+            </Field>
+            <Field label="Latin font URL" htmlFor="font-latin-url" hint="@font-face CSS or font file (optional)">
+              <Input id="font-latin-url" dir="ltr" value={state.fontUrlLatin} disabled={!canWrite}
+                onChange={(e) => set("fontUrlLatin", e.target.value)} placeholder="https://…" />
+            </Field>
+            <Field label="Persian font URL" htmlFor="font-fa-url" hint="@font-face CSS or font file (optional)">
+              <Input id="font-fa-url" dir="ltr" value={state.fontUrlPersian} disabled={!canWrite}
+                onChange={(e) => set("fontUrlPersian", e.target.value)} placeholder="https://…" />
+            </Field>
           </CardContent>
         </Card>
 

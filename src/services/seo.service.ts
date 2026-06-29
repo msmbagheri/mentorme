@@ -1,4 +1,5 @@
 import "server-only";
+import { revalidatePath } from "next/cache";
 import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { pick } from "@/lib/i18n";
@@ -68,9 +69,12 @@ export async function upsertSeoSetting(
   pageId: string,
   data: Omit<Prisma.SeoSettingUncheckedCreateInput, "pageId">,
 ) {
-  return prisma.seoSetting.upsert({
+  const result = await prisma.seoSetting.upsert({
     where: { pageId },
     update: data,
     create: { pageId, ...data },
   });
+  // SEO metadata is emitted into <head> on every ISR page — revalidate site-wide.
+  revalidatePath("/", "layout");
+  return result;
 }

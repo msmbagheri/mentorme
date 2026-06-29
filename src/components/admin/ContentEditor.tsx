@@ -14,7 +14,8 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { apiClient, runMutation } from "@/lib/admin-client";
+import { apiClient, runMutation, ApiClientError } from "@/lib/admin-client";
+import { toast } from "@/components/ui/use-toast";
 import { formatDate } from "@/lib/utils";
 import {
   Field,
@@ -41,6 +42,7 @@ export function ContentEditor({
   canWrite,
   canPublish,
   selectOptions,
+  createDefaults,
 }: {
   config: ContentModuleConfig;
   record: Values | null;
@@ -49,18 +51,22 @@ export function ContentEditor({
   canWrite: boolean;
   canPublish: boolean;
   selectOptions: Record<string, { value: string; label: string }[]>;
+  /** Server-supplied fields injected only on create (e.g. the homepage pageId). */
+  createDefaults?: Record<string, unknown>;
 }) {
   const router = useRouter();
   const isNew = !record?.id;
   const [values, setValues] = React.useState<Values>({});
   const [saving, setSaving] = React.useState(false);
   const [versions, setVersions] = React.useState<VersionRow[] | null>(null);
+  const [fieldErrors, setFieldErrors] = React.useState<{ path: string; message: string }[]>([]);
 
   React.useEffect(() => {
     if (!open) return;
     const base: Values = { ...(record ?? {}) };
     setValues(base);
     setVersions(null);
+    setFieldErrors([]);
   }, [open, record]);
 
   const set = (key: string, value: unknown) =>
@@ -98,21 +104,31 @@ export function ContentEditor({
 
   async function save() {
     setSaving(true);
-    const payload = buildPayload();
+    setFieldErrors([]);
+    // On create, merge server-supplied defaults (e.g. pageId) under the form values.
+    const payload = isNew ? { ...createDefaults, ...buildPayload() } : buildPayload();
     const body = isNew
       ? { entityType: config.entityType, data: payload }
       : { entityType: config.entityType, action: "update", data: { id: record!.id, ...payload } };
-    const res = await runMutation(
-      () =>
-        isNew
-          ? apiClient.post("/api/admin/content", body)
-          : apiClient.patch("/api/admin/content", body),
-      { success: `${config.singular} saved`, error: "Could not save" },
-    );
-    setSaving(false);
-    if (res) {
+    try {
+      await (isNew
+        ? apiClient.post("/api/admin/content", body)
+        : apiClient.patch("/api/admin/content", body));
+      toast({ title: `${config.singular} saved`, variant: "success" });
       onOpenChange(false);
       router.refresh();
+    } catch (err) {
+      // Surface Zod field errors inline; fall back to a toast for the rest.
+      if (err instanceof ApiClientError && Array.isArray(err.details)) {
+        setFieldErrors(err.details as { path: string; message: string }[]);
+      }
+      toast({
+        title: "Could not save",
+        description: err instanceof Error ? err.message : "Something went wrong.",
+        variant: "error",
+      });
+    } finally {
+      setSaving(false);
     }
   }
 
@@ -361,6 +377,20 @@ export function ContentEditor({
               </ul>
             ) : null}
           </div>
+        ) : null}
+
+        {fieldErrors.length > 0 ? (
+          <ul
+            role="alert"
+            data-testid="form-errors"
+            className="flex flex-col gap-1 rounded-[var(--radius-md)] border border-[var(--color-error)] bg-[var(--color-error-soft)] p-3 text-small text-[var(--color-error)]"
+          >
+            {fieldErrors.map((e, i) => (
+              <li key={`${e.path}-${i}`}>
+                <span className="font-semibold">{e.path || "form"}:</span> {e.message}
+              </li>
+            ))}
+          </ul>
         ) : null}
 
         <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[var(--color-border)] pt-4">

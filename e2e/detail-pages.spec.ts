@@ -13,7 +13,9 @@ test.describe("Detail pages", () => {
     test(`renders ${p.url}`, async ({ page }) => {
       const res = await page.goto(p.url);
       expect(res?.status()).toBe(200);
-      await expect(page.getByText(p.needle).first()).toBeVisible();
+      // Scope to main content so the needle doesn't match hidden nav/menu text
+      // (the mobile header keeps nav links in a collapsed overlay).
+      await expect(page.locator("#main-content").getByText(p.needle).first()).toBeVisible();
       await expect(page.getByRole("contentinfo")).toBeVisible(); // footer present
     });
   }

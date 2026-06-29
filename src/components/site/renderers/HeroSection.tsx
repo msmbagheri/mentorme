@@ -37,7 +37,7 @@ export function HeroSection({ data, locale }: HeroSectionProps) {
           )}
 
           {(data.primaryCta || data.secondaryCta) && (
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+            <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center">
               {data.primaryCta && (
                 <CtaButton cta={data.primaryCta} variant="cta" size="lg" />
               )}

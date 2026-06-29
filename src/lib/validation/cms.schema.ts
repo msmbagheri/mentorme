@@ -8,7 +8,25 @@ const slug = z
   .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Use lowercase letters, numbers and hyphens.");
 const optStr = z.string().max(2000).optional().or(z.literal("")).nullable();
 const optShort = z.string().max(300).optional().or(z.literal("")).nullable();
-const url = z.string().url().optional().or(z.literal("")).nullable();
+// Accepts a full http(s) URL OR an uploaded-media reference — and only the two
+// media paths the app actually serves (/uploads/… or /api/media/file/…), not an
+// arbitrary relative string. A strict .url() would reject every image-bearing
+// update because forms resend the existing relative image path on save.
+const MEDIA_PATH = /^\/(uploads|api\/media\/file)\//;
+const isUrlOrMediaPath = (v: string) =>
+  v === "" || /^https?:\/\//i.test(v) || MEDIA_PATH.test(v);
+const url = z
+  .string()
+  .max(500)
+  .refine(isUrlOrMediaPath, "Enter a full URL or pick an uploaded file.")
+  .optional()
+  .or(z.literal(""))
+  .nullable();
+const requiredMediaUrl = z
+  .string()
+  .min(1)
+  .max(500)
+  .refine(isUrlOrMediaPath, "Enter a full URL or pick an uploaded file.");
 const cuid = z.string().uuid();
 
 const CONTENT_STATUS = ["DRAFT", "IN_REVIEW", "PUBLISHED", "ARCHIVED"] as const;
@@ -280,7 +298,7 @@ export const footerUpdateSchema = withId(footerCreateSchema.partial().shape);
 export const asSeenInCreateSchema = z.object({
   title_en: z.string().min(1).max(160),
   title_fa: optShort,
-  imageUrl: z.string().url(),
+  imageUrl: requiredMediaUrl,
   altText_en: optShort,
   altText_fa: optShort,
   url: url,

@@ -1,6 +1,12 @@
 import "server-only";
+import { revalidatePath } from "next/cache";
 import type { MenuItem, MenuItemType } from "@prisma/client";
 import { prisma } from "@/lib/db";
+
+/** Menus drive the header/footer nav rendered in the root layout site-wide. */
+function revalidateMenus() {
+  revalidatePath("/", "layout");
+}
 import { pick } from "@/lib/i18n";
 import type { AppLocale } from "@/types/locale";
 import type { MenuItemDTO } from "@/types/cms";
@@ -75,11 +81,15 @@ export async function getMenuRaw(internalName: string) {
 }
 
 export async function createMenu(internalName: string) {
-  return prisma.menu.create({ data: { internalName } });
+  const menu = await prisma.menu.create({ data: { internalName } });
+  revalidateMenus();
+  return menu;
 }
 
 export async function deleteMenu(id: string) {
-  return prisma.menu.delete({ where: { id } });
+  const result = await prisma.menu.delete({ where: { id } });
+  revalidateMenus();
+  return result;
 }
 
 export async function createMenuItem(data: {
@@ -93,7 +103,9 @@ export async function createMenuItem(data: {
   sortOrder?: number;
   isActive?: boolean;
 }) {
-  return prisma.menuItem.create({ data });
+  const item = await prisma.menuItem.create({ data });
+  revalidateMenus();
+  return item;
 }
 
 export async function updateMenuItem(
@@ -109,9 +121,13 @@ export async function updateMenuItem(
     isActive: boolean;
   }>,
 ) {
-  return prisma.menuItem.update({ where: { id }, data });
+  const item = await prisma.menuItem.update({ where: { id }, data });
+  revalidateMenus();
+  return item;
 }
 
 export async function deleteMenuItem(id: string) {
-  return prisma.menuItem.delete({ where: { id } });
+  const result = await prisma.menuItem.delete({ where: { id } });
+  revalidateMenus();
+  return result;
 }

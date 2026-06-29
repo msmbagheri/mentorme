@@ -2,7 +2,18 @@ import { z } from "zod";
 
 const optStr = z.string().max(2000).optional().or(z.literal("")).nullable();
 const optShort = z.string().max(300).optional().or(z.literal("")).nullable();
-const optUrl = z.string().url().optional().or(z.literal("")).nullable();
+// Accept a full URL or an uploaded-media path the app serves (/uploads/… or
+// /api/media/file/…) — OG image references are relative; not an arbitrary string.
+const optUrl = z
+  .string()
+  .max(500)
+  .refine(
+    (v) => v === "" || /^https?:\/\//i.test(v) || /^\/(uploads|api\/media\/file)\//.test(v),
+    "Enter a full URL or pick an uploaded file.",
+  )
+  .optional()
+  .or(z.literal(""))
+  .nullable();
 
 export const seoUpsertSchema = z.object({
   pageId: z.string().uuid(),

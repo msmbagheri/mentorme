@@ -15,6 +15,8 @@ npm-debug.log*
 
 # e2e
 playwright-report
+playwright-report-local
+playwright-report-prod
 test-results
 /.playwright
 

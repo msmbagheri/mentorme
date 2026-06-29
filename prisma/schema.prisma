@@ -751,6 +751,12 @@ model ThemeSetting {
   accentColor        String?
   ctaGradientStart   String?
   ctaGradientEnd     String?
+  // Typography — bilingual. Family names apply to Latin (en) and Persian (fa)
+  // text; optional URLs load a custom/self-hosted webfont via @font-face.
+  fontFamilyLatin    String?
+  fontFamilyPersian  String?
+  fontUrlLatin       String?
+  fontUrlPersian     String?
   socialLinks        Json?
   contactInformation Json?
   createdAt          DateTime @default(now())

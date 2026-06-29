@@ -52,6 +52,10 @@ export default async function ThemeAdminPage() {
         accentColor: theme?.accentColor ?? "",
         ctaGradientStart: theme?.ctaGradientStart ?? "",
         ctaGradientEnd: theme?.ctaGradientEnd ?? "",
+        fontFamilyLatin: theme?.fontFamilyLatin ?? "",
+        fontFamilyPersian: theme?.fontFamilyPersian ?? "",
+        fontUrlLatin: theme?.fontUrlLatin ?? "",
+        fontUrlPersian: theme?.fontUrlPersian ?? "",
         socialLinks: asSocialLinks(theme?.socialLinks),
         contactInformation: asContact(theme?.contactInformation),
       }}

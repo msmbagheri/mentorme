@@ -37,6 +37,7 @@ export function ContentList({
   canPublish,
   canDelete,
   selectOptions = {},
+  createDefaults,
 }: {
   config: ContentModuleConfig;
   rows: Row[];
@@ -44,6 +45,7 @@ export function ContentList({
   canPublish: boolean;
   canDelete: boolean;
   selectOptions?: Record<string, { value: string; label: string }[]>;
+  createDefaults?: Record<string, unknown>;
 }) {
   const router = useRouter();
   const [search, setSearch] = React.useState("");
@@ -213,6 +215,7 @@ export function ContentList({
           canWrite={canWrite}
           canPublish={canPublish}
           selectOptions={selectOptions}
+          createDefaults={createDefaults}
         />
       ) : null}
 

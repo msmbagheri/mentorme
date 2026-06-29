@@ -1,6 +1,12 @@
 import "server-only";
+import { revalidatePath } from "next/cache";
 import type { CtaConfig } from "@prisma/client";
 import { prisma } from "@/lib/db";
+
+/** CTAs are rendered on the homepage and detail pages site-wide. */
+function revalidateCtas() {
+  revalidatePath("/", "layout");
+}
 import { pick } from "@/lib/i18n";
 import type { AppLocale } from "@/types/locale";
 import type { CtaDTO } from "@/types/cms";
@@ -113,7 +119,9 @@ export async function createCta(data: {
   assetUrl?: string | null;
   isActive?: boolean;
 }) {
-  return prisma.ctaConfig.create({ data });
+  const cta = await prisma.ctaConfig.create({ data });
+  revalidateCtas();
+  return cta;
 }
 
 export async function updateCta(
@@ -131,9 +139,13 @@ export async function updateCta(
     isActive: boolean;
   }>,
 ) {
-  return prisma.ctaConfig.update({ where: { id }, data });
+  const cta = await prisma.ctaConfig.update({ where: { id }, data });
+  revalidateCtas();
+  return cta;
 }
 
 export async function deleteCta(id: string) {
-  return prisma.ctaConfig.delete({ where: { id } });
+  const result = await prisma.ctaConfig.delete({ where: { id } });
+  revalidateCtas();
+  return result;
 }

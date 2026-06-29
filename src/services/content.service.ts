@@ -366,6 +366,32 @@ export async function listValuePropsRaw() {
 export async function listMethodologyStepsRaw() {
   return prisma.methodologyStep.findMany({ orderBy: { sortOrder: "asc" } });
 }
+export async function listSuccessMetricsRaw() {
+  return prisma.successMetric.findMany({ orderBy: { sortOrder: "asc" } });
+}
+export async function listAsSeenInLogosRaw() {
+  return prisma.asSeenInLogo.findMany({ orderBy: { sortOrder: "asc" } });
+}
+
+/** The homepage Page id — repeatable homepage sections (steps, metrics) need it on create. */
+export async function getHomepagePageId() {
+  const page = await prisma.page.findUnique({ where: { slug: "home" }, select: { id: true } });
+  return page?.id ?? null;
+}
+
+// Homepage singleton sections (one row each, tied to the homepage Page).
+export async function getHeroRaw() {
+  return prisma.heroSection.findFirst();
+}
+export async function getBrandPhilosophyRaw() {
+  return prisma.brandPhilosophy.findFirst();
+}
+export async function getFounderMessageRaw() {
+  return prisma.founderMessage.findFirst();
+}
+export async function getFinalCtaRaw() {
+  return prisma.finalCta.findFirst();
+}
 
 // ============================================================
 // GENERIC CONTENT CRUD (admin) — by entityType string
@@ -405,6 +431,38 @@ function delegateFor(entityType: ContentEntityType) {
   return ENTITY_DELEGATES[entityType]() as any;
 }
 
+/**
+ * Entities that surface on the ISR homepage (`/en`, `/fa`). Any create/update/
+ * delete on these must invalidate the homepage cache so the public site reflects
+ * the change immediately instead of waiting out the 60s revalidate window.
+ */
+const HOMEPAGE_ENTITIES = new Set<ContentEntityType>([
+  "HeroSection",
+  "AsSeenInLogo",
+  "MethodologyStep",
+  "Testimonial",
+  "ValueProposition",
+  "BrandPhilosophy",
+  "SuccessMetric",
+  "FounderMessage",
+  "FinalCta",
+  "FooterSetting",
+  "Service",
+  "CaseStudy",
+  "TeamMember",
+  "TeamCategory",
+  "Event",
+]);
+
+/** Revalidate every public path affected by a mutation on this entity type. */
+function revalidateForEntity(entityType: ContentEntityType) {
+  if (HOMEPAGE_ENTITIES.has(entityType)) {
+    revalidatePath("/en");
+    revalidatePath("/fa");
+  }
+  for (const path of PUBLISH_REVALIDATE_PATHS[entityType] ?? []) revalidatePath(path);
+}
+
 export async function createContent(
   entityType: ContentEntityType,
   data: Record<string, unknown>,
@@ -413,6 +471,7 @@ export async function createContent(
   const delegate = delegateFor(entityType);
   const created = await delegate.create({ data });
   await createVersion(entityType, created.id, created, userId);
+  revalidateForEntity(entityType);
   return created;
 }
 
@@ -425,12 +484,15 @@ export async function updateContent(
   const delegate = delegateFor(entityType);
   const updated = await delegate.update({ where: { id }, data });
   await createVersion(entityType, id, updated, userId);
+  revalidateForEntity(entityType);
   return updated;
 }
 
 export async function deleteContent(entityType: ContentEntityType, id: string) {
   const delegate = delegateFor(entityType);
-  return delegate.delete({ where: { id } });
+  const result = await delegate.delete({ where: { id } });
+  revalidateForEntity(entityType);
+  return result;
 }
 
 export async function getContent(entityType: ContentEntityType, id: string) {
