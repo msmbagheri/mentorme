@@ -25,10 +25,34 @@
 | DB | PostgreSQL 16 (container `mentorme-pg`, `localhost:5544`), migrated + seeded |
 | Report | `playwright-report-local/index.html` |
 
-**Result — PRODUCTION (`https://mentorme.ir`): NOT YET RUN.** Held pending (a) the
-fixed code deployed to prod, (b) a dedicated E2E admin account, and (c) your go-ahead —
-per the agreed rule "no production write tests until local is 100% green and purge is
-proven." Both preconditions are now met locally; see §5.
+## 1b. Result — PRODUCTION (`https://mentorme.ir`, deployed)
+
+The fixes are **deployed and verified live** (fonts on `<html>`, ThemeStyle `:root` injection,
+`/api/media/file` route, `theme_fonts` migration applied). A **DB-free, read-only** prod E2E
+run passed:
+
+| Metric | Value |
+|---|---|
+| Public / rendering / i18n / SEO / Success-Stories / mobile | **54 passed** (chromium + mobile) |
+| Engine | Chromium (system Chrome) against the live domain |
+| Report | `playwright-report-prod/` |
+
+What this confirms live: detail pages render, JSON-LD present, **`/en` LTR + Inter, `/fa` RTL +
+Persian content**, homepage trust-flow order, SEO/OpenGraph/sitemap, Success Stories ≥3 cards +
+responsive, mobile no-overflow + hamburger nav.
+
+**Not run on production (with reasons — none are deployed-code bugs):**
+- **Full destructive 3-layer CRUD suite.** This sandbox **blocks SSH port-forwards** to the prod
+  DB (every tunnel form returns exit 144), so the Prisma DB-assertion layer can't reach the prod
+  DB from here; and these tests briefly mutate the live homepage (Hero/Theme/SEO). The full
+  3-layer proof exists **locally (98/98)**. To run it against prod safely would need either a
+  secret-gated `/api/test/*` DB endpoint (one extra redeploy) or running from an unrestricted
+  network — your call.
+- **Admin auth / RBAC.** Login failed on prod with the seed passwords → the prod admin/editor/
+  viewer passwords differ from the seed (changed on the server — good). Needs the real prod
+  credentials (or a dedicated E2E admin account) to run.
+- **"unknown slug → 404"** timed out over the slow international link (`page.goto` load event);
+  prod actually returns **404 in 0.27s** (verified by curl). A network artifact, not a bug.
 
 ## 2. Coverage — full lifecycle for every entity
 

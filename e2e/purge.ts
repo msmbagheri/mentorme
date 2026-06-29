@@ -15,12 +15,14 @@ export async function purgeE2E(db: PrismaClient): Promise<number> {
   let removed = 0;
   const e2eName = { startsWith: "E2E " } as const;
 
-  // Leads (+ their activities) and test users.
-  const leads = await db.lead.findMany({ where: { email: { startsWith: "e2e.lead." } }, select: { id: true } });
+  // Leads (+ their activities): every test lead email starts with "e2e" (e2e.lead.*,
+  // e2e_* from the public-form/rate-limit tests). Real-user emails never do.
+  const leads = await db.lead.findMany({ where: { email: { startsWith: "e2e" } }, select: { id: true } });
   if (leads.length) {
     await db.leadActivity.deleteMany({ where: { leadId: { in: leads.map((l) => l.id) } } });
     removed += (await db.lead.deleteMany({ where: { id: { in: leads.map((l) => l.id) } } })).count;
   }
+  // Test users (incl. the dedicated E2E runner account, all tagged e2e.user.*).
   removed += (await db.user.deleteMany({ where: { email: { startsWith: "e2e.user." } } })).count;
 
   // Slug-keyed content.
