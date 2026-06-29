@@ -9,8 +9,16 @@ export const CREDENTIALS = {
     password: process.env.E2E_ADMIN_PASSWORD ?? "Admin12345!",
     role: "ADMIN",
   },
-  editor: { email: "editor@example.com", password: "Editor12345!", role: "EDITOR" },
-  viewer: { email: "viewer@example.com", password: "Viewer12345!", role: "VIEWER" },
+  editor: {
+    email: process.env.E2E_EDITOR_EMAIL ?? "editor@example.com",
+    password: process.env.E2E_EDITOR_PASSWORD ?? "Editor12345!",
+    role: "EDITOR",
+  },
+  viewer: {
+    email: process.env.E2E_VIEWER_EMAIL ?? "viewer@example.com",
+    password: process.env.E2E_VIEWER_PASSWORD ?? "Viewer12345!",
+    role: "VIEWER",
+  },
 } as const;
 
 export type RoleKey = keyof typeof CREDENTIALS;
