@@ -1,7 +1,14 @@
 import { type Page, expect } from "@playwright/test";
 
+// Credentials default to the local seed accounts. For the PRODUCTION run, point
+// the admin role at a DEDICATED E2E account (separate from real users) via
+// E2E_ADMIN_EMAIL / E2E_ADMIN_PASSWORD so write tests never touch a real login.
 export const CREDENTIALS = {
-  admin: { email: "admin@example.com", password: "Admin12345!", role: "ADMIN" },
+  admin: {
+    email: process.env.E2E_ADMIN_EMAIL ?? "admin@example.com",
+    password: process.env.E2E_ADMIN_PASSWORD ?? "Admin12345!",
+    role: "ADMIN",
+  },
   editor: { email: "editor@example.com", password: "Editor12345!", role: "EDITOR" },
   viewer: { email: "viewer@example.com", password: "Viewer12345!", role: "VIEWER" },
 } as const;

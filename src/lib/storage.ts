@@ -20,7 +20,10 @@ export interface StorageProvider {
 }
 
 const UPLOAD_DIR = process.env.UPLOAD_DIR ?? "public/uploads";
-const PUBLIC_PREFIX = "/uploads";
+// Serve runtime uploads through the media file route (app/api/media/file/[...path]).
+// Next's static handler only serves public/ files that existed at build time, so a
+// bare /uploads URL 404s for new uploads on `next start` / standalone / Docker builds.
+const PUBLIC_PREFIX = "/api/media/file";
 
 function safeName(original: string): string {
   const ext = path.extname(original);
@@ -53,8 +56,10 @@ class LocalStorageProvider implements StorageProvider {
   }
 
   async delete(fileUrl: string): Promise<void> {
-    if (!fileUrl.startsWith(PUBLIC_PREFIX)) return;
-    const fileName = fileUrl.slice(PUBLIC_PREFIX.length + 1);
+    // Accept both the current route prefix and legacy /uploads URLs — derive the
+    // on-disk name from the basename so either form removes the right file.
+    const fileName = path.basename(fileUrl);
+    if (!fileName || fileName === "." || fileName === "..") return;
     const filePath = path.join(process.cwd(), UPLOAD_DIR, fileName);
     await fs.rm(filePath, { force: true });
   }

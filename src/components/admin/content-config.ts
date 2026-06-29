@@ -248,8 +248,168 @@ export const CONTENT_MODULES: Record<string, ContentModuleConfig> = {
       ...SEO_FIELDS,
     ],
   },
+  "as-seen-in": {
+    entityType: "AsSeenInLogo",
+    resource: "homepage",
+    singular: "Logo",
+    plural: "As Seen In",
+    route: "as-seen-in",
+    hasWorkflow: false,
+    hasActive: true,
+    listColumns: [
+      { key: "title", label: "Title", bilingualBase: "title" },
+      { key: "sortOrder", label: "Order" },
+    ],
+    fields: [
+      { name: "title", label: "Title", type: "bilingual-text", required: true, tab: "content" },
+      { name: "url", label: "Link URL", type: "url", tab: "content" },
+      { name: "imageUrl", label: "Logo image", type: "media", required: true, tab: "media" },
+      { name: "altText", label: "Image alt text", type: "bilingual-text", tab: "media" },
+      { name: "sortOrder", label: "Sort order", type: "number", tab: "settings" },
+    ],
+  },
+  methodology: {
+    entityType: "MethodologyStep",
+    resource: "homepage",
+    singular: "Methodology Step",
+    plural: "Methodology",
+    route: "methodology",
+    hasWorkflow: false,
+    hasActive: true,
+    listColumns: [
+      { key: "stepNumber", label: "Step" },
+      { key: "title", label: "Title", bilingualBase: "title" },
+    ],
+    fields: [
+      { name: "stepNumber", label: "Step number", type: "number", required: true, tab: "content" },
+      { name: "icon", label: "Icon", type: "text", tab: "content" },
+      { name: "title", label: "Title", type: "bilingual-text", required: true, tab: "content" },
+      { name: "description", label: "Description", type: "bilingual-textarea", required: true, tab: "content" },
+      { name: "sortOrder", label: "Sort order", type: "number", tab: "settings" },
+    ],
+  },
+  "value-props": {
+    entityType: "ValueProposition",
+    resource: "homepage",
+    singular: "Value Proposition",
+    plural: "Value Propositions",
+    route: "value-props",
+    hasWorkflow: false,
+    hasActive: true,
+    listColumns: [
+      { key: "title", label: "Title", bilingualBase: "title" },
+      { key: "sortOrder", label: "Order" },
+    ],
+    fields: [
+      { name: "icon", label: "Icon", type: "text", tab: "content" },
+      { name: "title", label: "Title", type: "bilingual-text", required: true, tab: "content" },
+      { name: "description", label: "Description", type: "bilingual-textarea", required: true, tab: "content" },
+      { name: "sortOrder", label: "Sort order", type: "number", tab: "settings" },
+    ],
+  },
+  "success-metrics": {
+    entityType: "SuccessMetric",
+    resource: "homepage",
+    singular: "Success Metric",
+    plural: "Success Metrics",
+    route: "success-metrics",
+    hasWorkflow: false,
+    hasActive: true,
+    listColumns: [
+      { key: "metricValue", label: "Value" },
+      { key: "metricLabel", label: "Label", bilingualBase: "metricLabel" },
+    ],
+    fields: [
+      { name: "metricValue", label: "Metric value", type: "text", required: true, tab: "content", hint: "e.g. 98% or 500+" },
+      { name: "metricLabel", label: "Metric label", type: "bilingual-text", required: true, tab: "content" },
+      { name: "sortOrder", label: "Sort order", type: "number", tab: "settings" },
+    ],
+  },
 };
 
 export function moduleByRoute(route: string): ContentModuleConfig | undefined {
   return CONTENT_MODULES[route];
 }
+
+/**
+ * Homepage singleton sections (one row each). Edited in-place from the Homepage
+ * Builder via the same ContentEditor dialog — every image-bearing section gets a
+ * real CMS media picker so no section image is hardcoded.
+ */
+export const HOMEPAGE_SINGLETONS: Record<string, ContentModuleConfig> = {
+  hero: {
+    entityType: "HeroSection",
+    resource: "homepage",
+    singular: "Hero",
+    plural: "Hero",
+    route: "homepage",
+    hasWorkflow: false,
+    hasActive: true,
+    listColumns: [],
+    fields: [
+      { name: "eyebrow", label: "Eyebrow", type: "bilingual-text", tab: "content" },
+      { name: "headline", label: "Headline", type: "bilingual-text", required: true, tab: "content" },
+      { name: "subheadline", label: "Subheadline", type: "bilingual-textarea", required: true, tab: "content" },
+      { name: "trustBadgeText", label: "Trust badge", type: "bilingual-text", tab: "content" },
+      { name: "heroImageUrl", label: "Hero image", type: "media", tab: "media" },
+      { name: "heroImageAlt", label: "Hero image alt text", type: "bilingual-text", tab: "media" },
+      { name: "primaryCtaId", label: "Primary CTA", type: "cta", tab: "settings" },
+      { name: "secondaryCtaId", label: "Secondary CTA", type: "cta", tab: "settings" },
+    ],
+  },
+  brand_philosophy: {
+    entityType: "BrandPhilosophy",
+    resource: "homepage",
+    singular: "Brand Philosophy",
+    plural: "Brand Philosophy",
+    route: "homepage",
+    hasWorkflow: false,
+    hasActive: true,
+    listColumns: [],
+    fields: [
+      { name: "eyebrow", label: "Eyebrow", type: "bilingual-text", tab: "content" },
+      { name: "title", label: "Title", type: "bilingual-text", required: true, tab: "content" },
+      { name: "content", label: "Content", type: "bilingual-textarea", required: true, tab: "content" },
+      { name: "imageUrl", label: "Image", type: "media", tab: "media" },
+      { name: "imageAlt", label: "Image alt text", type: "bilingual-text", tab: "media" },
+      { name: "ctaId", label: "Call to action", type: "cta", tab: "settings" },
+    ],
+  },
+  founder_message: {
+    entityType: "FounderMessage",
+    resource: "homepage",
+    singular: "Founder Message",
+    plural: "Founder Message",
+    route: "homepage",
+    hasWorkflow: false,
+    hasActive: true,
+    listColumns: [],
+    fields: [
+      { name: "name", label: "Name", type: "bilingual-text", required: true, tab: "content" },
+      { name: "title", label: "Title", type: "bilingual-text", required: true, tab: "content" },
+      { name: "message", label: "Message", type: "bilingual-textarea", required: true, tab: "content" },
+      { name: "photoUrl", label: "Photo", type: "media", tab: "media" },
+      { name: "photoAlt", label: "Photo alt text", type: "bilingual-text", tab: "media" },
+      { name: "signatureUrl", label: "Signature image", type: "media", tab: "media" },
+    ],
+  },
+  final_cta: {
+    entityType: "FinalCta",
+    resource: "homepage",
+    singular: "Final CTA",
+    plural: "Final CTA",
+    route: "homepage",
+    hasWorkflow: false,
+    hasActive: true,
+    listColumns: [],
+    fields: [
+      { name: "eyebrow", label: "Eyebrow", type: "bilingual-text", tab: "content" },
+      { name: "headline", label: "Headline", type: "bilingual-text", required: true, tab: "content" },
+      { name: "subheadline", label: "Subheadline", type: "bilingual-textarea", tab: "content" },
+      { name: "trustStatement", label: "Trust statement", type: "bilingual-text", tab: "content" },
+      { name: "backgroundImageUrl", label: "Background image", type: "media", tab: "media" },
+      { name: "primaryCtaId", label: "Primary CTA", type: "cta", tab: "settings" },
+      { name: "secondaryCtaId", label: "Secondary CTA", type: "cta", tab: "settings" },
+    ],
+  },
+};

@@ -14,6 +14,8 @@ import {
   ReadOnlyNotice,
   BilingualField,
 } from "@/components/admin/shared";
+import { ContentEditor } from "@/components/admin/ContentEditor";
+import { HOMEPAGE_SINGLETONS } from "@/components/admin/content-config";
 
 interface SectionHeader {
   eyebrow_en: string;
@@ -64,8 +66,17 @@ const SECTION_LINKS: Record<string, string> = {
   team: "/admin/team",
   events: "/admin/events",
   why_choose_us: "/admin/testimonials",
-  as_seen_in: "/admin/media",
+  as_seen_in: "/admin/as-seen-in",
+  methodology: "/admin/methodology",
 };
+
+/** Repeatable homepage content managers reachable from the builder header. */
+const REPEATABLE_MANAGERS: { href: string; label: string }[] = [
+  { href: "/admin/as-seen-in", label: "As Seen In logos" },
+  { href: "/admin/methodology", label: "Methodology steps" },
+  { href: "/admin/value-props", label: "Value propositions" },
+  { href: "/admin/success-metrics", label: "Success metrics" },
+];
 
 function SectionHeaderForm({
   sectionType,
@@ -171,13 +182,16 @@ function SectionHeaderForm({
 
 export function HomepageBuilder({
   sections,
+  singletons = {},
   canWrite,
 }: {
   sections: SectionRow[];
+  singletons?: Record<string, Record<string, unknown> | null>;
   canWrite: boolean;
 }) {
   const router = useRouter();
   const [pending, setPending] = React.useState<string | null>(null);
+  const [editing, setEditing] = React.useState<string | null>(null);
 
   async function toggle(sectionType: string, isActive: boolean) {
     setPending(sectionType);
@@ -195,6 +209,17 @@ export function HomepageBuilder({
         title="Homepage Builder"
         description="Toggle section visibility. The trust-flow order is fixed and cannot be changed."
       />
+      <div className="mb-4 flex flex-wrap gap-2">
+        {REPEATABLE_MANAGERS.map((m) => (
+          <Link
+            key={m.href}
+            href={m.href}
+            className="inline-flex items-center gap-1 rounded-[var(--radius-sm)] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1.5 text-small font-medium text-[var(--color-text-secondary)] hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]"
+          >
+            <Pencil className="size-3.5" /> {m.label}
+          </Link>
+        ))}
+      </div>
       {!canWrite ? <ReadOnlyNotice className="mb-4" /> : null}
 
       <Card>
@@ -202,6 +227,7 @@ export function HomepageBuilder({
           <ol className="flex flex-col divide-y divide-[var(--color-border)]">
             {sections.map((s) => {
               const link = SECTION_LINKS[s.sectionType];
+              const singletonConfig = HOMEPAGE_SINGLETONS[s.sectionType];
               return (
                 <li key={s.sectionType} className="flex flex-col">
                   <div className="flex items-center gap-3 p-4">
@@ -225,7 +251,15 @@ export function HomepageBuilder({
                   ) : (
                     <Badge variant="neutral">Hidden</Badge>
                   )}
-                  {link ? (
+                  {singletonConfig ? (
+                    <button
+                      type="button"
+                      onClick={() => setEditing(s.sectionType)}
+                      className="inline-flex items-center gap-1 text-small font-semibold text-[var(--brand-primary)] hover:underline"
+                    >
+                      <Pencil className="size-4" /> Edit content
+                    </button>
+                  ) : link ? (
                     <Link
                       href={link}
                       className="inline-flex items-center gap-1 text-small font-semibold text-[var(--brand-primary)] hover:underline"
@@ -261,6 +295,20 @@ export function HomepageBuilder({
           </ol>
         </CardContent>
       </Card>
+
+      {editing && HOMEPAGE_SINGLETONS[editing] ? (
+        <ContentEditor
+          config={HOMEPAGE_SINGLETONS[editing]}
+          record={singletons[editing] ?? null}
+          open
+          onOpenChange={(o) => {
+            if (!o) setEditing(null);
+          }}
+          canWrite={canWrite}
+          canPublish={false}
+          selectOptions={{}}
+        />
+      ) : null}
     </div>
   );
 }

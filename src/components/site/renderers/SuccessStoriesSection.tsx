@@ -64,7 +64,7 @@ export function SuccessStoriesSection({
                       {cs.outcomeBadge}
                     </Badge>
                   )}
-                  <p className="flex-1 text-body text-[var(--color-text-secondary)]">
+                  <p className="line-clamp-5 flex-1 text-body text-[var(--color-text-secondary)]">
                     {cs.story}
                   </p>
                   <span className="text-body font-semibold text-[var(--brand-primary)]">

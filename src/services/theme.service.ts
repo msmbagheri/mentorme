@@ -1,4 +1,5 @@
 import "server-only";
+import { revalidatePath } from "next/cache";
 import type { ThemeSetting, Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { pick } from "@/lib/i18n";
@@ -156,8 +157,11 @@ export async function upsertTheme(
   data: Prisma.ThemeSettingUncheckedCreateInput,
 ) {
   const existing = await prisma.themeSetting.findFirst();
-  if (existing) {
-    return prisma.themeSetting.update({ where: { id: existing.id }, data });
-  }
-  return prisma.themeSetting.create({ data });
+  const result = existing
+    ? await prisma.themeSetting.update({ where: { id: existing.id }, data })
+    : await prisma.themeSetting.create({ data });
+  // Theme drives colors, logos, fonts and contact info in the root layout —
+  // revalidate every page so the whole site reflects the change.
+  revalidatePath("/", "layout");
+  return result;
 }

@@ -41,6 +41,13 @@
   --gradient-cta: linear-gradient(135deg, #e4007f, #ff40a3);
   --gradient-soft: linear-gradient(135deg, #fff1ec, #fbe3f0);
   --focus-ring: #c7156f;
+  /* Fonts as REAL runtime custom properties (the @theme inline block below is
+     build-time only and is NOT emitted to :root, so the hand-written body /
+     html[lang] font-family rules need these here). --font-inter / --font-vazirmatn
+     come from next/font on <html>. ThemeStyle overrides these for custom fonts. */
+  --font-en: var(--font-inter), "Segoe UI", sans-serif;
+  --font-fa: var(--font-vazirmatn), "IRANSansX", "Segoe UI", sans-serif;
+  --font-sans: var(--font-inter), "Segoe UI", sans-serif;
 }
 
 @theme inline {
@@ -126,17 +133,22 @@
   html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
+    /* Default font on <html> so body + all descendants inherit the locale font.
+       Body must NOT hardcode a family or it would override the per-locale rules. */
+    font-family: var(--font-sans);
   }
   body {
     background-color: var(--color-bg);
     color: var(--color-text-primary);
-    font-family: var(--font-sans);
     font-size: 1rem;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    /* Safety net against stray horizontal overflow on small viewports.
+       `clip` (not `hidden`) preserves the sticky header. */
+    overflow-x: clip;
   }
   html[lang="fa"],
-  [dir="rtl"] {
+  html[dir="rtl"] {
     font-family: var(--font-fa);
   }
   html[lang="en"] {

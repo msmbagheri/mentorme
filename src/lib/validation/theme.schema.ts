@@ -20,6 +20,10 @@ export const themeUpdateSchema = z.object({
   accentColor: optColor,
   ctaGradientStart: optColor,
   ctaGradientEnd: optColor,
+  fontFamilyLatin: z.string().max(120).optional().or(z.literal("")).nullable(),
+  fontFamilyPersian: z.string().max(120).optional().or(z.literal("")).nullable(),
+  fontUrlLatin: optUrl,
+  fontUrlPersian: optUrl,
   socialLinks: z
     .array(z.object({ platform: z.string().min(1).max(60), url: z.string().url() }))
     .optional(),

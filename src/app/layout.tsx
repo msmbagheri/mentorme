@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { Inter, Vazirmatn } from "next/font/google";
 import { isLocale, dirFor, type AppLocale } from "@/types/locale";
 import { ChunkErrorReloader } from "@/components/system/ChunkErrorReloader";
+import { ThemeStyle } from "@/components/site/ThemeStyle";
 import "./globals.css";
 
 const inter = Inter({
@@ -36,8 +37,14 @@ export default async function RootLayout({
   const locale: AppLocale = isLocale(headerLocale) ? headerLocale : "en";
 
   return (
-    <html lang={locale} dir={dirFor(locale)} suppressHydrationWarning>
-      <body className={`${inter.variable} ${vazirmatn.variable}`}>
+    <html
+      lang={locale}
+      dir={dirFor(locale)}
+      className={`${inter.variable} ${vazirmatn.variable}`}
+      suppressHydrationWarning
+    >
+      <body>
+        <ThemeStyle />
         <ChunkErrorReloader />
         {children}
       </body>
