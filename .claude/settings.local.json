@@ -1,19 +1,15 @@
 {
   "permissions": {
-    "defaultMode": "acceptEdits",
     "allow": [
       "Bash",
       "Edit",
       "Write",
       "Read",
       "WebFetch",
-      "WebSearch"
-    ],
-    "ask": [
-      "Bash(docker system prune:*)",
-      "Bash(docker volume rm:*)",
-      "Bash(docker volume prune:*)",
-      "Bash(git push:*)"
+      "WebSearch",
+      "Bash(git branch *)",
+      "Bash(git add *)",
+      "Bash(git commit -m 'chore: allow git branch in local Claude settings *)"
     ],
     "deny": [
       "Bash(rm -rf /:*)",
@@ -27,6 +23,13 @@
       "Bash(reboot:*)",
       "Bash(git push --force:*)",
       "Bash(git push -f:*)"
-    ]
+    ],
+    "ask": [
+      "Bash(docker system prune:*)",
+      "Bash(docker volume rm:*)",
+      "Bash(docker volume prune:*)",
+      "Bash(git push:*)"
+    ],
+    "defaultMode": "acceptEdits"
   }
 }
