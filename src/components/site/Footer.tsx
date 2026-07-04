@@ -42,9 +42,9 @@ export function Footer({ locale, footer, theme }: FooterProps) {
                 <Image
                   src={theme.primaryLogoUrl}
                   alt={theme.brandName}
-                  width={140}
-                  height={40}
-                  className="h-9 w-auto object-contain"
+                  width={160}
+                  height={64}
+                  className="h-12 w-auto max-w-[180px] object-contain"
                 />
               ) : (
                 <span className="text-h4 font-bold text-gradient-logo">

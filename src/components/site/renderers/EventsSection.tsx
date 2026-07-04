@@ -1,4 +1,6 @@
 import { SectionHeader } from "./SectionHeader";
+import { CardCarousel } from "./CardCarousel";
+import { cardBasis, normalizeCardsPerRow } from "./card-basis";
 import { EventCard } from "@/components/site/EventCard";
 import type { AppLocale } from "@/types/locale";
 import type { EventCardDTO, SectionHeaderDTO } from "@/types/cms";
@@ -7,15 +9,18 @@ interface EventsSectionProps {
   data: EventCardDTO[];
   locale: AppLocale;
   header?: SectionHeaderDTO;
+  cardsPerRow?: number;
 }
 
-/** Events & Webinars: header + 3-col grid (2 tablet / 1 mobile). */
-export function EventsSection({ data, locale, header }: EventsSectionProps) {
+/** Events & Webinars: header + admin-configurable card carousel. */
+export function EventsSection({ data, locale, header, cardsPerRow }: EventsSectionProps) {
   if (data.length === 0) return null;
   const title =
     header?.title ?? (locale === "fa" ? "رویدادها و وبینارها" : "Events & Webinars");
   const eyebrow = header?.eyebrow ?? null;
   const description = header?.description ?? null;
+  const columns = normalizeCardsPerRow(cardsPerRow, 3);
+  const basis = cardBasis(columns);
 
   return (
     <section
@@ -29,13 +34,13 @@ export function EventsSection({ data, locale, header }: EventsSectionProps) {
           title={title}
           description={description}
         />
-        <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <CardCarousel perRow={columns} itemCount={data.length} locale={locale}>
           {data.map((e) => (
-            <li key={e.id} className="h-full">
+            <li key={e.id} className={basis}>
               <EventCard event={e} locale={locale} />
             </li>
           ))}
-        </ul>
+        </CardCarousel>
       </div>
     </section>
   );

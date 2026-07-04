@@ -406,6 +406,13 @@ async function main() {
     { sectionType: "final_cta", stageGroup: "CONVERSION" },
     { sectionType: "footer", stageGroup: "FOOTER" },
   ];
+  // Sensible default carousel columns per section (grids historically 3-up, team 4-up).
+  const cardsDefault: Record<string, number> = {
+    services: 3,
+    success_stories: 3,
+    events: 3,
+    team: 4,
+  };
   for (let i = 0; i < sections.length; i++) {
     await prisma.homepageSection.create({
       data: {
@@ -415,6 +422,7 @@ async function main() {
         orderIndex: i,
         isActive: true,
         isDeleted: false,
+        cardsPerRow: cardsDefault[sections[i].sectionType] ?? 1,
         ...sections[i].header,
       },
     });

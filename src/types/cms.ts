@@ -106,6 +106,10 @@ export interface ValuePropositionDTO {
 
 export interface WhyChooseUsDTO {
   featuredTestimonial: TestimonialDTO | null;
+  /** All active testimonials, ordered (featured first). Rendered as a carousel. */
+  testimonials: TestimonialDTO[];
+  /** Admin-configured cards per row for the testimonials carousel (1 | 2 | 4). */
+  testimonialsPerRow: number;
   averageRating: number;
   reviewCount: number;
   valueProps: ValuePropositionDTO[];
@@ -293,6 +297,14 @@ export interface SectionHeaderDTO {
   description: string | null;
 }
 
+/** Per-section layout + style overrides configured in the admin builder. */
+export interface SectionLayoutDTO {
+  cardsPerRow: number;
+  bgColor: string | null;
+  textColor: string | null;
+  accentColor: string | null;
+}
+
 /** Whether a homepage section is enabled (CMS visibility). */
 export type SectionVisibility = Record<SectionType, boolean>;
 
@@ -300,7 +312,10 @@ export type SectionVisibility = Record<SectionType, boolean>;
 export interface HomepageDTO {
   locale: AppLocale;
   visibility: SectionVisibility;
+  /** Render order of sections for this page (fixed trust-flow for home). */
+  sectionOrder: SectionType[];
   sectionHeaders: Partial<Record<SectionType, SectionHeaderDTO>>;
+  sectionSettings: Partial<Record<SectionType, SectionLayoutDTO>>;
   hero: HeroDTO | null;
   asSeenIn: AsSeenInLogoDTO[];
   methodology: MethodologyStepDTO[];

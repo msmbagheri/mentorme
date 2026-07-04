@@ -1,6 +1,5 @@
-import type { ComponentType } from "react";
-import type { HomepageDTO, SectionType } from "@/types/cms";
-import { SECTION_ORDER } from "@/types/cms";
+import type { ComponentType, CSSProperties } from "react";
+import type { HomepageDTO, SectionType, SectionLayoutDTO } from "@/types/cms";
 
 import { HeroSection } from "./HeroSection";
 import { AsSeenInSection } from "./AsSeenInSection";
@@ -63,6 +62,7 @@ const Services: ComponentType<SectionProps> = ({ homepage }) => (
     data={homepage.services}
     locale={homepage.locale}
     header={homepage.sectionHeaders.services}
+    cardsPerRow={homepage.sectionSettings.services?.cardsPerRow}
   />
 );
 
@@ -71,6 +71,7 @@ const SuccessStories: ComponentType<SectionProps> = ({ homepage }) => (
     data={homepage.successStories}
     locale={homepage.locale}
     header={homepage.sectionHeaders.success_stories}
+    cardsPerRow={homepage.sectionSettings.success_stories?.cardsPerRow}
   />
 );
 
@@ -87,6 +88,7 @@ const Team: ComponentType<SectionProps> = ({ homepage }) => (
     data={homepage.team}
     locale={homepage.locale}
     header={homepage.sectionHeaders.team}
+    cardsPerRow={homepage.sectionSettings.team?.cardsPerRow}
   />
 );
 
@@ -95,6 +97,7 @@ const Events: ComponentType<SectionProps> = ({ homepage }) => (
     data={homepage.events}
     locale={homepage.locale}
     header={homepage.sectionHeaders.events}
+    cardsPerRow={homepage.sectionSettings.events?.cardsPerRow}
   />
 );
 
@@ -124,16 +127,46 @@ export const sectionRegistry: Partial<
 };
 
 /**
+ * Build scoped CSS-variable overrides for a section from its admin-configured
+ * colors. Set on a wrapper <div>, the vars cascade into the section's own
+ * `bg-[var(--color-surface)]` / text / accent tokens. Only valid hex values are
+ * stored (validated server-side), so no runtime sanitizing is needed here.
+ */
+function sectionVars(s?: SectionLayoutDTO): CSSProperties | undefined {
+  if (!s) return undefined;
+  const vars: Record<string, string> = {};
+  if (s.bgColor) {
+    vars["--color-surface"] = s.bgColor;
+    vars["--color-bg"] = s.bgColor;
+  }
+  if (s.textColor) {
+    vars["--color-text-primary"] = s.textColor;
+    vars["--color-text-secondary"] = s.textColor;
+  }
+  if (s.accentColor) vars["--brand-primary"] = s.accentColor;
+  return Object.keys(vars).length ? (vars as CSSProperties) : undefined;
+}
+
+/**
  * Iterates SECTION_ORDER, skips sections whose visibility is false (or which
  * have no registered renderer, e.g. footer), and renders from the registry.
+ * Sections with color overrides are wrapped in a div that scopes the CSS vars.
  */
 export function HomeSections({ homepage }: { homepage: HomepageDTO }) {
   return (
     <>
-      {SECTION_ORDER.map((type) => {
+      {homepage.sectionOrder.map((type) => {
         if (homepage.visibility[type] === false) return null;
         const Section = sectionRegistry[type];
         if (!Section) return null;
+        const style = sectionVars(homepage.sectionSettings[type]);
+        if (style) {
+          return (
+            <div key={type} style={style}>
+              <Section homepage={homepage} />
+            </div>
+          );
+        }
         return <Section key={type} homepage={homepage} />;
       })}
     </>

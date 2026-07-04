@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { SectionHeader } from "./SectionHeader";
+import { CardCarousel } from "./CardCarousel";
+import { cardBasis, normalizeCardsPerRow } from "./card-basis";
 import { dictionary } from "@/lib/i18n";
 import type { AppLocale } from "@/types/locale";
 import type { ServiceCardDTO, SectionHeaderDTO } from "@/types/cms";
@@ -10,15 +12,18 @@ interface ServicesSectionProps {
   data: ServiceCardDTO[];
   locale: AppLocale;
   header?: SectionHeaderDTO;
+  cardsPerRow?: number;
 }
 
-/** Services: header + 3-col grid (2 tablet / 1 mobile). Cards link to detail. */
-export function ServicesSection({ data, locale, header }: ServicesSectionProps) {
+/** Services: header + admin-configurable card carousel (no empty trailing space). */
+export function ServicesSection({ data, locale, header, cardsPerRow }: ServicesSectionProps) {
   if (data.length === 0) return null;
   const t = dictionary[locale];
   const title = header?.title ?? (locale === "fa" ? "خدمات ما" : "Our Services");
   const eyebrow = header?.eyebrow ?? null;
   const description = header?.description ?? null;
+  const columns = normalizeCardsPerRow(cardsPerRow, 3);
+  const basis = cardBasis(columns);
 
   return (
     <section
@@ -32,9 +37,9 @@ export function ServicesSection({ data, locale, header }: ServicesSectionProps) 
           title={title}
           description={description}
         />
-        <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <CardCarousel perRow={columns} itemCount={data.length} locale={locale}>
           {data.map((s) => (
-            <li key={s.id} className="h-full">
+            <li key={s.id} className={basis}>
               <Link
                 href={`/${locale}/services/${s.slug}`}
                 className="group flex h-full flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-sm)] transition-shadow hover:shadow-[var(--shadow-md)]"
@@ -68,7 +73,7 @@ export function ServicesSection({ data, locale, header }: ServicesSectionProps) 
               </Link>
             </li>
           ))}
-        </ul>
+        </CardCarousel>
       </div>
     </section>
   );

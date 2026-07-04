@@ -38,6 +38,14 @@ function defaultVisibility(): SectionVisibility {
   }, {} as SectionVisibility);
 }
 
+// Non-home pages start with everything hidden — the admin opts sections in.
+function hiddenVisibility(): SectionVisibility {
+  return SECTION_ORDER.reduce((acc, key) => {
+    acc[key] = false;
+    return acc;
+  }, {} as SectionVisibility);
+}
+
 /** Visibility map keyed by SectionType (admin toggles isActive; order is fixed). */
 export async function getSectionVisibility(): Promise<SectionVisibility> {
   const visibility = defaultVisibility();
@@ -56,10 +64,11 @@ export async function getSectionVisibility(): Promise<SectionVisibility> {
 
 // ---- Admin: homepage section visibility ------------------------------------
 
-/** List homepage sections in fixed trust-flow order for the builder UI. */
-export async function listHomepageSections() {
+/** List a page's sections in fixed trust-flow order for the builder UI. */
+export async function listHomepageSections(pageSlug: string = HOME_SLUG) {
+  const isHome = pageSlug === HOME_SLUG;
   const page = await prisma.page.findUnique({
-    where: { slug: HOME_SLUG },
+    where: { slug: pageSlug },
     select: { id: true, homepageSections: true },
   });
   const existing = new Map(
@@ -70,8 +79,13 @@ export async function listHomepageSections() {
     return {
       sectionType: type,
       orderIndex: idx,
-      isActive: row ? row.isActive && !row.isDeleted : true,
+      // Home defaults sections visible; other pages default hidden (opt-in).
+      isActive: row ? row.isActive && !row.isDeleted : isHome,
       exists: Boolean(row),
+      cardsPerRow: row?.cardsPerRow ?? 1,
+      bgColor: row?.bgColor ?? "",
+      textColor: row?.textColor ?? "",
+      accentColor: row?.accentColor ?? "",
       header: {
         eyebrow_en: row?.eyebrow_en ?? "",
         eyebrow_fa: row?.eyebrow_fa ?? "",
@@ -92,12 +106,24 @@ export interface SectionHeaderInput {
   title_fa?: string | null;
   description_en?: string | null;
   description_fa?: string | null;
+  /** Section-level layout: cards per row (1 | 2 | 3 | 4). */
+  cardsPerRow?: number | null;
+  /** Per-section color overrides (hex or "" to clear). */
+  bgColor?: string | null;
+  textColor?: string | null;
+  accentColor?: string | null;
 }
 
 function normalize(value: string | null | undefined): string | null {
   if (value == null) return null;
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : null;
+}
+
+/** Accept only a #RGB / #RRGGBB / #RRGGBBAA hex, else null. */
+function normalizeHex(value: string | null | undefined): string | null {
+  const v = normalize(value);
+  return v && /^#[0-9a-fA-F]{3,8}$/.test(v) ? v : null;
 }
 
 /**
@@ -113,16 +139,22 @@ export async function updateSectionHeader(
     ipAddress?: string | null;
     userAgent?: string | null;
   },
+  pageSlug: string = HOME_SLUG,
 ) {
   if (!(SECTION_ORDER as string[]).includes(sectionType)) {
     throw new Error("Unknown section type.");
   }
   const page = await prisma.page.findUnique({
-    where: { slug: HOME_SLUG },
+    where: { slug: pageSlug },
     select: { id: true },
   });
-  if (!page) throw new Error("Homepage not found.");
+  if (!page) throw new Error("Page not found.");
   const orderIndex = (SECTION_ORDER as string[]).indexOf(sectionType);
+
+  const cardsPerRow =
+    input.cardsPerRow != null && [1, 2, 3, 4].includes(input.cardsPerRow)
+      ? input.cardsPerRow
+      : null;
 
   const data = {
     eyebrow_en: normalize(input.eyebrow_en),
@@ -131,6 +163,14 @@ export async function updateSectionHeader(
     title_fa: normalize(input.title_fa),
     description_en: normalize(input.description_en),
     description_fa: normalize(input.description_fa),
+    // Only touch cardsPerRow when a valid value was supplied, so a plain
+    // header-copy save never resets the layout.
+    ...(cardsPerRow != null ? { cardsPerRow } : {}),
+    // Colors are only touched when the key is present (form sends them; a
+    // header-only API call omits them). "" clears to null.
+    ...(input.bgColor !== undefined ? { bgColor: normalizeHex(input.bgColor) } : {}),
+    ...(input.textColor !== undefined ? { textColor: normalizeHex(input.textColor) } : {}),
+    ...(input.accentColor !== undefined ? { accentColor: normalizeHex(input.accentColor) } : {}),
   };
 
   const section = await prisma.homepageSection.upsert({
@@ -143,6 +183,7 @@ export async function updateSectionHeader(
       orderIndex,
       isActive: true,
       ...data,
+      cardsPerRow: cardsPerRow ?? 1,
     },
   });
 
@@ -156,23 +197,37 @@ export async function updateSectionHeader(
     userAgent: audit?.userAgent ?? null,
   });
 
-  revalidatePath("/en");
-  revalidatePath("/fa");
+  revalidateForPage(pageSlug);
   return section;
 }
 
-/** Toggle a homepage section's visibility (order is fixed and never changes). */
-export async function setSectionActive(sectionType: string, isActive: boolean) {
+/** Revalidate a page's public routes (the home path, or /{locale}/{slug}). */
+function revalidateForPage(pageSlug: string) {
+  if (pageSlug === HOME_SLUG) {
+    revalidatePath("/en");
+    revalidatePath("/fa");
+  } else {
+    revalidatePath(`/en/${pageSlug}`);
+    revalidatePath(`/fa/${pageSlug}`);
+  }
+}
+
+/** Toggle a page section's visibility (enabling opts the section into the page). */
+export async function setSectionActive(
+  sectionType: string,
+  isActive: boolean,
+  pageSlug: string = HOME_SLUG,
+) {
   const page = await prisma.page.findUnique({
-    where: { slug: HOME_SLUG },
+    where: { slug: pageSlug },
     select: { id: true },
   });
-  if (!page) throw new Error("Homepage not found.");
+  if (!page) throw new Error("Page not found.");
   if (!(SECTION_ORDER as string[]).includes(sectionType)) {
     throw new Error("Unknown section type.");
   }
   const orderIndex = (SECTION_ORDER as string[]).indexOf(sectionType);
-  return prisma.homepageSection.upsert({
+  const section = await prisma.homepageSection.upsert({
     where: { pageId_sectionType: { pageId: page.id, sectionType } },
     update: { isActive, isDeleted: false },
     create: {
@@ -183,6 +238,53 @@ export async function setSectionActive(sectionType: string, isActive: boolean) {
       isActive,
     },
   });
+  revalidateForPage(pageSlug);
+  return section;
+}
+
+/** Slugs served by fixed routes — a CMS page must never shadow these. */
+export const RESERVED_PAGE_SLUGS = new Set([
+  "home",
+  "contact",
+  "services",
+  "team",
+  "case-studies",
+  "events",
+]);
+
+/** Fetch a CMS page's render metadata by slug (null if absent/reserved). */
+export async function getRenderablePage(slug: string) {
+  if (RESERVED_PAGE_SLUGS.has(slug)) return null;
+  return prisma.page.findUnique({
+    where: { slug },
+    select: {
+      slug: true,
+      status: true,
+      isIndexed: true,
+      title_en: true,
+      title_fa: true,
+      meta_title_en: true,
+      meta_title_fa: true,
+      meta_description_en: true,
+      meta_description_fa: true,
+      ogImageUrl: true,
+    },
+  });
+}
+
+/** Pages that can be composed in the section builder (excludes the homepage). */
+export async function listBuilderPages() {
+  const pages = await prisma.page.findMany({
+    where: { slug: { not: HOME_SLUG } },
+    select: { id: true, slug: true, title_en: true, title_fa: true, status: true },
+    orderBy: { createdAt: "asc" },
+  });
+  return pages.map((p) => ({
+    id: p.id,
+    slug: p.slug,
+    title: p.title_en || p.title_fa || p.slug,
+    status: p.status,
+  }));
 }
 
 async function getGradeOptions(locale: AppLocale): Promise<GradeOptionDTO[]> {
@@ -198,10 +300,18 @@ async function getGradeOptions(locale: AppLocale): Promise<GradeOptionDTO[]> {
   }));
 }
 
-/** Assemble the full, localized homepage payload for RSC rendering. */
-export async function getHomepage(locale: AppLocale): Promise<HomepageDTO> {
+/**
+ * Assemble the localized section payload for a page (the homepage by default).
+ * Shared content (services, testimonials, team, …) is global; the page only
+ * controls which sections show, their order, per-section header copy + colors.
+ */
+export async function getHomepage(
+  locale: AppLocale,
+  pageSlug: string = HOME_SLUG,
+): Promise<HomepageDTO> {
+  const isHome = pageSlug === HOME_SLUG;
   const page = await prisma.page.findUnique({
-    where: { slug: HOME_SLUG },
+    where: { slug: pageSlug },
     include: {
       homepageSections: true,
       heroSection: { include: { primaryCta: true, secondaryCta: true } },
@@ -213,8 +323,12 @@ export async function getHomepage(locale: AppLocale): Promise<HomepageDTO> {
     },
   });
 
-  const visibility = defaultVisibility();
+  // Home defaults every section visible; other pages start empty and opt in.
+  const visibility = isHome ? defaultVisibility() : hiddenVisibility();
   const sectionHeaders: HomepageDTO["sectionHeaders"] = {};
+  const sectionSettings: HomepageDTO["sectionSettings"] = {};
+  // Section-level layout knobs read off HomepageSection (e.g. testimonials carousel columns).
+  let testimonialsPerRow = 1;
   if (page) {
     for (const section of page.homepageSections) {
       if ((SECTION_ORDER as string[]).includes(section.sectionType)) {
@@ -225,9 +339,32 @@ export async function getHomepage(locale: AppLocale): Promise<HomepageDTO> {
           title: pick(section, "title", locale) || null,
           description: pick(section, "description", locale) || null,
         };
+        sectionSettings[type] = {
+          cardsPerRow: section.cardsPerRow,
+          bgColor: section.bgColor,
+          textColor: section.textColor,
+          accentColor: section.accentColor,
+        };
+      }
+      if (section.sectionType === "why_choose_us") {
+        testimonialsPerRow = section.cardsPerRow;
       }
     }
   }
+
+  // Home keeps the fixed trust-flow order; other pages render their active
+  // sections in the admin-defined orderIndex order.
+  const sectionOrder: SectionType[] = isHome
+    ? SECTION_ORDER
+    : (page?.homepageSections ?? [])
+        .filter(
+          (s) =>
+            (SECTION_ORDER as string[]).includes(s.sectionType) &&
+            s.isActive &&
+            !s.isDeleted,
+        )
+        .sort((a, b) => a.orderIndex - b.orderIndex)
+        .map((s) => s.sectionType as SectionType);
 
   const [
     grades,
@@ -333,6 +470,16 @@ export async function getHomepage(locale: AppLocale): Promise<HomepageDTO> {
           (testimonials.reduce((sum, t) => sum + t.rating, 0) / reviewCount) * 10,
         ) / 10
       : 0;
+  const testimonialsDTO: TestimonialDTO[] = testimonials.map((t) => ({
+    id: t.id,
+    name: t.name,
+    role: pick(t, "role", locale) || null,
+    company: t.company,
+    content: pick(t, "content", locale),
+    rating: t.rating,
+    avatarUrl: t.avatarUrl,
+    avatarAlt: pick(t, "avatarAlt", locale) || null,
+  }));
   const valuePropsDTO: ValuePropositionDTO[] = valueProps.map((v) => ({
     id: v.id,
     icon: v.icon,
@@ -341,6 +488,8 @@ export async function getHomepage(locale: AppLocale): Promise<HomepageDTO> {
   }));
   const whyChooseUs: WhyChooseUsDTO = {
     featuredTestimonial,
+    testimonials: testimonialsDTO,
+    testimonialsPerRow,
     averageRating,
     reviewCount,
     valueProps: valuePropsDTO,
@@ -414,7 +563,9 @@ export async function getHomepage(locale: AppLocale): Promise<HomepageDTO> {
   return {
     locale,
     visibility,
+    sectionOrder,
     sectionHeaders,
+    sectionSettings,
     hero,
     asSeenIn,
     methodology,

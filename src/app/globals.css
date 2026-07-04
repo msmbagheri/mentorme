@@ -110,6 +110,10 @@
   --radius-xl: 20px;
   --radius-pill: 999px;
 
+  /* default (md) button dimensions — ThemeSetting.buttonSize overrides these */
+  --btn-height: 3rem;
+  --btn-padding-x: 1.5rem;
+
   /* shadows */
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
   --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.08);

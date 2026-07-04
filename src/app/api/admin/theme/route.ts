@@ -41,6 +41,7 @@ async function save(req: NextRequest) {
     fontFamilyPersian: data.fontFamilyPersian ?? null,
     fontUrlLatin: data.fontUrlLatin ?? null,
     fontUrlPersian: data.fontUrlPersian ?? null,
+    buttonSize: data.buttonSize || null,
     socialLinks: (data.socialLinks ?? undefined) as Prisma.InputJsonValue | undefined,
     contactInformation: (data.contactInformation ?? undefined) as
       | Prisma.InputJsonValue

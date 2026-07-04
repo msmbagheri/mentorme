@@ -24,6 +24,7 @@ export const themeUpdateSchema = z.object({
   fontFamilyPersian: z.string().max(120).optional().or(z.literal("")).nullable(),
   fontUrlLatin: optUrl,
   fontUrlPersian: optUrl,
+  buttonSize: z.enum(["sm", "md", "lg"]).optional().or(z.literal("")).nullable(),
   socialLinks: z
     .array(z.object({ platform: z.string().min(1).max(60), url: z.string().url() }))
     .optional(),

@@ -7,6 +7,7 @@ import { dictionary } from "@/lib/i18n";
 import { formatDate, formatTime } from "@/lib/utils";
 import { getEvent } from "@/services/content.service";
 import { getHomepage } from "@/services/homepage.service";
+import { getLeadFieldSettings } from "@/services/lead-fields.service";
 import {
   buildPageMetadata,
   eventLd,
@@ -53,7 +54,10 @@ export default async function EventDetailPage({
   const ev = await getEvent(slug, locale);
   if (!ev) notFound();
 
-  const homepage = await getHomepage(locale);
+  const [homepage, leadFields] = await Promise.all([
+    getHomepage(locale),
+    getLeadFieldSettings(),
+  ]);
   const grades = homepage.hero?.grades ?? [];
 
   const dateLabel = formatDate(ev.startDate, locale);
@@ -153,6 +157,7 @@ export default async function EventDetailPage({
                   locale={locale}
                   source={`event:${ev.slug}`}
                   grades={grades}
+                  fields={leadFields}
                 />
               )}
             </aside>

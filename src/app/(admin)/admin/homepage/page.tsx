@@ -1,6 +1,6 @@
 import { requireCan } from "@/lib/admin-session";
 import { can } from "@/lib/permissions";
-import { listHomepageSections } from "@/services/homepage.service";
+import { listHomepageSections, listBuilderPages } from "@/services/homepage.service";
 import {
   getHeroRaw,
   getBrandPhilosophyRaw,
@@ -11,16 +11,30 @@ import { HomepageBuilder } from "@/components/admin/HomepageBuilder";
 
 export const dynamic = "force-dynamic";
 
-export default async function HomepageAdminPage() {
+const HOME_SLUG = "home";
+
+export default async function HomepageAdminPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
   const session = await requireCan("homepage", "read");
-  const [sections, hero, brandPhilosophy, founderMessage, finalCta] = await Promise.all([
-    listHomepageSections(),
-    getHeroRaw(),
-    getBrandPhilosophyRaw(),
-    getFounderMessageRaw(),
-    getFinalCtaRaw(),
-  ]);
-  // Singleton section records keyed by sectionType, fed to the in-place editor.
+  const { page: pageParam } = await searchParams;
+  const pageSlug = pageParam && pageParam !== HOME_SLUG ? pageParam : HOME_SLUG;
+  const isHome = pageSlug === HOME_SLUG;
+
+  const [sections, builderPages, hero, brandPhilosophy, founderMessage, finalCta] =
+    await Promise.all([
+      listHomepageSections(pageSlug),
+      listBuilderPages(),
+      isHome ? getHeroRaw() : Promise.resolve(null),
+      isHome ? getBrandPhilosophyRaw() : Promise.resolve(null),
+      isHome ? getFounderMessageRaw() : Promise.resolve(null),
+      isHome ? getFinalCtaRaw() : Promise.resolve(null),
+    ]);
+
+  // Singleton in-place editors only apply to the home page (their content is
+  // page-scoped 1:1 and only the home rows exist today).
   const singletons: Record<string, Record<string, unknown> | null> = {
     hero,
     brand_philosophy: brandPhilosophy,
@@ -29,10 +43,17 @@ export default async function HomepageAdminPage() {
   };
   return (
     <HomepageBuilder
+      pageSlug={pageSlug}
+      isHome={isHome}
+      pages={builderPages.map((p) => ({ slug: p.slug, title: p.title }))}
       sections={sections.map((s) => ({
         sectionType: s.sectionType,
         orderIndex: s.orderIndex,
         isActive: s.isActive,
+        cardsPerRow: s.cardsPerRow,
+        bgColor: s.bgColor,
+        textColor: s.textColor,
+        accentColor: s.accentColor,
         header: s.header,
       }))}
       singletons={JSON.parse(JSON.stringify(singletons))}

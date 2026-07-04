@@ -29,10 +29,13 @@ export function MediaPicker({
   label = "Image",
   value,
   onChange,
+  hint,
 }: {
   label?: string;
   value: string;
   onChange: (url: string) => void;
+  /** Optional guidance shown under the field, e.g. recommended dimensions. */
+  hint?: string;
 }) {
   const [open, setOpen] = React.useState(false);
   const [media, setMedia] = React.useState<MediaRow[]>([]);
@@ -47,7 +50,7 @@ export function MediaPicker({
   }, [open]);
 
   return (
-    <Field label={label} htmlFor={inputId}>
+    <Field label={label} htmlFor={inputId} hint={hint ?? "Max 25 MB · JPG, PNG, WebP, AVIF, GIF, SVG"}>
       <div className="flex items-start gap-3">
         <div className="relative size-20 shrink-0 overflow-hidden rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface-alt)]">
           {value ? (

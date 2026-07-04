@@ -392,6 +392,9 @@ export async function getFounderMessageRaw() {
 export async function getFinalCtaRaw() {
   return prisma.finalCta.findFirst();
 }
+export async function getFooterSettingRaw() {
+  return prisma.footerSetting.findFirst();
+}
 
 // ============================================================
 // GENERIC CONTENT CRUD (admin) — by entityType string

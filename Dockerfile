@@ -5,8 +5,11 @@
 # Stages: base → deps → builder → runner (slim app) + migrator (runs prisma migrate/seed).
 
 FROM node:20-bookworm-slim AS base
+# fonts-dejavu-core + fontconfig are REQUIRED at runtime: the login captcha
+# rasterizes an SVG with sharp/librsvg, which renders no glyphs without a font
+# installed (the slim image ships none) — the captcha would show only noise.
 RUN apt-get update -y \
-  && apt-get install -y --no-install-recommends openssl ca-certificates \
+  && apt-get install -y --no-install-recommends openssl ca-certificates fonts-dejavu-core fontconfig \
   && rm -rf /var/lib/apt/lists/*
 ENV NEXT_TELEMETRY_DISABLED=1
 WORKDIR /app

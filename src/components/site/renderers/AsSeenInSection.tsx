@@ -32,9 +32,9 @@ export function AsSeenInSection({ data, locale, header }: AsSeenInSectionProps) 
               <Image
                 src={logo.imageUrl}
                 alt={logo.alt ?? logo.title}
-                width={140}
-                height={48}
-                className="h-12 w-auto object-contain opacity-70 transition-opacity hover:opacity-100"
+                width={240}
+                height={96}
+                className="h-14 w-auto max-w-[220px] object-contain opacity-70 transition-opacity hover:opacity-100"
               />
             );
             return (

@@ -30,6 +30,13 @@ function svg({ w, h, label, kind }) {
   const fg = isLogo ? MAGENTA : "#FFFFFF";
   const fontSize = Math.round(Math.min(w, h) * (isAvatar ? 0.26 : 0.09)) || 18;
   const markSize = Math.round(Math.min(w, h) * 0.05) || 12;
+  // Fit a logo wordmark inside the box width so long names never clip: shrink
+  // the font as the label gets longer, capped so short names stay bold/large.
+  const logoLabel = label || "MentorMe";
+  const logoFont = Math.max(
+    10,
+    Math.min(Math.round(h * 0.42), Math.floor((w * 0.84) / (Math.max(logoLabel.length, 3) * 0.6))),
+  );
   const initials = isAvatar
     ? esc(
         (label || "MM")
@@ -52,13 +59,15 @@ function svg({ w, h, label, kind }) {
   ${isLogo ? "" : `<rect width="${w}" height="${h}" fill="url(#soft)"/>`}
   ${isLogo ? "" : `<circle cx="${w * 0.12}" cy="${h * 0.85}" r="${Math.min(w, h) * 0.18}" fill="#FFFFFF" opacity="0.07"/>`}
   ${
-    initials
-      ? `<text x="50%" y="50%" dy="0.35em" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="${fontSize}" fill="${fg}">${initials}</text>`
-      : `<text x="50%" y="50%" dy="0.35em" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="${fontSize}" fill="${fg}">${esc(label || "MentorMe")}</text>`
+    isLogo
+      ? ""
+      : initials
+        ? `<text x="50%" y="50%" dy="0.35em" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="${fontSize}" fill="${fg}">${initials}</text>`
+        : `<text x="50%" y="50%" dy="0.35em" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="${fontSize}" fill="${fg}">${esc(label || "MentorMe")}</text>`
   }
   ${
     isLogo
-      ? `<text x="50%" y="50%" dy="0.35em" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="${Math.round(h * 0.42)}" fill="${MAGENTA}">${esc(label || "MentorMe")}</text>`
+      ? `<text x="50%" y="50%" dy="0.35em" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="${logoFont}" fill="${MAGENTA}">${esc(logoLabel)}</text>`
       : `<text x="${w / 2}" y="${h - markSize * 1.4}" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="600" font-size="${markSize}" fill="#FFFFFF" opacity="0.85">MentorMe</text>`
   }
 </svg>`;

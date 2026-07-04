@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { PermissionError } from "@/lib/permissions";
 import { forbidden, unauthorized, fromZodError, serverError } from "@/lib/api-response";
 import { getClientIp, getUserAgent } from "@/lib/security";
+import { isSessionStale } from "@/lib/session-freshness";
 import { log } from "@/lib/logger";
 import type { Role } from "@prisma/client";
 
@@ -22,6 +23,9 @@ export async function requireAdmin(
 ): Promise<AdminContext | { response: ReturnType<typeof unauthorized> }> {
   const session = await auth();
   if (!session?.user?.id) {
+    return { response: unauthorized() };
+  }
+  if (await isSessionStale(session)) {
     return { response: unauthorized() };
   }
   return {

@@ -57,9 +57,10 @@ export function Header({ locale, theme, navItems, cta }: HeaderProps) {
         <Image
           src={logoUrl}
           alt={theme.brandName}
-          width={140}
-          height={40}
-          className="h-9 w-auto object-contain"
+          width={160}
+          height={64}
+          sizes="(max-width: 768px) 44px, 56px"
+          className="h-11 w-auto max-w-[180px] object-contain md:h-14"
           priority
         />
       ) : (

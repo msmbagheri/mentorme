@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { loginAs, CREDENTIALS } from "./helpers";
+import { loginAs, fillCaptcha, CREDENTIALS } from "./helpers";
 import { db } from "./db";
 
 function tag() {
@@ -34,6 +34,7 @@ test("User Manager: create (can log in) → edit role → deactivate", async ({ 
   await p2.goto("/admin/login");
   await p2.fill("#email", email);
   await p2.fill("#password", password);
+  await fillCaptcha(p2);
   await p2.getByRole("button", { name: /sign in/i }).click();
   await expect(p2).toHaveURL(/\/admin(\/|$)(?!login)/, { timeout: 15_000 });
   await ctx.close();
@@ -90,7 +91,10 @@ test("Theme Manager: edit color + Persian font → reflected on public site", as
 
   try {
     await page.goto("/admin/theme");
-    await page.getByLabel("Primary color picker").fill(color);
+    // Set the color via the paired hex text input (the native <input type=color>
+    // doesn't reliably fire React's onChange under Playwright); this Input shares
+    // the same state value and fill() triggers onChange normally.
+    await page.getByLabel("Primary", { exact: true }).fill(color);
     await page.locator("#font-fa").fill("Vazirmatn");
     await page.getByRole("button", { name: /^save$/i }).click();
     await expect(page.getByText(/Theme saved/i).first()).toBeVisible({ timeout: 10_000 });

@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { SectionHeader } from "./SectionHeader";
+import { CardCarousel } from "./CardCarousel";
+import { cardBasis, normalizeCardsPerRow } from "./card-basis";
 import { Badge } from "@/components/ui/badge";
 import { dictionary } from "@/lib/i18n";
 import type { AppLocale } from "@/types/locale";
@@ -10,13 +12,15 @@ interface SuccessStoriesSectionProps {
   data: CaseStudyCardDTO[];
   locale: AppLocale;
   header?: SectionHeaderDTO;
+  cardsPerRow?: number;
 }
 
-/** Success Stories: header + 3-col grid. Photo 1:1, outcome badge near top. */
+/** Success Stories: header + admin-configurable card carousel. Photo 1:1, outcome badge. */
 export function SuccessStoriesSection({
   data,
   locale,
   header,
+  cardsPerRow,
 }: SuccessStoriesSectionProps) {
   if (data.length === 0) return null;
   const t = dictionary[locale];
@@ -24,6 +28,8 @@ export function SuccessStoriesSection({
     header?.title ?? (locale === "fa" ? "داستان‌های موفقیت" : "Success Stories");
   const eyebrow = header?.eyebrow ?? null;
   const description = header?.description ?? null;
+  const columns = normalizeCardsPerRow(cardsPerRow, 3);
+  const basis = cardBasis(columns);
 
   return (
     <section
@@ -37,9 +43,9 @@ export function SuccessStoriesSection({
           title={title}
           description={description}
         />
-        <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <CardCarousel perRow={columns} itemCount={data.length} locale={locale}>
           {data.map((cs) => (
-            <li key={cs.id} className="h-full">
+            <li key={cs.id} className={basis}>
               <Link
                 href={`/${locale}/case-studies/${cs.slug}`}
                 className="group flex h-full flex-col gap-4 rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-[var(--shadow-sm)] transition-shadow hover:shadow-[var(--shadow-md)]"
@@ -74,7 +80,7 @@ export function SuccessStoriesSection({
               </Link>
             </li>
           ))}
-        </ul>
+        </CardCarousel>
       </div>
     </section>
   );

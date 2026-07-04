@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { AlertCircle, Loader2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,6 +24,23 @@ export function LoginForm() {
   const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(false);
+  const [captcha, setCaptcha] = React.useState<{ token: string; image: string } | null>(null);
+  const [captchaAnswer, setCaptchaAnswer] = React.useState("");
+
+  const loadCaptcha = React.useCallback(async () => {
+    setCaptchaAnswer("");
+    try {
+      const res = await fetch("/api/auth/captcha", { cache: "no-store" });
+      const json = await res.json();
+      setCaptcha({ token: json.token, image: json.image });
+    } catch {
+      setCaptcha(null);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    loadCaptcha();
+  }, [loadCaptcha]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -32,11 +49,15 @@ export function LoginForm() {
     const res = await signIn("credentials", {
       email,
       password,
+      captchaToken: captcha?.token ?? "",
+      captchaAnswer,
       redirect: false,
     });
     setLoading(false);
     if (!res || res.error) {
-      setError("Invalid email or password. Please try again.");
+      setError("Invalid email, password, or captcha. Please try again.");
+      // The token may be spent/expired — always issue a fresh challenge.
+      loadCaptcha();
       return;
     }
     router.push(callbackUrl);
@@ -85,6 +106,43 @@ export function LoginForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="captcha">Enter the code shown</Label>
+            <div className="flex items-center gap-2">
+              {captcha ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={captcha.image}
+                  alt="Captcha challenge"
+                  width={160}
+                  height={52}
+                  className="h-[52px] w-[160px] shrink-0 rounded-[var(--radius-md)] border border-[var(--color-border)]"
+                />
+              ) : (
+                <div className="h-[52px] w-[160px] shrink-0 animate-pulse rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface-alt)]" />
+              )}
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                aria-label="Refresh captcha"
+                onClick={loadCaptcha}
+              >
+                <RefreshCw className="size-5" aria-hidden />
+              </Button>
+            </div>
+            <Input
+              id="captcha"
+              name="captcha"
+              autoComplete="off"
+              inputMode="text"
+              required
+              value={captchaAnswer}
+              onChange={(e) => setCaptchaAnswer(e.target.value)}
+              placeholder="Code"
             />
           </div>
 

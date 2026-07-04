@@ -4,6 +4,7 @@ import type { Session } from "next-auth";
 import type { Role } from "@prisma/client";
 import { auth } from "@/lib/auth";
 import { can, type Capability, type Resource } from "@/lib/permissions";
+import { isSessionStale } from "@/lib/session-freshness";
 
 export interface AdminSession {
   userId: string;
@@ -28,6 +29,13 @@ export async function requireSession(): Promise<AdminSession> {
   const session = await auth();
   if (!session?.user?.id) {
     redirect("/admin/login");
+  }
+  if (await isSessionStale(session)) {
+    // The JWT is still validly signed (so edge middleware sees a "logged-in"
+    // token), but it's stale (password changed / expired / deactivated). The
+    // `expired` flag tells the middleware not to bounce us back to /admin,
+    // avoiding a redirect loop; the login form then issues a fresh token.
+    redirect("/admin/login?expired=1");
   }
   return toAdminSession(session);
 }

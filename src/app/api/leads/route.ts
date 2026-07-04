@@ -9,8 +9,9 @@ import { rateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 import { getClientIp, getUserAgent } from "@/lib/security";
 import { leadCreateSchema } from "@/lib/validation/lead.schema";
 import { createLead } from "@/services/lead.service";
+import { getLeadFieldSettings } from "@/services/lead-fields.service";
 import { log } from "@/lib/logger";
-import { ZodError } from "zod";
+import { z, ZodError } from "zod";
 
 export async function POST(req: NextRequest) {
   try {
@@ -27,6 +28,27 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json().catch(() => ({}));
     const parsed = leadCreateSchema.parse(body);
+
+    // Enforce admin-configured required optional fields (phone/country/notes).
+    const fieldSettings = await getLeadFieldSettings();
+    const missing = fieldSettings
+      .filter(
+        (f) =>
+          f.isRequired &&
+          !String((parsed as Record<string, unknown>)[f.field] ?? "").trim(),
+      )
+      .map((f) => f.field);
+    if (missing.length > 0) {
+      return fromZodError(
+        new ZodError(
+          missing.map((field) => ({
+            code: z.ZodIssueCode.custom,
+            path: [field],
+            message: `${field} is required.`,
+          })),
+        ),
+      );
+    }
 
     const { id } = await createLead(
       {

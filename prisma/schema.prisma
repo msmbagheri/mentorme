@@ -113,6 +113,9 @@ model User {
   role         Role     @default(EDITOR)
   image        String?
   isActive     Boolean  @default(true)
+  // Bumped whenever the password changes so all existing JWT sessions (which
+  // embed the value at sign-in) are invalidated and forced to re-login.
+  sessionVersion Int    @default(0)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -210,6 +213,14 @@ model HomepageSection {
   title_fa       String?
   description_en String?   @db.Text
   description_fa String?   @db.Text
+  // Section-level layout: how many cards per row a repeatable section renders
+  // (e.g. the testimonials carousel in "Why Choose Us"). Admin-configurable 1/2/3/4.
+  cardsPerRow Int          @default(1)
+  // Per-section style overrides (hex). Injected as scoped CSS vars on the section
+  // wrapper; null = inherit the global theme.
+  bgColor     String?
+  textColor   String?
+  accentColor String?
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 
@@ -738,6 +749,18 @@ model CtaConfig {
   events          Event[]           @relation("EventCta")
 }
 
+// Admin-configurable visibility + required flags for the optional lead-form
+// fields (phone / country / notes). Core identity fields (first/last/email) are
+// always shown + required and are not represented here.
+model LeadFieldSetting {
+  id         String   @id @default(uuid())
+  field      String   @unique
+  isShown    Boolean  @default(true)
+  isRequired Boolean  @default(false)
+  sortOrder  Int      @default(0)
+  updatedAt  DateTime @updatedAt
+}
+
 model ThemeSetting {
   id                 String   @id @default(uuid())
   brandName          String
@@ -751,6 +774,8 @@ model ThemeSetting {
   accentColor        String?
   ctaGradientStart   String?
   ctaGradientEnd     String?
+  // Global button dimension scale for primary CTAs: "sm" | "md" | "lg" (default md).
+  buttonSize         String?
   // Typography — bilingual. Family names apply to Latin (en) and Persian (fa)
   // text; optional URLs load a custom/self-hosted webfont via @font-face.
   fontFamilyLatin    String?

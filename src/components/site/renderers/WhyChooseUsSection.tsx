@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Star } from "lucide-react";
 import { SectionHeader } from "./SectionHeader";
+import { TestimonialsCarousel } from "./TestimonialsCarousel";
 import { resolveIcon } from "@/lib/icons";
 import type { AppLocale } from "@/types/locale";
 import type { WhyChooseUsDTO, SectionHeaderDTO } from "@/types/cms";
@@ -30,14 +31,18 @@ function Stars({ rating, label }: { rating: number; label: string }) {
   );
 }
 
-/** Why Choose Us: header → featured review (full width) → 3 value-prop cards. */
+/** Why Choose Us: header → featured review → testimonials carousel → value-prop cards. */
 export function WhyChooseUsSection({
   data,
   locale,
   header,
 }: WhyChooseUsSectionProps) {
-  const { featuredTestimonial, valueProps, averageRating, reviewCount } = data;
-  if (!featuredTestimonial && valueProps.length === 0) return null;
+  const { featuredTestimonial, testimonials, testimonialsPerRow, valueProps, averageRating, reviewCount } =
+    data;
+  if (!featuredTestimonial && valueProps.length === 0 && testimonials.length === 0) return null;
+  // The featured review is highlighted above; the carousel shows the rest so no
+  // testimonial appears twice.
+  const carouselItems = testimonials.filter((t) => t.id !== featuredTestimonial?.id);
   const title =
     header?.title ??
     (locale === "fa" ? "چرا ما را انتخاب می‌کنند" : "Why Clients Choose Us");
@@ -91,6 +96,14 @@ export function WhyChooseUsSection({
               <Stars rating={featuredTestimonial.rating} label={ratingLabel} />
             </figcaption>
           </figure>
+        )}
+
+        {carouselItems.length > 0 && (
+          <TestimonialsCarousel
+            testimonials={carouselItems}
+            perRow={testimonialsPerRow}
+            locale={locale}
+          />
         )}
 
         {valueProps.length > 0 && (

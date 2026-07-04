@@ -26,6 +26,13 @@ function familyName(v: string | null | undefined): string | null {
   return cleaned || null;
 }
 
+// Global CTA button dimension presets, keyed by ThemeSetting.buttonSize.
+const BUTTON_SIZE_VARS: Record<string, string> = {
+  sm: "--btn-height:2.75rem;--btn-padding-x:1rem;",
+  md: "--btn-height:3rem;--btn-padding-x:1.5rem;",
+  lg: "--btn-height:3.5rem;--btn-padding-x:1.75rem;",
+};
+
 const FONT_FORMATS: Record<string, string> = {
   ".woff2": "woff2",
   ".woff": "woff",
@@ -71,6 +78,8 @@ export async function ThemeStyle() {
   if (gStart && gEnd) root.push(`--gradient-cta:linear-gradient(135deg, ${gStart}, ${gEnd});`);
   if (latinFamily) root.push(`--font-en:"${latinFamily}", var(--font-inter), "Segoe UI", sans-serif;`);
   if (faFamily) root.push(`--font-fa:"${faFamily}", var(--font-vazirmatn), sans-serif;`);
+  const btn = BUTTON_SIZE_VARS[theme.buttonSize ?? ""];
+  if (btn) root.push(btn);
 
   const css = [
     ...imports, // @import must precede other rules

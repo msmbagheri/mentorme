@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Linkedin } from "lucide-react";
 import { SectionHeader } from "./SectionHeader";
+import { CardCarousel } from "./CardCarousel";
+import { cardBasis, normalizeCardsPerRow } from "./card-basis";
 import { dictionary } from "@/lib/i18n";
 import type { AppLocale } from "@/types/locale";
 import type { TeamCategoryDTO, SectionHeaderDTO } from "@/types/cms";
@@ -10,15 +12,18 @@ interface TeamSectionProps {
   data: TeamCategoryDTO[];
   locale: AppLocale;
   header?: SectionHeaderDTO;
+  cardsPerRow?: number;
 }
 
-/** Team: header + member grid grouped by category (4 col / 2 tablet / 1 mobile). */
-export function TeamSection({ data, locale, header }: TeamSectionProps) {
+/** Team: header + per-category member carousel (admin-configurable columns). */
+export function TeamSection({ data, locale, header, cardsPerRow }: TeamSectionProps) {
   if (data.length === 0) return null;
   const t = dictionary[locale];
   const title = header?.title ?? (locale === "fa" ? "تیم ما" : "Meet The Team");
   const eyebrow = header?.eyebrow ?? null;
   const description = header?.description ?? null;
+  const columns = normalizeCardsPerRow(cardsPerRow, 4);
+  const basis = cardBasis(columns);
 
   return (
     <section
@@ -41,11 +46,11 @@ export function TeamSection({ data, locale, header }: TeamSectionProps) {
                   {cat.title}
                 </h3>
               )}
-              <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              <CardCarousel perRow={columns} itemCount={cat.members.length} locale={locale}>
                 {cat.members.map((m) => (
                   <li
                     key={m.id}
-                    className="flex h-full flex-col gap-3 rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-[var(--shadow-sm)]"
+                    className={`${basis} flex-col gap-3 rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-[var(--shadow-sm)]`}
                   >
                     {m.photoUrl && (
                       <div className="relative aspect-square w-full overflow-hidden rounded-[var(--radius-md)]">
@@ -90,7 +95,7 @@ export function TeamSection({ data, locale, header }: TeamSectionProps) {
                     </div>
                   </li>
                 ))}
-              </ul>
+              </CardCarousel>
             </div>
           ))}
         </div>

@@ -23,12 +23,26 @@ export const CREDENTIALS = {
 
 export type RoleKey = keyof typeof CREDENTIALS;
 
+/**
+ * The login captcha answer. In non-production runs with CAPTCHA_TEST_BYPASS=1
+ * the server accepts this sentinel (see src/lib/captcha.ts); the E2E webServer
+ * sets that env (dev mode) so the double-gated bypass never affects real prod.
+ */
+export const CAPTCHA_BYPASS_ANSWER = "TESTBYPASS";
+
+/** Fill the login captcha field with the test-bypass sentinel. */
+export async function fillCaptcha(page: Page) {
+  const field = page.locator("#captcha");
+  if (await field.count()) await field.fill(CAPTCHA_BYPASS_ANSWER);
+}
+
 /** Log in through the real admin login form and wait until inside /admin. */
 export async function loginAs(page: Page, role: RoleKey) {
   const { email, password } = CREDENTIALS[role];
   await page.goto("/admin/login");
   await page.fill("#email", email);
   await page.fill("#password", password);
+  await fillCaptcha(page);
   await page.getByRole("button", { name: /sign in/i }).click();
   await expect(page).toHaveURL(/\/admin(\/|$)(?!login)/, { timeout: 15_000 });
 }

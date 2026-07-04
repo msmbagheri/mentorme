@@ -3,6 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import { authConfig } from "@/lib/auth.config";
 import { prisma } from "@/lib/db";
 import { verifyPassword } from "@/lib/security";
+import { verifyCaptcha } from "@/lib/captcha";
 import { loginSchema } from "@/lib/validation/auth.schema";
 import { log } from "@/lib/logger";
 
@@ -13,8 +14,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
+        captchaToken: { label: "Captcha token", type: "text" },
+        captchaAnswer: { label: "Captcha", type: "text" },
       },
       async authorize(credentials) {
+        // Verify the captcha before any DB work — stops credential-stuffing bots.
+        const captchaToken =
+          typeof credentials?.captchaToken === "string" ? credentials.captchaToken : "";
+        const captchaAnswer =
+          typeof credentials?.captchaAnswer === "string" ? credentials.captchaAnswer : "";
+        if (!verifyCaptcha(captchaToken, captchaAnswer)) {
+          log.auth("Login failed: captcha invalid");
+          return null;
+        }
+
         const parsed = loginSchema.safeParse(credentials);
         if (!parsed.success) return null;
 
@@ -49,6 +62,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           email: user.email,
           role: user.role,
           image: user.image ?? undefined,
+          sessionVersion: user.sessionVersion,
         };
       },
     }),

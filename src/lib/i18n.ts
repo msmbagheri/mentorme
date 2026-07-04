@@ -51,6 +51,7 @@ export const dictionary = {
       success: "Thank you! We’ll be in touch shortly.",
       error: "Something went wrong. Please try again.",
       selectGrade: "Select grade",
+      requiredError: "Please complete the required fields marked with an asterisk.",
     },
     contact: {
       title: "Book a Consultation",
@@ -91,6 +92,7 @@ export const dictionary = {
       success: "سپاسگزاریم! به‌زودی با شما تماس می‌گیریم.",
       error: "خطایی رخ داد. لطفاً دوباره تلاش کنید.",
       selectGrade: "انتخاب پایه",
+      requiredError: "پر کردن فیلدهای ستاره‌دار الزامی می‌باشد",
     },
     contact: {
       title: "رزرو مشاوره",

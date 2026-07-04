@@ -144,6 +144,13 @@ export function MediaLibrary({
         ) : null}
       </PageHeader>
 
+      {canWrite ? (
+        <p className="mb-4 text-caption text-[var(--color-text-muted)]">
+          Max 25&nbsp;MB per file · Allowed: JPG, PNG, WebP, AVIF, GIF, SVG, MP4, WebM, PDF · up to
+          30 uploads/hour
+        </p>
+      ) : null}
+
       {!canWrite ? <ReadOnlyNotice className="mb-4" /> : null}
 
       {visible.length === 0 ? (

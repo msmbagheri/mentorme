@@ -34,7 +34,12 @@ export default auth((req) => {
     const isLoginPage = pathname === "/admin/login";
 
     if (isLoginPage) {
-      if (isLoggedIn) return NextResponse.redirect(new URL("/admin", nextUrl));
+      // Bounce already-authenticated users to the dashboard — unless a Node-side
+      // guard sent them here with `expired` because their token is stale
+      // (password changed / session expired). Edge can't check staleness, so we
+      // honor that flag to avoid a login⇄dashboard redirect loop.
+      const expired = nextUrl.searchParams.get("expired") === "1";
+      if (isLoggedIn && !expired) return NextResponse.redirect(new URL("/admin", nextUrl));
       return nextWithLocale(req, "en");
     }
 

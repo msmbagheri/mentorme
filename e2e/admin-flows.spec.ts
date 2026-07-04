@@ -12,6 +12,9 @@ test.describe("Admin module flows", () => {
   });
 
   test("key admin module pages load", async ({ page }) => {
+    // Dev-mode compiles each admin route on first hit, so loading ~13 pages
+    // sequentially needs headroom beyond the default per-test timeout.
+    test.setTimeout(120_000);
     await loginAs(page, "admin");
     for (const path of [
       "/admin/leads",
@@ -28,7 +31,7 @@ test.describe("Admin module flows", () => {
       "/admin/homepage",
       "/admin/settings",
     ]) {
-      const res = await page.goto(path);
+      const res = await page.goto(path, { waitUntil: "commit" });
       expect(res?.status(), `GET ${path}`).toBe(200);
     }
   });

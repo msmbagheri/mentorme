@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "HomepageSection" ADD COLUMN     "cardsPerRow" INTEGER NOT NULL DEFAULT 1;
+
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "sessionVersion" INTEGER NOT NULL DEFAULT 0;

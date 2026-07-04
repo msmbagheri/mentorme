@@ -30,8 +30,22 @@ interface SectionRow {
   sectionType: string;
   orderIndex: number;
   isActive: boolean;
+  cardsPerRow: number;
+  bgColor: string;
+  textColor: string;
+  accentColor: string;
   header: SectionHeader;
 }
+
+/** Sections whose repeatable cards expose a "cards per row" carousel control. */
+const CARDS_PER_ROW_SECTIONS = new Set([
+  "why_choose_us",
+  "services",
+  "success_stories",
+  "team",
+  "events",
+]);
+const CARDS_PER_ROW_OPTIONS = [1, 2, 3, 4] as const;
 
 /** Sections whose CMS header copy (eyebrow/title/description) is editable here. */
 const HEADER_EDITABLE = new Set([
@@ -68,6 +82,7 @@ const SECTION_LINKS: Record<string, string> = {
   why_choose_us: "/admin/testimonials",
   as_seen_in: "/admin/as-seen-in",
   methodology: "/admin/methodology",
+  footer: "/admin/footer",
 };
 
 /** Repeatable homepage content managers reachable from the builder header. */
@@ -76,26 +91,78 @@ const REPEATABLE_MANAGERS: { href: string; label: string }[] = [
   { href: "/admin/methodology", label: "Methodology steps" },
   { href: "/admin/value-props", label: "Value propositions" },
   { href: "/admin/success-metrics", label: "Success metrics" },
+  { href: "/admin/footer", label: "Footer settings" },
 ];
+
+function ColorPick({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <div className="flex flex-col gap-1">
+      <span className="text-caption text-[var(--color-text-muted)]">{label}</span>
+      <div className="flex items-center gap-2">
+        <input
+          type="color"
+          aria-label={label}
+          value={value || "#ffffff"}
+          onChange={(e) => onChange(e.target.value)}
+          className="h-9 w-10 cursor-pointer rounded-[var(--radius-sm)] border border-[var(--color-border)] bg-transparent"
+        />
+        <span className="w-16 text-caption text-[var(--color-text-secondary)]">{value || "—"}</span>
+        {value ? (
+          <button
+            type="button"
+            onClick={() => onChange("")}
+            className="text-caption text-[var(--color-text-muted)] hover:text-[var(--color-error)]"
+            aria-label={`Clear ${label}`}
+          >
+            Clear
+          </button>
+        ) : null}
+      </div>
+    </div>
+  );
+}
 
 function SectionHeaderForm({
   sectionType,
+  pageSlug,
   initial,
+  initialCardsPerRow,
+  initialColors,
   canWrite,
   onSaved,
 }: {
   sectionType: string;
+  pageSlug: string;
   initial: SectionHeader;
+  initialCardsPerRow: number;
+  initialColors: { bgColor: string; textColor: string; accentColor: string };
   canWrite: boolean;
   onSaved: () => void;
 }) {
   const [open, setOpen] = React.useState(false);
   const [form, setForm] = React.useState<SectionHeader>(initial);
+  const [cardsPerRow, setCardsPerRow] = React.useState<number>(initialCardsPerRow);
+  const [colors, setColors] = React.useState(initialColors);
   const [saving, setSaving] = React.useState(false);
+  const showCardsPerRow = CARDS_PER_ROW_SECTIONS.has(sectionType);
 
   React.useEffect(() => {
     setForm(initial);
   }, [initial]);
+  React.useEffect(() => {
+    setCardsPerRow(initialCardsPerRow);
+  }, [initialCardsPerRow]);
+  React.useEffect(() => {
+    setColors(initialColors);
+  }, [initialColors]);
 
   function change(key: string, value: string) {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -107,9 +174,14 @@ function SectionHeaderForm({
       () =>
         apiClient.patch("/api/admin/homepage", {
           sectionType,
+          pageSlug,
           header: form,
+          ...(showCardsPerRow ? { cardsPerRow } : {}),
+          bgColor: colors.bgColor,
+          textColor: colors.textColor,
+          accentColor: colors.accentColor,
         }),
-      { success: "Header updated", error: "Could not update header" },
+      { success: "Section updated", error: "Could not update section" },
     );
     setSaving(false);
     if (res) onSaved();
@@ -123,7 +195,7 @@ function SectionHeaderForm({
         aria-expanded={open}
         className="flex w-full items-center justify-between px-4 py-2 text-small font-semibold text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
       >
-        Section header copy
+        Content &amp; style
         <ChevronDown
           className={`size-4 transition-transform ${open ? "rotate-180" : ""}`}
           aria-hidden
@@ -162,6 +234,44 @@ function SectionHeaderForm({
               )
             }
           />
+          {showCardsPerRow ? (
+            <label className="flex flex-col gap-1.5 text-small font-semibold text-[var(--color-text-secondary)]">
+              Cards per row
+              <select
+                value={cardsPerRow}
+                onChange={(e) => setCardsPerRow(Number(e.target.value))}
+                className="h-10 w-full max-w-[12rem] rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-body text-[var(--color-text-primary)]"
+              >
+                {CARDS_PER_ROW_OPTIONS.map((n) => (
+                  <option key={n} value={n}>
+                    {n} {n === 1 ? "card" : "cards"} per row
+                  </option>
+                ))}
+              </select>
+            </label>
+          ) : null}
+          <div className="flex flex-col gap-2">
+            <span className="text-small font-semibold text-[var(--color-text-secondary)]">
+              Section colors (optional — leave empty to use the theme)
+            </span>
+            <div className="flex flex-wrap gap-5">
+              <ColorPick
+                label="Background"
+                value={colors.bgColor}
+                onChange={(v) => setColors((c) => ({ ...c, bgColor: v }))}
+              />
+              <ColorPick
+                label="Text"
+                value={colors.textColor}
+                onChange={(v) => setColors((c) => ({ ...c, textColor: v }))}
+              />
+              <ColorPick
+                label="Accent / buttons"
+                value={colors.accentColor}
+                onChange={(v) => setColors((c) => ({ ...c, accentColor: v }))}
+              />
+            </div>
+          </div>
           {canWrite ? (
             <div className="flex justify-end">
               <Button
@@ -170,7 +280,7 @@ function SectionHeaderForm({
                 onClick={save}
                 disabled={saving}
               >
-                {saving ? "Saving…" : "Save header"}
+                {saving ? "Saving…" : "Save section"}
               </Button>
             </div>
           ) : null}
@@ -184,10 +294,16 @@ export function HomepageBuilder({
   sections,
   singletons = {},
   canWrite,
+  pageSlug = "home",
+  isHome = true,
+  pages = [],
 }: {
   sections: SectionRow[];
   singletons?: Record<string, Record<string, unknown> | null>;
   canWrite: boolean;
+  pageSlug?: string;
+  isHome?: boolean;
+  pages?: { slug: string; title: string }[];
 }) {
   const router = useRouter();
   const [pending, setPending] = React.useState<string | null>(null);
@@ -196,19 +312,56 @@ export function HomepageBuilder({
   async function toggle(sectionType: string, isActive: boolean) {
     setPending(sectionType);
     const res = await runMutation(
-      () => apiClient.patch("/api/admin/homepage", { sectionType, isActive }),
-      { success: "Homepage updated", error: "Could not update section" },
+      () => apiClient.patch("/api/admin/homepage", { sectionType, isActive, pageSlug }),
+      { success: "Page updated", error: "Could not update section" },
     );
     setPending(null);
     if (res) router.refresh();
   }
 
+  // On non-home pages only the shared, header-editable sections are composable;
+  // the singleton sections (hero/final CTA/…) need per-page content we don't
+  // support yet, so hide them there.
+  const visibleSections = isHome
+    ? sections
+    : sections.filter((s) => HEADER_EDITABLE.has(s.sectionType));
+
   return (
     <div>
       <PageHeader
-        title="Homepage Builder"
-        description="Toggle section visibility. The trust-flow order is fixed and cannot be changed."
+        title={isHome ? "Homepage Builder" : "Page Builder"}
+        description={
+          isHome
+            ? "Toggle section visibility. The trust-flow order is fixed."
+            : "Enable sections on this page and set their copy, colors and layout. Sections use the site's shared content."
+        }
       />
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        <label className="text-small font-semibold text-[var(--color-text-secondary)]">
+          Editing page:
+        </label>
+        <select
+          value={pageSlug}
+          onChange={(e) => {
+            const slug = e.target.value;
+            router.push(slug === "home" ? "/admin/homepage" : `/admin/homepage?page=${slug}`);
+          }}
+          className="h-10 rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-body text-[var(--color-text-primary)]"
+        >
+          <option value="home">Homepage</option>
+          {pages.map((p) => (
+            <option key={p.slug} value={p.slug}>
+              {p.title} (/{p.slug})
+            </option>
+          ))}
+        </select>
+        <Link
+          href="/admin/pages"
+          className="text-small font-medium text-[var(--brand-primary)] hover:underline"
+        >
+          + New page
+        </Link>
+      </div>
       <div className="mb-4 flex flex-wrap gap-2">
         {REPEATABLE_MANAGERS.map((m) => (
           <Link
@@ -225,7 +378,7 @@ export function HomepageBuilder({
       <Card>
         <CardContent className="p-0">
           <ol className="flex flex-col divide-y divide-[var(--color-border)]">
-            {sections.map((s) => {
+            {visibleSections.map((s) => {
               const link = SECTION_LINKS[s.sectionType];
               const singletonConfig = HOMEPAGE_SINGLETONS[s.sectionType];
               return (
@@ -284,7 +437,14 @@ export function HomepageBuilder({
                   {HEADER_EDITABLE.has(s.sectionType) ? (
                     <SectionHeaderForm
                       sectionType={s.sectionType}
+                      pageSlug={pageSlug}
                       initial={s.header}
+                      initialCardsPerRow={s.cardsPerRow}
+                      initialColors={{
+                        bgColor: s.bgColor,
+                        textColor: s.textColor,
+                        accentColor: s.accentColor,
+                      }}
                       canWrite={canWrite}
                       onSaved={() => router.refresh()}
                     />

@@ -56,6 +56,7 @@ export default async function ThemeAdminPage() {
         fontFamilyPersian: theme?.fontFamilyPersian ?? "",
         fontUrlLatin: theme?.fontUrlLatin ?? "",
         fontUrlPersian: theme?.fontUrlPersian ?? "",
+        buttonSize: theme?.buttonSize ?? "",
         socialLinks: asSocialLinks(theme?.socialLinks),
         contactInformation: asContact(theme?.contactInformation),
       }}

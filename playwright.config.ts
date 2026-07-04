@@ -41,14 +41,18 @@ export default defineConfig({
   ],
   // Only manage a local server when targeting localhost; against production
   // (E2E_BASE_URL set) the app is already deployed, so do not start one.
+  // Local runs use `next dev`: the login captcha's test bypass is double-gated to
+  // NON-production (src/lib/captcha.ts), so the suite runs in development with
+  // CAPTCHA_TEST_BYPASS=1 while the deployed production build stays fully enforced.
   webServer: IS_REMOTE
     ? undefined
     : {
-        command: `npx next start -p ${PORT}`,
+        command: `npx next dev -p ${PORT}`,
         url: `${BASE_URL}/en`,
         reuseExistingServer: true,
-        timeout: 120_000,
+        timeout: 180_000,
         stdout: "ignore",
         stderr: "pipe",
+        env: { CAPTCHA_TEST_BYPASS: "1" },
       },
 });

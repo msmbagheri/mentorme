@@ -5,6 +5,7 @@ import { isLocale, type AppLocale } from "@/types/locale";
 import { dictionary } from "@/lib/i18n";
 import { getTheme } from "@/services/theme.service";
 import { getHomepage } from "@/services/homepage.service";
+import { getLeadFieldSettings } from "@/services/lead-fields.service";
 import { getSeoForPage } from "@/services/seo.service";
 import {
   buildPageMetadata,
@@ -47,9 +48,10 @@ export default async function ContactPage({ params }: { params: Params }) {
   const locale: AppLocale = rawLocale;
   const t = dictionary[locale];
 
-  const [theme, homepage] = await Promise.all([
+  const [theme, homepage, leadFields] = await Promise.all([
     getTheme(locale),
     getHomepage(locale),
+    getLeadFieldSettings(),
   ]);
   const grades = homepage.hero?.grades ?? [];
   const { contact, socialLinks } = theme;
@@ -78,7 +80,7 @@ export default async function ContactPage({ params }: { params: Params }) {
           </header>
 
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-[60fr_40fr]">
-            <LeadForm locale={locale} source="contact_form" grades={grades} />
+            <LeadForm locale={locale} source="contact_form" grades={grades} fields={leadFields} />
 
             <aside className="flex flex-col gap-8">
               <div className="flex flex-col gap-4">

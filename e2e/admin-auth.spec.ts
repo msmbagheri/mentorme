@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { loginAs, CREDENTIALS } from "./helpers";
+import { loginAs, fillCaptcha, CREDENTIALS } from "./helpers";
 
 test.describe("Admin authentication", () => {
   test("unauthenticated /admin redirects to login", async ({ page }) => {
@@ -11,8 +11,9 @@ test.describe("Admin authentication", () => {
     await page.goto("/admin/login");
     await page.fill("#email", "admin@example.com");
     await page.fill("#password", "WRONG-password");
+    await fillCaptcha(page);
     await page.getByRole("button", { name: /sign in/i }).click();
-    await expect(page.getByText(/invalid email or password/i)).toBeVisible();
+    await expect(page.getByText(/invalid email, password, or captcha/i)).toBeVisible();
     await expect(page).toHaveURL(/\/admin\/login/);
   });
 

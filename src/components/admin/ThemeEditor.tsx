@@ -31,6 +31,7 @@ interface ThemeState {
   fontFamilyPersian: string;
   fontUrlLatin: string;
   fontUrlPersian: string;
+  buttonSize: string;
   socialLinks: SocialLink[];
   contactInformation: { email: string; phone: string; address: string; hours: string };
 }
@@ -69,6 +70,7 @@ export function ThemeEditor({
           fontFamilyPersian: state.fontFamilyPersian || null,
           fontUrlLatin: state.fontUrlLatin || null,
           fontUrlPersian: state.fontUrlPersian || null,
+          buttonSize: state.buttonSize || null,
           socialLinks: state.socialLinks.filter((s) => s.platform && s.url),
           contactInformation: state.contactInformation,
         }),
@@ -114,10 +116,10 @@ export function ThemeEditor({
             <CardTitle className="text-h4">Logos</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
-            <MediaPicker label="Primary logo" value={state.primaryLogoUrl} onChange={(v) => set("primaryLogoUrl", v)} />
-            <MediaPicker label="Dark logo" value={state.darkLogoUrl} onChange={(v) => set("darkLogoUrl", v)} />
-            <MediaPicker label="Mobile logo" value={state.mobileLogoUrl} onChange={(v) => set("mobileLogoUrl", v)} />
-            <MediaPicker label="Favicon" value={state.faviconUrl} onChange={(v) => set("faviconUrl", v)} />
+            <MediaPicker label="Primary logo" value={state.primaryLogoUrl} onChange={(v) => set("primaryLogoUrl", v)} hint="Landscape ~320×96 or a square logo — both render adaptively · Max 25 MB" />
+            <MediaPicker label="Dark logo" value={state.darkLogoUrl} onChange={(v) => set("darkLogoUrl", v)} hint="For dark backgrounds · ~320×96" />
+            <MediaPicker label="Mobile logo" value={state.mobileLogoUrl} onChange={(v) => set("mobileLogoUrl", v)} hint="Square ~96×96 for compact spaces" />
+            <MediaPicker label="Favicon" value={state.faviconUrl} onChange={(v) => set("faviconUrl", v)} hint="Square 64×64 · PNG or ICO" />
           </CardContent>
         </Card>
 
@@ -169,6 +171,19 @@ export function ThemeEditor({
             <Field label="Persian font URL" htmlFor="font-fa-url" hint="@font-face CSS or font file (optional)">
               <Input id="font-fa-url" dir="ltr" value={state.fontUrlPersian} disabled={!canWrite}
                 onChange={(e) => set("fontUrlPersian", e.target.value)} placeholder="https://…" />
+            </Field>
+            <Field label="Button size" htmlFor="btn-size" hint="Global size of primary CTA buttons">
+              <select
+                id="btn-size"
+                value={state.buttonSize || "md"}
+                disabled={!canWrite}
+                onChange={(e) => set("buttonSize", e.target.value)}
+                className="h-12 w-full rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 text-body text-[var(--color-text-primary)] disabled:opacity-50"
+              >
+                <option value="sm">Small</option>
+                <option value="md">Medium (default)</option>
+                <option value="lg">Large</option>
+              </select>
             </Field>
           </CardContent>
         </Card>

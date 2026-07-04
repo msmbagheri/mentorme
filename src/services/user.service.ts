@@ -62,7 +62,12 @@ export async function updateUser(input: UpdateUserInput) {
   if (input.email !== undefined) data.email = input.email;
   if (input.role !== undefined) data.role = input.role;
   if (input.isActive !== undefined) data.isActive = input.isActive;
-  if (input.password) data.passwordHash = await hashPassword(input.password);
+  if (input.password) {
+    data.passwordHash = await hashPassword(input.password);
+    // Invalidate every existing session for this user: their JWTs embed the old
+    // sessionVersion and will no longer match, forcing a re-login with the new password.
+    data.sessionVersion = { increment: 1 };
+  }
 
   return prisma.user.update({
     where: { id: input.id },
