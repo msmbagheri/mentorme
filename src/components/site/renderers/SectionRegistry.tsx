@@ -1,5 +1,6 @@
 import type { ComponentType, CSSProperties } from "react";
 import type { HomepageDTO, SectionType, SectionLayoutDTO } from "@/types/cms";
+import { sectionFontVars } from "@/lib/fonts";
 
 import { HeroSection } from "./HeroSection";
 import { AsSeenInSection } from "./AsSeenInSection";
@@ -132,18 +133,25 @@ export const sectionRegistry: Partial<
  * `bg-[var(--color-surface)]` / text / accent tokens. Only valid hex values are
  * stored (validated server-side), so no runtime sanitizing is needed here.
  */
-function sectionVars(s?: SectionLayoutDTO): CSSProperties | undefined {
+export function sectionVars(s?: SectionLayoutDTO): CSSProperties | undefined {
   if (!s) return undefined;
   const vars: Record<string, string> = {};
   if (s.bgColor) {
     vars["--color-surface"] = s.bgColor;
     vars["--color-bg"] = s.bgColor;
+    // Hero paints `background-image: var(--gradient-soft)` and Final CTA paints a
+    // dark surface var; override both so every section's background truly follows
+    // the admin color (not just the ones using --color-bg/--color-surface).
+    vars["--gradient-soft"] = `linear-gradient(0deg, ${s.bgColor}, ${s.bgColor})`;
+    vars["--section-dark-bg"] = s.bgColor;
   }
   if (s.textColor) {
     vars["--color-text-primary"] = s.textColor;
     vars["--color-text-secondary"] = s.textColor;
   }
   if (s.accentColor) vars["--brand-primary"] = s.accentColor;
+  const font = sectionFontVars(s.fontFamily);
+  if (font) Object.assign(vars, font);
   return Object.keys(vars).length ? (vars as CSSProperties) : undefined;
 }
 

@@ -107,16 +107,35 @@ export async function getFooter(locale: AppLocale): Promise<FooterDTO> {
     navItems = (menu?.items ?? []).map((item) => toMenuItemDTO(item, locale));
   }
 
-  const services = await prisma.service.findMany({
-    where: { isActive: true, status: "PUBLISHED" },
-    orderBy: { sortOrder: "asc" },
-    take: 6,
-    select: { slug: true, title_en: true, title_fa: true },
-  });
-  const serviceLinks = services.map((s) => ({
-    label: pick(s, "title", locale),
-    href: `/${locale}/services/${s.slug}`,
-  }));
+  // Prefer an admin-chosen menu for the "Related services" column; otherwise
+  // fall back to auto-listing the first published services.
+  let serviceLinks: FooterDTO["serviceLinks"] = [];
+  if (setting?.servicesMenuId) {
+    const menu = await prisma.menu.findUnique({
+      where: { id: setting.servicesMenuId },
+      include: {
+        items: { where: { isActive: true }, orderBy: { sortOrder: "asc" } },
+      },
+    });
+    serviceLinks = (menu?.items ?? []).map((item) => {
+      const dto = toMenuItemDTO(item, locale);
+      return { label: dto.label, href: dto.href };
+    });
+  } else {
+    const services = await prisma.service.findMany({
+      where: { isActive: true, status: "PUBLISHED" },
+      orderBy: { sortOrder: "asc" },
+      take: 6,
+      select: { slug: true, title_en: true, title_fa: true },
+    });
+    serviceLinks = services.map((s) => ({
+      label: pick(s, "title", locale),
+      href: `/${locale}/services/${s.slug}`,
+    }));
+  }
+  const servicesHeading = setting
+    ? pick(setting, "servicesHeading", locale) || null
+    : null;
 
   if (!setting) {
     return {
@@ -130,6 +149,7 @@ export async function getFooter(locale: AppLocale): Promise<FooterDTO> {
       socialLinks: [],
       navItems,
       serviceLinks,
+      servicesHeading,
     };
   }
 
@@ -144,6 +164,7 @@ export async function getFooter(locale: AppLocale): Promise<FooterDTO> {
     socialLinks: parseSocialLinks(setting.socialLinks),
     navItems,
     serviceLinks,
+    servicesHeading,
   };
 }
 

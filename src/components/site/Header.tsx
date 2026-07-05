@@ -2,10 +2,10 @@
 
 import * as React from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { dictionary } from "@/lib/i18n";
+import { isVideoUrl } from "@/lib/media-url";
 import { CtaButton } from "@/components/site/CtaButton";
 import { LocaleSwitcher } from "@/components/site/LocaleSwitcher";
 import type { AppLocale } from "@/types/locale";
@@ -54,15 +54,26 @@ export function Header({ locale, theme, navItems, cta }: HeaderProps) {
       onClick={() => setOpen(false)}
     >
       {logoUrl ? (
-        <Image
-          src={logoUrl}
-          alt={theme.brandName}
-          width={160}
-          height={64}
-          sizes="(max-width: 768px) 44px, 56px"
-          className="h-11 w-auto max-w-[180px] object-contain md:h-14"
-          priority
-        />
+        isVideoUrl(logoUrl) ? (
+          <video
+            src={logoUrl}
+            aria-label={theme.brandName}
+            muted
+            autoPlay
+            loop
+            playsInline
+            className="h-11 w-auto max-w-[220px] object-contain md:h-14"
+          />
+        ) : (
+          // Height-normalized so a wide, square OR tall brand logo all render at
+          // full header height (a fixed next/image box shrank non-standard logos).
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={logoUrl}
+            alt={theme.brandName}
+            className="h-11 w-auto max-w-[220px] object-contain md:h-14"
+          />
+        )
       ) : (
         <span className="text-h4 font-bold text-gradient-logo">
           {theme.brandName}

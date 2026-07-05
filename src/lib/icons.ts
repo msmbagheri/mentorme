@@ -65,6 +65,37 @@ const ICON_MAP: Record<string, LucideIcon> = {
 
 export const DEFAULT_ICON: LucideIcon = Sparkles;
 
+/**
+ * Canonical icon names (deduped, no aliases) exposed to the admin icon picker so
+ * editors choose from the real library instead of typing a raw string blindly.
+ */
+export const ICON_NAMES: string[] = [
+  "award",
+  "book-open",
+  "briefcase",
+  "calendar",
+  "check-circle",
+  "compass",
+  "graduation-cap",
+  "globe",
+  "heart",
+  "lightbulb",
+  "line-chart",
+  "map-pin",
+  "message-circle",
+  "rocket",
+  "search",
+  "shield-check",
+  "sparkles",
+  "star",
+  "target",
+  "trending-up",
+  "trophy",
+  "users",
+  "user-check",
+  "zap",
+];
+
 /** Resolve a CMS icon name to a lucide component; never returns undefined. */
 export function resolveIcon(name: string | null | undefined): LucideIcon {
   if (!name) return DEFAULT_ICON;

@@ -26,6 +26,7 @@ import type {
   SuccessMetricDTO,
   TeamCategoryDTO,
   GradeOptionDTO,
+  SectionLayoutDTO,
 } from "@/types/cms";
 import { SECTION_ORDER } from "@/types/cms";
 
@@ -86,6 +87,7 @@ export async function listHomepageSections(pageSlug: string = HOME_SLUG) {
       bgColor: row?.bgColor ?? "",
       textColor: row?.textColor ?? "",
       accentColor: row?.accentColor ?? "",
+      fontFamily: row?.fontFamily ?? "",
       header: {
         eyebrow_en: row?.eyebrow_en ?? "",
         eyebrow_fa: row?.eyebrow_fa ?? "",
@@ -96,6 +98,40 @@ export async function listHomepageSections(pageSlug: string = HOME_SLUG) {
       },
     };
   });
+}
+
+/**
+ * Fetch one section's style overrides. Used for sections rendered OUTSIDE the
+ * `HomeSections` map (e.g. the footer, which the site layout renders), so their
+ * admin-configured colors/font can be applied via a wrapper too.
+ */
+export async function getSectionStyle(
+  sectionType: string,
+  pageSlug: string = HOME_SLUG,
+): Promise<SectionLayoutDTO | null> {
+  const page = await prisma.page.findUnique({
+    where: { slug: pageSlug },
+    select: { id: true },
+  });
+  if (!page) return null;
+  const row = await prisma.homepageSection.findUnique({
+    where: { pageId_sectionType: { pageId: page.id, sectionType } },
+    select: {
+      cardsPerRow: true,
+      bgColor: true,
+      textColor: true,
+      accentColor: true,
+      fontFamily: true,
+    },
+  });
+  if (!row) return null;
+  return {
+    cardsPerRow: row.cardsPerRow,
+    bgColor: row.bgColor,
+    textColor: row.textColor,
+    accentColor: row.accentColor,
+    fontFamily: row.fontFamily,
+  };
 }
 
 /** Header copy fields editable from the admin Homepage Builder. */
@@ -112,6 +148,8 @@ export interface SectionHeaderInput {
   bgColor?: string | null;
   textColor?: string | null;
   accentColor?: string | null;
+  /** Per-section font family override ("" to clear). */
+  fontFamily?: string | null;
 }
 
 function normalize(value: string | null | undefined): string | null {
@@ -171,6 +209,7 @@ export async function updateSectionHeader(
     ...(input.bgColor !== undefined ? { bgColor: normalizeHex(input.bgColor) } : {}),
     ...(input.textColor !== undefined ? { textColor: normalizeHex(input.textColor) } : {}),
     ...(input.accentColor !== undefined ? { accentColor: normalizeHex(input.accentColor) } : {}),
+    ...(input.fontFamily !== undefined ? { fontFamily: normalize(input.fontFamily) } : {}),
   };
 
   const section = await prisma.homepageSection.upsert({
@@ -344,6 +383,7 @@ export async function getHomepage(
           bgColor: section.bgColor,
           textColor: section.textColor,
           accentColor: section.accentColor,
+          fontFamily: section.fontFamily,
         };
       }
       if (section.sectionType === "why_choose_us") {

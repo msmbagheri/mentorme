@@ -21,9 +21,29 @@ import {
   ShieldCheck,
   ScrollText,
   Settings,
+  ListChecks,
+  Sparkles,
+  Newspaper,
+  BarChart3,
 } from "lucide-react";
 import { can, NAV_RESOURCES, type Resource } from "@/lib/permissions";
 import { cn } from "@/lib/utils";
+
+/**
+ * Homepage sub-modules that were previously only reachable from the Homepage
+ * Builder's deep-links. Surfaced here (gated by the "homepage" read permission)
+ * so editors can find them directly.
+ */
+const HOMEPAGE_SUBMODULES: {
+  href: string;
+  label: string;
+  Icon: React.ComponentType<{ className?: string }>;
+}[] = [
+  { href: "/admin/methodology", label: "Methodology", Icon: ListChecks },
+  { href: "/admin/value-props", label: "Value cards", Icon: Sparkles },
+  { href: "/admin/as-seen-in", label: "As Seen In", Icon: Newspaper },
+  { href: "/admin/success-metrics", label: "Success metrics", Icon: BarChart3 },
+];
 
 const ICONS: Record<Resource, React.ComponentType<{ className?: string }>> = {
   dashboard: LayoutDashboard,
@@ -71,6 +91,16 @@ export function AdminSidebar({ role }: { role: Role }) {
   const pathname = usePathname();
 
   const items = NAV_RESOURCES.filter((n) => can(role, "read", n.resource));
+  const showHomepageContent = can(role, "read", "homepage");
+
+  function linkClass(active: boolean) {
+    return cn(
+      "flex min-h-11 items-center gap-3 rounded-[var(--radius-md)] px-3 py-2 text-small font-medium transition-colors",
+      active
+        ? "bg-[var(--color-surface-alt)] text-[var(--brand-primary)]"
+        : "text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-alt)] hover:text-[var(--color-text-primary)]",
+    );
+  }
 
   return (
     <aside className="hidden w-64 shrink-0 flex-col border-e border-[var(--color-border)] bg-[var(--color-surface)] lg:flex">
@@ -92,12 +122,7 @@ export function AdminSidebar({ role }: { role: Role }) {
                 <Link
                   href={href}
                   aria-current={active ? "page" : undefined}
-                  className={cn(
-                    "flex min-h-11 items-center gap-3 rounded-[var(--radius-md)] px-3 py-2 text-small font-medium transition-colors",
-                    active
-                      ? "bg-[var(--color-surface-alt)] text-[var(--brand-primary)]"
-                      : "text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-alt)] hover:text-[var(--color-text-primary)]",
-                  )}
+                  className={linkClass(active)}
                 >
                   <Icon className="size-5 shrink-0" aria-hidden />
                   <span>{item.label}</span>
@@ -106,6 +131,31 @@ export function AdminSidebar({ role }: { role: Role }) {
             );
           })}
         </ul>
+
+        {showHomepageContent ? (
+          <div className="mt-4 border-t border-[var(--color-border)] pt-3">
+            <p className="px-3 pb-1 text-caption font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">
+              Homepage content
+            </p>
+            <ul className="flex flex-col gap-0.5">
+              {HOMEPAGE_SUBMODULES.map(({ href, label, Icon }) => {
+                const active = pathname === href || pathname.startsWith(`${href}/`);
+                return (
+                  <li key={href}>
+                    <Link
+                      href={href}
+                      aria-current={active ? "page" : undefined}
+                      className={linkClass(active)}
+                    >
+                      <Icon className="size-5 shrink-0" aria-hidden />
+                      <span>{label}</span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ) : null}
       </nav>
     </aside>
   );

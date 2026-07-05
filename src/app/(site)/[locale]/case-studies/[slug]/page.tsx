@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { SiteMediaServer } from "@/components/site/SiteMediaServer";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale, type AppLocale } from "@/types/locale";
@@ -76,7 +76,7 @@ export default async function CaseStudyDetailPage({
           <header className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
             {cs.imageUrl && (
               <div className="relative aspect-square w-full overflow-hidden rounded-[var(--radius-xl)] shadow-[var(--shadow-md)]">
-                <Image
+                <SiteMediaServer
                   src={cs.imageUrl}
                   alt={cs.imageAlt ?? cs.name}
                   fill

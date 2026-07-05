@@ -31,7 +31,18 @@ export function CardCarousel({ perRow, itemCount, locale, children }: CardCarous
   function scrollByPage(direction: 1 | -1) {
     const el = trackRef.current;
     if (!el) return;
-    el.scrollBy({ left: el.clientWidth * (isRtl ? -direction : direction), behavior: "smooth" });
+    // Page by the TRUE inter-card step (card width + gap), not clientWidth —
+    // clientWidth omits the flex gap, so scrolling by it lands short of the next
+    // snap point and scroll-snap needs a second nudge to settle the card.
+    const items = el.children;
+    const step =
+      items.length >= 2
+        ? Math.abs(
+            (items[1] as HTMLElement).offsetLeft -
+              (items[0] as HTMLElement).offsetLeft,
+          ) * perRow
+        : el.clientWidth;
+    el.scrollBy({ left: step * (isRtl ? -direction : direction), behavior: "smooth" });
   }
 
   return (

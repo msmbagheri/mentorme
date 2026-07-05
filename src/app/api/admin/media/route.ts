@@ -5,7 +5,13 @@ import { assertCan } from "@/lib/permissions";
 import { requireAdmin, isResponse, handleApiError } from "@/lib/api/admin-guard";
 import { rateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/security";
-import { listMedia, createMedia, deleteMedia, updateMedia } from "@/services/media.service";
+import {
+  listMedia,
+  createMedia,
+  deleteMedia,
+  updateMedia,
+  setMediaPosterByUrl,
+} from "@/services/media.service";
 import { record } from "@/services/audit.service";
 import { mediaUploadMetaSchema, mediaUpdateSchema } from "@/lib/validation/media.schema";
 import type { MediaType } from "@prisma/client";
@@ -111,6 +117,28 @@ export async function PATCH(req: NextRequest) {
     assertCan(ctx.role, "update", "media");
 
     const body = await req.json().catch(() => ({}));
+
+    // Set/clear a video's cover (poster) by file URL — used by the media picker.
+    if (body && typeof body === "object" && "fileUrl" in body && "posterUrl" in body) {
+      const { fileUrl, posterUrl } = z
+        .object({
+          fileUrl: z.string().min(1).max(2000),
+          posterUrl: z.string().max(2000).nullable().or(z.literal("")),
+        })
+        .parse(body);
+      await setMediaPosterByUrl(fileUrl, posterUrl || null);
+      await record({
+        userId: ctx.userId,
+        action: "UPDATE",
+        entityType: "MediaAsset",
+        entityId: fileUrl,
+        details: "Updated media cover image.",
+        ipAddress: ctx.ipAddress,
+        userAgent: ctx.userAgent,
+      });
+      return ok({ fileUrl, posterUrl: posterUrl || null });
+    }
+
     const { id, ...data } = mediaUpdateSchema.parse(body);
     const asset = await updateMedia(id, data);
     await record({

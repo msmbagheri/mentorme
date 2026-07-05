@@ -1,7 +1,7 @@
-import Image from "next/image";
 import { Star } from "lucide-react";
 import { SectionHeader } from "./SectionHeader";
 import { TestimonialsCarousel } from "./TestimonialsCarousel";
+import { SiteMediaServer } from "@/components/site/SiteMediaServer";
 import { resolveIcon } from "@/lib/icons";
 import type { AppLocale } from "@/types/locale";
 import type { WhyChooseUsDTO, SectionHeaderDTO } from "@/types/cms";
@@ -73,11 +73,12 @@ export function WhyChooseUsSection({
             </blockquote>
             <figcaption className="flex flex-col items-center gap-3">
               {featuredTestimonial.avatarUrl && (
-                <Image
+                <SiteMediaServer
                   src={featuredTestimonial.avatarUrl}
                   alt={featuredTestimonial.avatarAlt ?? featuredTestimonial.name}
                   width={64}
                   height={64}
+                  background
                   className="size-16 rounded-full object-cover"
                 />
               )}

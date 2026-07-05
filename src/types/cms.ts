@@ -279,6 +279,8 @@ export interface FooterDTO {
   socialLinks: SocialLink[];
   navItems: MenuItemDTO[];
   serviceLinks: { label: string; href: string }[];
+  /** Editable heading for the "Related services" column; null = use default. */
+  servicesHeading: string | null;
 }
 
 export interface SeoDTO {
@@ -303,6 +305,8 @@ export interface SectionLayoutDTO {
   bgColor: string | null;
   textColor: string | null;
   accentColor: string | null;
+  /** CSS font family override for the section; null = inherit theme font. */
+  fontFamily: string | null;
 }
 
 /** Whether a homepage section is enabled (CMS visibility). */

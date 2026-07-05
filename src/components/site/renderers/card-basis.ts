@@ -17,3 +17,16 @@ export function cardBasis(perRow: number): string {
 export function normalizeCardsPerRow(value: number | null | undefined, fallback = 3): number {
   return value === 1 || value === 2 || value === 3 || value === 4 ? value : fallback;
 }
+
+/**
+ * Desktop columns clamped to the number of items so a short list fills the row
+ * instead of leaving empty tracks: 1 card → full width, 2 → halves, 3 → thirds.
+ */
+export function effectiveColumns(
+  configured: number | null | undefined,
+  itemCount: number,
+  fallback = 3,
+): number {
+  const cols = normalizeCardsPerRow(configured, fallback);
+  return Math.max(1, Math.min(cols, itemCount || 1));
+}

@@ -1,6 +1,6 @@
 import { SectionHeader } from "./SectionHeader";
 import { CardCarousel } from "./CardCarousel";
-import { cardBasis, normalizeCardsPerRow } from "./card-basis";
+import { cardBasis, effectiveColumns } from "./card-basis";
 import { EventCard } from "@/components/site/EventCard";
 import type { AppLocale } from "@/types/locale";
 import type { EventCardDTO, SectionHeaderDTO } from "@/types/cms";
@@ -19,7 +19,7 @@ export function EventsSection({ data, locale, header, cardsPerRow }: EventsSecti
     header?.title ?? (locale === "fa" ? "رویدادها و وبینارها" : "Events & Webinars");
   const eyebrow = header?.eyebrow ?? null;
   const description = header?.description ?? null;
-  const columns = normalizeCardsPerRow(cardsPerRow, 3);
+  const columns = effectiveColumns(cardsPerRow, data.length, 3);
   const basis = cardBasis(columns);
 
   return (

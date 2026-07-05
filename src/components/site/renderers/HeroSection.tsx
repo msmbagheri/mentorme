@@ -1,7 +1,7 @@
-import Image from "next/image";
 import { Star } from "lucide-react";
 import { CtaButton } from "@/components/site/CtaButton";
 import { GradeSelector } from "@/components/site/GradeSelector";
+import { SiteMediaServer } from "@/components/site/SiteMediaServer";
 import type { AppLocale } from "@/types/locale";
 import type { HeroDTO } from "@/types/cms";
 
@@ -64,7 +64,7 @@ export function HeroSection({ data, locale }: HeroSectionProps) {
 
         {data.imageUrl && (
           <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)]">
-            <Image
+            <SiteMediaServer
               src={data.imageUrl}
               alt={data.imageAlt ?? data.headline}
               fill

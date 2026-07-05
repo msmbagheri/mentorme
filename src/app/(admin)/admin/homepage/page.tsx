@@ -54,6 +54,7 @@ export default async function HomepageAdminPage({
         bgColor: s.bgColor,
         textColor: s.textColor,
         accentColor: s.accentColor,
+        fontFamily: s.fontFamily,
         header: s.header,
       }))}
       singletons={JSON.parse(JSON.stringify(singletons))}

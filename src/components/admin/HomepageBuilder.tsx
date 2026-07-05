@@ -16,6 +16,7 @@ import {
 } from "@/components/admin/shared";
 import { ContentEditor } from "@/components/admin/ContentEditor";
 import { HOMEPAGE_SINGLETONS } from "@/components/admin/content-config";
+import { SECTION_FONT_OPTIONS } from "@/lib/fonts";
 
 interface SectionHeader {
   eyebrow_en: string;
@@ -34,6 +35,7 @@ interface SectionRow {
   bgColor: string;
   textColor: string;
   accentColor: string;
+  fontFamily: string;
   header: SectionHeader;
 }
 
@@ -73,16 +75,23 @@ const SECTION_LABELS: Record<string, string> = {
   footer: "Footer",
 };
 
-/** Editor deep-links for sections that map to a managed module. */
-const SECTION_LINKS: Record<string, string> = {
-  services: "/admin/services",
-  success_stories: "/admin/case-studies",
-  team: "/admin/team",
-  events: "/admin/events",
-  why_choose_us: "/admin/testimonials",
-  as_seen_in: "/admin/as-seen-in",
-  methodology: "/admin/methodology",
-  footer: "/admin/footer",
+/**
+ * Editor deep-links for sections that map to managed modules. A section can map
+ * to MORE THAN ONE module (e.g. Why Choose Us is built from testimonials AND the
+ * value-prop cards), so each entry is a labelled list.
+ */
+const SECTION_LINKS: Record<string, { href: string; label: string }[]> = {
+  services: [{ href: "/admin/services", label: "Edit" }],
+  success_stories: [{ href: "/admin/case-studies", label: "Edit" }],
+  team: [{ href: "/admin/team", label: "Edit" }],
+  events: [{ href: "/admin/events", label: "Edit" }],
+  why_choose_us: [
+    { href: "/admin/testimonials", label: "Testimonials" },
+    { href: "/admin/value-props", label: "Value cards" },
+  ],
+  as_seen_in: [{ href: "/admin/as-seen-in", label: "Edit" }],
+  methodology: [{ href: "/admin/methodology", label: "Edit" }],
+  footer: [{ href: "/admin/footer", label: "Edit" }],
 };
 
 /** Repeatable homepage content managers reachable from the builder header. */
@@ -136,6 +145,8 @@ function SectionHeaderForm({
   initial,
   initialCardsPerRow,
   initialColors,
+  initialFont,
+  showHeaderCopy,
   canWrite,
   onSaved,
 }: {
@@ -144,6 +155,9 @@ function SectionHeaderForm({
   initial: SectionHeader;
   initialCardsPerRow: number;
   initialColors: { bgColor: string; textColor: string; accentColor: string };
+  initialFont: string;
+  /** Whether this section's eyebrow/title/description copy lives on HomepageSection. */
+  showHeaderCopy: boolean;
   canWrite: boolean;
   onSaved: () => void;
 }) {
@@ -151,6 +165,7 @@ function SectionHeaderForm({
   const [form, setForm] = React.useState<SectionHeader>(initial);
   const [cardsPerRow, setCardsPerRow] = React.useState<number>(initialCardsPerRow);
   const [colors, setColors] = React.useState(initialColors);
+  const [font, setFont] = React.useState(initialFont);
   const [saving, setSaving] = React.useState(false);
   const showCardsPerRow = CARDS_PER_ROW_SECTIONS.has(sectionType);
 
@@ -163,6 +178,9 @@ function SectionHeaderForm({
   React.useEffect(() => {
     setColors(initialColors);
   }, [initialColors]);
+  React.useEffect(() => {
+    setFont(initialFont);
+  }, [initialFont]);
 
   function change(key: string, value: string) {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -175,11 +193,23 @@ function SectionHeaderForm({
         apiClient.patch("/api/admin/homepage", {
           sectionType,
           pageSlug,
-          header: form,
+          // Header copy only lives on HomepageSection for header-editable sections;
+          // singletons keep their copy on their own record, so send an empty header.
+          header: showHeaderCopy
+            ? form
+            : {
+                eyebrow_en: "",
+                eyebrow_fa: "",
+                title_en: "",
+                title_fa: "",
+                description_en: "",
+                description_fa: "",
+              },
           ...(showCardsPerRow ? { cardsPerRow } : {}),
           bgColor: colors.bgColor,
           textColor: colors.textColor,
           accentColor: colors.accentColor,
+          fontFamily: font,
         }),
       { success: "Section updated", error: "Could not update section" },
     );
@@ -203,37 +233,46 @@ function SectionHeaderForm({
       </button>
       {open ? (
         <div className="flex flex-col gap-4 px-4 pb-4">
-          <BilingualField
-            label="Eyebrow"
-            baseName={`${sectionType}_eyebrow`}
-            valueEn={form.eyebrow_en}
-            valueFa={form.eyebrow_fa}
-            onChange={(k, v) =>
-              change(k.replace(`${sectionType}_eyebrow_`, "eyebrow_"), v)
-            }
-          />
-          <BilingualField
-            label="Title"
-            baseName={`${sectionType}_title`}
-            valueEn={form.title_en}
-            valueFa={form.title_fa}
-            onChange={(k, v) =>
-              change(k.replace(`${sectionType}_title_`, "title_"), v)
-            }
-          />
-          <BilingualField
-            label="Description"
-            baseName={`${sectionType}_description`}
-            valueEn={form.description_en}
-            valueFa={form.description_fa}
-            textarea
-            onChange={(k, v) =>
-              change(
-                k.replace(`${sectionType}_description_`, "description_"),
-                v,
-              )
-            }
-          />
+          {showHeaderCopy ? (
+            <>
+              <BilingualField
+                label="Eyebrow"
+                baseName={`${sectionType}_eyebrow`}
+                valueEn={form.eyebrow_en}
+                valueFa={form.eyebrow_fa}
+                onChange={(k, v) =>
+                  change(k.replace(`${sectionType}_eyebrow_`, "eyebrow_"), v)
+                }
+              />
+              <BilingualField
+                label="Title"
+                baseName={`${sectionType}_title`}
+                valueEn={form.title_en}
+                valueFa={form.title_fa}
+                onChange={(k, v) =>
+                  change(k.replace(`${sectionType}_title_`, "title_"), v)
+                }
+              />
+              <BilingualField
+                label="Description"
+                baseName={`${sectionType}_description`}
+                valueEn={form.description_en}
+                valueFa={form.description_fa}
+                textarea
+                onChange={(k, v) =>
+                  change(
+                    k.replace(`${sectionType}_description_`, "description_"),
+                    v,
+                  )
+                }
+              />
+            </>
+          ) : (
+            <p className="text-caption text-[var(--color-text-muted)]">
+              Edit this section&apos;s text &amp; images via “Edit content” above. Colors and
+              font below apply to the whole section.
+            </p>
+          )}
           {showCardsPerRow ? (
             <label className="flex flex-col gap-1.5 text-small font-semibold text-[var(--color-text-secondary)]">
               Cards per row
@@ -272,6 +311,20 @@ function SectionHeaderForm({
               />
             </div>
           </div>
+          <label className="flex flex-col gap-1.5 text-small font-semibold text-[var(--color-text-secondary)]">
+            Section font (optional — leave on default to use the theme)
+            <select
+              value={font}
+              onChange={(e) => setFont(e.target.value)}
+              className="h-10 w-full max-w-[16rem] rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-body text-[var(--color-text-primary)]"
+            >
+              {SECTION_FONT_OPTIONS.map((f) => (
+                <option key={f.value} value={f.value}>
+                  {f.label}
+                </option>
+              ))}
+            </select>
+          </label>
           {canWrite ? (
             <div className="flex justify-end">
               <Button
@@ -379,7 +432,7 @@ export function HomepageBuilder({
         <CardContent className="p-0">
           <ol className="flex flex-col divide-y divide-[var(--color-border)]">
             {visibleSections.map((s) => {
-              const link = SECTION_LINKS[s.sectionType];
+              const links = SECTION_LINKS[s.sectionType];
               const singletonConfig = HOMEPAGE_SINGLETONS[s.sectionType];
               return (
                 <li key={s.sectionType} className="flex flex-col">
@@ -412,13 +465,18 @@ export function HomepageBuilder({
                     >
                       <Pencil className="size-4" /> Edit content
                     </button>
-                  ) : link ? (
-                    <Link
-                      href={link}
-                      className="inline-flex items-center gap-1 text-small font-semibold text-[var(--brand-primary)] hover:underline"
-                    >
-                      <Pencil className="size-4" /> Edit
-                    </Link>
+                  ) : links && links.length > 0 ? (
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                      {links.map((l) => (
+                        <Link
+                          key={l.href}
+                          href={l.href}
+                          className="inline-flex items-center gap-1 text-small font-semibold text-[var(--brand-primary)] hover:underline"
+                        >
+                          <Pencil className="size-4" /> {l.label}
+                        </Link>
+                      ))}
+                    </div>
                   ) : (
                     <span
                       className="inline-flex items-center gap-1 text-caption text-[var(--color-text-muted)]"
@@ -434,21 +492,21 @@ export function HomepageBuilder({
                     aria-label={`Toggle ${s.sectionType} visibility`}
                   />
                   </div>
-                  {HEADER_EDITABLE.has(s.sectionType) ? (
-                    <SectionHeaderForm
-                      sectionType={s.sectionType}
-                      pageSlug={pageSlug}
-                      initial={s.header}
-                      initialCardsPerRow={s.cardsPerRow}
-                      initialColors={{
-                        bgColor: s.bgColor,
-                        textColor: s.textColor,
-                        accentColor: s.accentColor,
-                      }}
-                      canWrite={canWrite}
-                      onSaved={() => router.refresh()}
-                    />
-                  ) : null}
+                  <SectionHeaderForm
+                    sectionType={s.sectionType}
+                    pageSlug={pageSlug}
+                    initial={s.header}
+                    initialCardsPerRow={s.cardsPerRow}
+                    initialColors={{
+                      bgColor: s.bgColor,
+                      textColor: s.textColor,
+                      accentColor: s.accentColor,
+                    }}
+                    initialFont={s.fontFamily}
+                    showHeaderCopy={HEADER_EDITABLE.has(s.sectionType)}
+                    canWrite={canWrite}
+                    onSaved={() => router.refresh()}
+                  />
                 </li>
               );
             })}

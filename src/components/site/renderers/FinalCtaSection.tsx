@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { CtaButton } from "@/components/site/CtaButton";
+import { SiteMediaServer } from "@/components/site/SiteMediaServer";
 import type { AppLocale } from "@/types/locale";
 import type { FinalCtaDTO } from "@/types/cms";
 
@@ -14,15 +14,15 @@ export function FinalCtaSection({ data }: FinalCtaSectionProps) {
     <section
       id="final-cta"
       aria-label={data.headline}
-      className="relative isolate overflow-hidden bg-[var(--color-text-primary)]"
+      className="relative isolate overflow-hidden bg-[var(--section-dark-bg,var(--color-text-primary))]"
     >
       {data.backgroundImageUrl && (
         <>
-          <Image
+          <SiteMediaServer
             src={data.backgroundImageUrl}
             alt=""
-            aria-hidden="true"
             fill
+            background
             sizes="100vw"
             className="-z-10 object-cover opacity-30"
           />

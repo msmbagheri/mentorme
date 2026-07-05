@@ -1,8 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 import { SectionHeader } from "./SectionHeader";
+import { SiteMediaServer } from "@/components/site/SiteMediaServer";
 import { CardCarousel } from "./CardCarousel";
-import { cardBasis, normalizeCardsPerRow } from "./card-basis";
+import { cardBasis, effectiveColumns } from "./card-basis";
 import { Badge } from "@/components/ui/badge";
 import { dictionary } from "@/lib/i18n";
 import type { AppLocale } from "@/types/locale";
@@ -28,7 +28,7 @@ export function SuccessStoriesSection({
     header?.title ?? (locale === "fa" ? "داستان‌های موفقیت" : "Success Stories");
   const eyebrow = header?.eyebrow ?? null;
   const description = header?.description ?? null;
-  const columns = normalizeCardsPerRow(cardsPerRow, 3);
+  const columns = effectiveColumns(cardsPerRow, data.length, 3);
   const basis = cardBasis(columns);
 
   return (
@@ -52,7 +52,7 @@ export function SuccessStoriesSection({
               >
                 {cs.imageUrl && (
                   <div className="relative aspect-square w-full overflow-hidden rounded-[var(--radius-md)]">
-                    <Image
+                    <SiteMediaServer
                       src={cs.imageUrl}
                       alt={cs.imageAlt ?? cs.name}
                       fill

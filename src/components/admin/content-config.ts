@@ -14,7 +14,8 @@ export type FieldType =
   | "tags"
   | "url"
   | "email"
-  | "select";
+  | "select"
+  | "icon";
 
 export interface FieldDef {
   /** Base name. For bilingual fields the editor appends _en/_fa. */
@@ -282,7 +283,7 @@ export const CONTENT_MODULES: Record<string, ContentModuleConfig> = {
     ],
     fields: [
       { name: "stepNumber", label: "Step number", type: "number", required: true, tab: "content" },
-      { name: "icon", label: "Icon", type: "text", tab: "content" },
+      { name: "icon", label: "Icon", type: "icon", tab: "content" },
       { name: "title", label: "Title", type: "bilingual-text", required: true, tab: "content" },
       { name: "description", label: "Description", type: "bilingual-textarea", required: true, tab: "content" },
       { name: "sortOrder", label: "Sort order", type: "number", tab: "settings" },
@@ -301,7 +302,7 @@ export const CONTENT_MODULES: Record<string, ContentModuleConfig> = {
       { key: "sortOrder", label: "Order" },
     ],
     fields: [
-      { name: "icon", label: "Icon", type: "text", tab: "content" },
+      { name: "icon", label: "Icon", type: "icon", tab: "content" },
       { name: "title", label: "Title", type: "bilingual-text", required: true, tab: "content" },
       { name: "description", label: "Description", type: "bilingual-textarea", required: true, tab: "content" },
       { name: "sortOrder", label: "Sort order", type: "number", tab: "settings" },

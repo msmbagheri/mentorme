@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { SiteMediaServer } from "@/components/site/SiteMediaServer";
 import type { AppLocale } from "@/types/locale";
 import type { FounderMessageDTO } from "@/types/cms";
 
@@ -18,7 +18,7 @@ export function FounderMessageSection({ data }: FounderMessageSectionProps) {
       <div className="container-page grid grid-cols-1 items-center gap-12 lg:grid-cols-[40fr_60fr]">
         {data.photoUrl && (
           <div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-[var(--radius-xl)] shadow-[var(--shadow-md)] lg:mx-0">
-            <Image
+            <SiteMediaServer
               src={data.photoUrl}
               alt={data.photoAlt ?? data.name}
               fill
@@ -41,7 +41,7 @@ export function FounderMessageSection({ data }: FounderMessageSectionProps) {
             {data.message}
           </blockquote>
           {data.signatureUrl && (
-            <Image
+            <SiteMediaServer
               src={data.signatureUrl}
               alt={`${data.name} signature`}
               width={180}

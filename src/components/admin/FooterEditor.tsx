@@ -30,6 +30,9 @@ export interface FooterState {
   businessHours_fa: string;
   socialLinks: SocialLink[];
   footerMenuId: string;
+  servicesMenuId: string;
+  servicesHeading_en: string;
+  servicesHeading_fa: string;
 }
 
 interface MenuOption {
@@ -72,6 +75,9 @@ export function FooterEditor({
       socialLinks: state.socialLinks.filter((s) => s.platform && s.url),
       // footerMenuId must be a uuid or null — never an empty string.
       footerMenuId: state.footerMenuId || null,
+      servicesMenuId: state.servicesMenuId || null,
+      servicesHeading_en: state.servicesHeading_en,
+      servicesHeading_fa: state.servicesHeading_fa,
     };
 
     const res = await runMutation(
@@ -203,6 +209,41 @@ export function FooterEditor({
                 ))}
               </select>
             </Field>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-h4">Related services column</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            <Field
+              label="Services menu"
+              htmlFor="f-services-menu"
+              hint="Choose a menu to drive the footer “Related services” links. Leave as “Auto” to list published services. Manage menu items under Menus."
+            >
+              <select
+                id="f-services-menu"
+                value={state.servicesMenuId}
+                disabled={!canWrite}
+                onChange={(e) => set("servicesMenuId", e.target.value)}
+                className="h-12 w-full rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 text-body text-[var(--color-text-primary)] disabled:opacity-50"
+              >
+                <option value="">— Auto (published services) —</option>
+                {menus.map((m) => (
+                  <option key={m.id} value={m.id}>
+                    {m.internalName}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <BilingualField
+              label="Column heading"
+              baseName="servicesHeading"
+              valueEn={state.servicesHeading_en}
+              valueFa={state.servicesHeading_fa}
+              onChange={(k, v) => set(k as keyof FooterState, v)}
+            />
           </CardContent>
         </Card>
 

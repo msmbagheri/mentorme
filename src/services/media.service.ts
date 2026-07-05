@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import type { MediaType, Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { storage, detectMediaType } from "@/lib/storage";
@@ -71,6 +72,27 @@ export async function createMedia(input: CreateMediaInput) {
 
 export async function getMedia(id: string) {
   return prisma.mediaAsset.findUnique({ where: { id } });
+}
+
+/**
+ * Request-cached map of every asset's URL → { type, poster }. Public renderers
+ * use it to decide image-vs-video and to find a video's cover. React `cache`
+ * dedupes it to a single query per request across all SiteMedia instances.
+ */
+export const getMediaMetaMap = cache(
+  async (): Promise<Map<string, { type: MediaType; poster: string | null }>> => {
+    const rows = await prisma.mediaAsset.findMany({
+      select: { fileUrl: true, mediaType: true, posterUrl: true },
+    });
+    const map = new Map<string, { type: MediaType; poster: string | null }>();
+    for (const r of rows) map.set(r.fileUrl, { type: r.mediaType, poster: r.posterUrl });
+    return map;
+  },
+);
+
+/** Set (or clear) the poster/cover image for the asset(s) at a given file URL. */
+export async function setMediaPosterByUrl(fileUrl: string, posterUrl: string | null) {
+  return prisma.mediaAsset.updateMany({ where: { fileUrl }, data: { posterUrl } });
 }
 
 export async function updateMedia(

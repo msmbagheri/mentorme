@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { SiteMediaServer } from "@/components/site/SiteMediaServer";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Linkedin, Mail, MapPin } from "lucide-react";
@@ -81,7 +81,7 @@ export default async function TeamMemberPage({
           <header className="grid grid-cols-1 items-start gap-10 lg:grid-cols-[40fr_60fr]">
             {member.photoUrl && (
               <div className="relative mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-[var(--radius-xl)] shadow-[var(--shadow-md)] lg:mx-0">
-                <Image
+                <SiteMediaServer
                   src={member.photoUrl}
                   alt={member.photoAlt ?? member.name}
                   fill
@@ -180,7 +180,7 @@ export default async function TeamMemberPage({
                     >
                       {r.photoUrl && (
                         <div className="relative aspect-square w-full overflow-hidden rounded-[var(--radius-md)]">
-                          <Image
+                          <SiteMediaServer
                             src={r.photoUrl}
                             alt={r.photoAlt ?? r.name}
                             fill

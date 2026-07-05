@@ -290,6 +290,10 @@ export const footerCreateSchema = z.object({
     .array(z.object({ platform: z.string().min(1), url: z.string().url() }))
     .optional(),
   footerMenuId: cuid.optional().nullable(),
+  // "Related services" column: optional menu driving the links + editable heading.
+  servicesMenuId: cuid.optional().nullable(),
+  servicesHeading_en: optShort,
+  servicesHeading_fa: optShort,
   isActive: z.boolean().default(true),
 });
 export const footerUpdateSchema = withId(footerCreateSchema.partial().shape);

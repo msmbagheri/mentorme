@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Calendar, Clock, MapPin } from "lucide-react";
+import { SiteMediaServer } from "@/components/site/SiteMediaServer";
 import { Button } from "@/components/ui/button";
 import { dictionary } from "@/lib/i18n";
 import { formatDate, formatTime } from "@/lib/utils";
@@ -26,7 +26,7 @@ export function EventCard({ event, locale }: EventCardProps) {
     <article className="flex h-full flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-sm)] transition-shadow hover:shadow-[var(--shadow-md)]">
       <div className="relative aspect-video w-full overflow-hidden bg-[var(--color-surface-alt)]">
         {event.imageUrl && (
-          <Image
+          <SiteMediaServer
             src={event.imageUrl}
             alt={event.imageAlt ?? event.title}
             fill

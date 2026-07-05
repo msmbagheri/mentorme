@@ -48,6 +48,9 @@ export default async function FooterAdminPage() {
         businessHours_fa: footer?.businessHours_fa ?? "",
         socialLinks: asSocialLinks(footer?.socialLinks),
         footerMenuId: footer?.footerMenuId ?? "",
+        servicesMenuId: footer?.servicesMenuId ?? "",
+        servicesHeading_en: footer?.servicesHeading_en ?? "",
+        servicesHeading_fa: footer?.servicesHeading_fa ?? "",
       }}
     />
   );

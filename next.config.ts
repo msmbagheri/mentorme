@@ -18,6 +18,7 @@ const nextConfig: NextConfig = {
       "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https:",
+      "media-src 'self' blob: https:",
       "font-src 'self' data:",
       "connect-src 'self'",
       "frame-src 'self' https://calendly.com https://cal.com",

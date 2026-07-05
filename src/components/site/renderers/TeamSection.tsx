@@ -1,9 +1,9 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Linkedin } from "lucide-react";
 import { SectionHeader } from "./SectionHeader";
+import { SiteMediaServer } from "@/components/site/SiteMediaServer";
 import { CardCarousel } from "./CardCarousel";
-import { cardBasis, normalizeCardsPerRow } from "./card-basis";
+import { cardBasis, effectiveColumns } from "./card-basis";
 import { dictionary } from "@/lib/i18n";
 import type { AppLocale } from "@/types/locale";
 import type { TeamCategoryDTO, SectionHeaderDTO } from "@/types/cms";
@@ -22,8 +22,6 @@ export function TeamSection({ data, locale, header, cardsPerRow }: TeamSectionPr
   const title = header?.title ?? (locale === "fa" ? "تیم ما" : "Meet The Team");
   const eyebrow = header?.eyebrow ?? null;
   const description = header?.description ?? null;
-  const columns = normalizeCardsPerRow(cardsPerRow, 4);
-  const basis = cardBasis(columns);
 
   return (
     <section
@@ -39,7 +37,12 @@ export function TeamSection({ data, locale, header, cardsPerRow }: TeamSectionPr
         />
 
         <div className="flex flex-col gap-12">
-          {data.map((cat) => (
+          {data.map((cat) => {
+            // Clamp columns to this category's member count so a lone member
+            // renders full-width instead of leaving the desktop row mostly empty.
+            const columns = effectiveColumns(cardsPerRow, cat.members.length, 4);
+            const basis = cardBasis(columns);
+            return (
             <div key={cat.id} className="flex flex-col gap-6">
               {data.length > 1 && (
                 <h3 className="text-h3 font-semibold text-[var(--color-text-primary)]">
@@ -54,7 +57,7 @@ export function TeamSection({ data, locale, header, cardsPerRow }: TeamSectionPr
                   >
                     {m.photoUrl && (
                       <div className="relative aspect-square w-full overflow-hidden rounded-[var(--radius-md)]">
-                        <Image
+                        <SiteMediaServer
                           src={m.photoUrl}
                           alt={m.photoAlt ?? m.name}
                           fill
@@ -97,7 +100,8 @@ export function TeamSection({ data, locale, header, cardsPerRow }: TeamSectionPr
                 ))}
               </CardCarousel>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

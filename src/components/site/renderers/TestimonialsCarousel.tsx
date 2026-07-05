@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { Star } from "lucide-react";
+import { SiteMedia } from "@/components/site/SiteMedia";
 import { CardCarousel } from "./CardCarousel";
 import { cardBasis, normalizeCardsPerRow } from "./card-basis";
 import type { AppLocale } from "@/types/locale";
@@ -49,11 +49,12 @@ export function TestimonialsCarousel({ testimonials, perRow, locale }: Testimoni
             </blockquote>
             <figcaption className="flex items-center gap-3">
               {t.avatarUrl && (
-                <Image
+                <SiteMedia
                   src={t.avatarUrl}
                   alt={t.avatarAlt ?? t.name}
                   width={44}
                   height={44}
+                  background
                   className="size-11 rounded-full object-cover"
                 />
               )}

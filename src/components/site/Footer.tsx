@@ -1,6 +1,6 @@
 import Link from "next/link";
-import Image from "next/image";
 import { dictionary } from "@/lib/i18n";
+import { isVideoUrl } from "@/lib/media-url";
 import type { AppLocale } from "@/types/locale";
 import type { FooterDTO, ThemeDTO } from "@/types/cms";
 
@@ -39,13 +39,24 @@ export function Footer({ locale, footer, theme }: FooterProps) {
               className="inline-flex items-center gap-2"
             >
               {theme.primaryLogoUrl ? (
-                <Image
-                  src={theme.primaryLogoUrl}
-                  alt={theme.brandName}
-                  width={160}
-                  height={64}
-                  className="h-12 w-auto max-w-[180px] object-contain"
-                />
+                isVideoUrl(theme.primaryLogoUrl) ? (
+                  <video
+                    src={theme.primaryLogoUrl}
+                    aria-label={theme.brandName}
+                    muted
+                    autoPlay
+                    loop
+                    playsInline
+                    className="h-12 w-auto max-w-[220px] object-contain"
+                  />
+                ) : (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={theme.primaryLogoUrl}
+                    alt={theme.brandName}
+                    className="h-12 w-auto max-w-[220px] object-contain"
+                  />
+                )
               ) : (
                 <span className="text-h4 font-bold text-gradient-logo">
                   {theme.brandName}
@@ -93,9 +104,9 @@ export function Footer({ locale, footer, theme }: FooterProps) {
 
           {/* Col 3 — services */}
           {footer.serviceLinks.length > 0 && (
-            <nav aria-label={t.relatedServices} className="flex flex-col gap-3">
+            <nav aria-label={footer.servicesHeading ?? t.relatedServices} className="flex flex-col gap-3">
               <h2 className="text-small font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">
-                {t.relatedServices}
+                {footer.servicesHeading ?? t.relatedServices}
               </h2>
               <ul className="flex flex-col gap-2">
                 {footer.serviceLinks.map((s) => (

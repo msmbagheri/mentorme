@@ -19,6 +19,16 @@ export function MethodologySection({
   const title = header?.title ?? (locale === "fa" ? "روش ما" : "Our Methodology");
   const eyebrow = header?.eyebrow ?? null;
   const description = header?.description ?? null;
+  // Fill the row based on step count (up to 4-up on desktop) so a 5th+ step
+  // wraps and centers instead of dangling under a fixed 4-column grid.
+  const columns = Math.min(Math.max(data.length, 1), 4);
+  const lgWidth: Record<number, string> = {
+    1: "lg:w-full",
+    2: "lg:w-[calc((100%-1.5rem)/2)]",
+    3: "lg:w-[calc((100%-3rem)/3)]",
+    4: "lg:w-[calc((100%-4.5rem)/4)]",
+  };
+  const cardWidth = `w-full sm:w-[calc((100%-1.5rem)/2)] ${lgWidth[columns]}`;
 
   return (
     <section
@@ -32,13 +42,13 @@ export function MethodologySection({
           title={title}
           description={description}
         />
-        <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="flex flex-wrap justify-center gap-6">
           {data.map((step) => {
             const Icon = resolveIcon(step.icon);
             return (
               <li
                 key={step.id}
-                className="flex h-full flex-col gap-4 rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-[var(--shadow-sm)] transition-shadow hover:shadow-[var(--shadow-md)]"
+                className={`flex flex-col gap-4 rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-[var(--shadow-sm)] transition-shadow hover:shadow-[var(--shadow-md)] ${cardWidth}`}
               >
                 <span className="text-h2 font-bold text-[var(--color-border-strong)]">
                   {String(step.stepNumber).padStart(2, "0")}

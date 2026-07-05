@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { SiteMediaServer } from "@/components/site/SiteMediaServer";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight } from "lucide-react";
@@ -86,7 +86,7 @@ export default async function ServiceDetailPage({
             </div>
             {service.imageUrl && (
               <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[var(--radius-xl)] shadow-[var(--shadow-md)]">
-                <Image
+                <SiteMediaServer
                   src={service.imageUrl}
                   alt={service.imageAlt ?? service.title}
                   fill

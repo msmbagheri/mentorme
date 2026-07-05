@@ -221,6 +221,9 @@ model HomepageSection {
   bgColor     String?
   textColor   String?
   accentColor String?
+  // Per-section font override (CSS family name, e.g. "Vazirmatn"). Applied to
+  // both --font-en and --font-fa for the section; null = inherit the theme font.
+  fontFamily  String?
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 
@@ -441,6 +444,11 @@ model FooterSetting {
   businessHours_fa String?
   socialLinks  Json?
   footerMenuId String?
+  // Footer "Related services" column: optional menu driving the links (falls
+  // back to auto-listing published services) + an editable column heading.
+  servicesMenuId   String?
+  servicesHeading_en String?
+  servicesHeading_fa String?
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -815,6 +823,9 @@ model MediaAsset {
   fileSize   Int?
   width      Int?
   height     Int?
+  // Cover/poster image URL for a VIDEO asset (shown before playback and as the
+  // <video poster>). Null for images or videos without a chosen cover.
+  posterUrl  String?
   altText_en String?
   altText_fa String?
   createdBy  String?

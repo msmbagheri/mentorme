@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { SiteMediaServer } from "@/components/site/SiteMediaServer";
 import { notFound } from "next/navigation";
 import { Calendar, Clock, MapPin, Users } from "lucide-react";
 import { isLocale, type AppLocale } from "@/types/locale";
@@ -82,7 +82,7 @@ export default async function EventDetailPage({
           <header className="flex flex-col gap-6">
             {ev.imageUrl && (
               <div className="relative aspect-video w-full overflow-hidden rounded-[var(--radius-xl)] shadow-[var(--shadow-md)]">
-                <Image
+                <SiteMediaServer
                   src={ev.imageUrl}
                   alt={ev.imageAlt ?? ev.title}
                   fill

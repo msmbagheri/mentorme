@@ -25,6 +25,7 @@ import {
 } from "@/components/admin/shared";
 import { MediaPicker } from "@/components/admin/MediaPicker";
 import { CtaSelect } from "@/components/admin/CtaSelect";
+import { IconPicker } from "@/components/admin/IconPicker";
 import type { ContentModuleConfig, FieldDef } from "@/components/admin/content-config";
 
 type Values = Record<string, unknown>;
@@ -209,6 +210,16 @@ export function ContentEditor({
               id={id}
               value={(values[f.name] as string) ?? null}
               onChange={(v) => set(f.name, v)}
+            />
+          </Field>
+        );
+      case "icon":
+        return (
+          <Field key={f.name} label={f.label} htmlFor={id} hint={f.hint}>
+            <IconPicker
+              value={String(values[f.name] ?? "")}
+              onChange={(v) => set(f.name, v)}
+              disabled={!canWrite}
             />
           </Field>
         );

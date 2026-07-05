@@ -1,9 +1,9 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { SectionHeader } from "./SectionHeader";
+import { SiteMediaServer } from "@/components/site/SiteMediaServer";
 import { CardCarousel } from "./CardCarousel";
-import { cardBasis, normalizeCardsPerRow } from "./card-basis";
+import { cardBasis, effectiveColumns } from "./card-basis";
 import { dictionary } from "@/lib/i18n";
 import type { AppLocale } from "@/types/locale";
 import type { ServiceCardDTO, SectionHeaderDTO } from "@/types/cms";
@@ -22,7 +22,7 @@ export function ServicesSection({ data, locale, header, cardsPerRow }: ServicesS
   const title = header?.title ?? (locale === "fa" ? "خدمات ما" : "Our Services");
   const eyebrow = header?.eyebrow ?? null;
   const description = header?.description ?? null;
-  const columns = normalizeCardsPerRow(cardsPerRow, 3);
+  const columns = effectiveColumns(cardsPerRow, data.length, 3);
   const basis = cardBasis(columns);
 
   return (
@@ -46,7 +46,7 @@ export function ServicesSection({ data, locale, header, cardsPerRow }: ServicesS
               >
                 {s.imageUrl && (
                   <div className="relative aspect-[16/10] w-full overflow-hidden">
-                    <Image
+                    <SiteMediaServer
                       src={s.imageUrl}
                       alt={s.imageAlt ?? s.title}
                       fill

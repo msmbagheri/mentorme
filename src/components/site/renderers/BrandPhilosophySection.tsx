@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { CtaButton } from "@/components/site/CtaButton";
+import { SiteMediaServer } from "@/components/site/SiteMediaServer";
 import type { AppLocale } from "@/types/locale";
 import type { BrandPhilosophyDTO } from "@/types/cms";
 
@@ -19,7 +19,7 @@ export function BrandPhilosophySection({ data }: BrandPhilosophySectionProps) {
       <div className="container-page grid grid-cols-1 items-center gap-12 lg:grid-cols-[45fr_55fr]">
         {data.imageUrl && (
           <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[var(--radius-xl)] shadow-[var(--shadow-md)]">
-            <Image
+            <SiteMediaServer
               src={data.imageUrl}
               alt={data.imageAlt ?? data.title}
               fill
