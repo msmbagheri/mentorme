@@ -9,7 +9,16 @@
       "WebSearch",
       "Bash(git branch *)",
       "Bash(git add *)",
-      "Bash(git commit -m 'chore: allow git branch in local Claude settings *)"
+      "Bash(git commit -m 'chore: allow git branch in local Claude settings *)",
+      "Bash(docker info *)",
+      "Bash(ssh -i /home/metadeep/.ssh/id_ed25519_mentorme -o BatchMode=yes -o ConnectTimeout=20 root@185.164.73.133 'echo SSH_OK; podman --version; ls /opt/mentorme/docker-compose.prod.yml')",
+      "Bash(npm run *)",
+      "Bash(git commit -m 'fix: body-less 400 from icon endpoint \\(CDN truncates chunked error bodies\\) *)",
+      "Bash(git commit -m 'test: tolerate CDN edge-page interception of 4xx in pwa invalid-size spec *)",
+      "Bash(fuser -k 3100/tcp)",
+      "Bash(git commit -m 'fix: viewport-height-aware hero headline so long copy keeps CTAs above the fold \\(#2\\) *)",
+      "Bash(git commit -m 'fix: hero 55/45 split + tighter padding — long copy wraps fewer lines \\(#2\\) *)",
+      "Bash(./scripts/deploy.sh)"
     ],
     "deny": [
       "Bash(rm -rf /:*)",
