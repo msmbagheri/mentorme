@@ -15,7 +15,9 @@ export async function GET(req: NextRequest) {
   const params = req.nextUrl.searchParams;
   const size = Number(params.get("size") ?? "192");
   if (!(PWA_ICON_SIZES as readonly number[]).includes(size)) {
-    return new Response("Unsupported icon size", { status: 400 });
+    // Body-less 400: the production CDN edge truncates chunked error bodies,
+    // which strict clients (Playwright fetch) report as an aborted request.
+    return new Response(null, { status: 400 });
   }
   const png = await renderPwaIcon(size as PwaIconSize, params.get("maskable") === "1");
   return pngResponse(png);
