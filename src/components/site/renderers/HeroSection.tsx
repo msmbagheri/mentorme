@@ -18,9 +18,11 @@ export function HeroSection({ data, locale }: HeroSectionProps) {
       aria-label="Hero"
       // Tighter spacing than the shared section rhythm: the hero (text, CTAs,
       // trust row AND image) must fit a desktop viewport without scrolling (#2).
-      className="bg-gradient-soft py-10 md:py-12"
+      className="bg-gradient-soft py-8 md:py-10"
     >
-      <div className="container-page grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-10">
+      {/* 55/45 split: the copy column gets more width so long Persian
+          headlines/chips wrap into fewer lines and stay above the fold. */}
+      <div className="container-page grid grid-cols-1 items-center gap-8 lg:grid-cols-[55fr_45fr] lg:gap-10">
         <div className="flex flex-col gap-5">
           {data.eyebrow && (
             <span className="text-small font-semibold uppercase tracking-wide text-[var(--brand-primary)]">
