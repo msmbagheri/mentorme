@@ -13,7 +13,7 @@ import type {
 } from "@/types/cms";
 
 /** Design-system fallbacks used when no ThemeSetting row exists yet. */
-const THEME_DEFAULTS = {
+export const THEME_DEFAULTS = {
   brandName: "MentorMe",
   tagline: { en: "Your path to global universities", fa: "مسیر شما به دانشگاه‌های جهانی" },
   primaryColor: "#1e3a8a",
