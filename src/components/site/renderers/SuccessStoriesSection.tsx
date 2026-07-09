@@ -48,7 +48,7 @@ export function SuccessStoriesSection({
             <li key={cs.id} className={basis}>
               <Link
                 href={`/${locale}/case-studies/${cs.slug}`}
-                className="group flex h-full flex-col gap-4 rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-[var(--shadow-sm)] transition-shadow hover:shadow-[var(--shadow-md)]"
+                className="group flex h-full flex-col gap-4 rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--card-surface,var(--color-surface))] p-6 shadow-[var(--shadow-sm)] transition-shadow hover:shadow-[var(--shadow-md)]"
               >
                 {cs.imageUrl && (
                   <div className="relative aspect-square w-full overflow-hidden rounded-[var(--radius-md)]">

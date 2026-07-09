@@ -48,7 +48,7 @@ export function MethodologySection({
             return (
               <li
                 key={step.id}
-                className={`flex flex-col gap-4 rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-[var(--shadow-sm)] transition-shadow hover:shadow-[var(--shadow-md)] ${cardWidth}`}
+                className={`flex flex-col gap-4 rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--card-surface,var(--color-surface))] p-6 shadow-[var(--shadow-sm)] transition-shadow hover:shadow-[var(--shadow-md)] ${cardWidth}`}
               >
                 <span className="text-h2 font-bold text-[var(--color-border-strong)]">
                   {String(step.stepNumber).padStart(2, "0")}

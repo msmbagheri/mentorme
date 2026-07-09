@@ -24,7 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
   // PWA identity (icons, install name) follows the CMS logo/brand at runtime;
   // getPwaBranding falls back to defaults when the DB is unreachable (build).
   const branding = await getPwaBranding();
-  const icon = (size: 32 | 64 | 180 | 192) =>
+  const icon = (size: 32 | 48 | 64 | 180 | 192) =>
     pwaIconHref(size, branding.version);
   return {
     title: {
@@ -39,6 +39,9 @@ export async function generateMetadata(): Promise<Metadata> {
     icons: {
       icon: [
         { url: icon(32), sizes: "32x32", type: "image/png" },
+        // Google Search favicons must be a multiple of 48px — declare one
+        // explicitly so the result page shows the site logo (#17).
+        { url: icon(48), sizes: "48x48", type: "image/png" },
         { url: icon(192), sizes: "192x192", type: "image/png" },
       ],
       shortcut: [{ url: icon(64), sizes: "64x64", type: "image/png" }],

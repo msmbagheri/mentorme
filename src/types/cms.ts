@@ -268,6 +268,13 @@ export interface ThemeDTO {
   contact: ContactInfo;
 }
 
+/** Trust/licence badge shown in the footer (اینماد, ساماندهی, …). */
+export interface FooterBadge {
+  imageUrl: string;
+  linkUrl: string | null;
+  alt: string | null;
+}
+
 export interface FooterDTO {
   tagline: string | null;
   description: string | null;
@@ -281,6 +288,10 @@ export interface FooterDTO {
   serviceLinks: { label: string; href: string }[];
   /** Editable heading for the "Related services" column; null = use default. */
   servicesHeading: string | null;
+  /** Admin switch: hide the services column entirely. */
+  showServices: boolean;
+  /** Trust badges rendered in the footer bottom bar. */
+  badges: FooterBadge[];
 }
 
 export interface SeoDTO {
@@ -307,6 +318,10 @@ export interface SectionLayoutDTO {
   accentColor: string | null;
   /** CSS font family override for the section; null = inherit theme font. */
   fontFamily: string | null;
+  /** Card background override for card-bearing sections; null = theme surface. */
+  cardBgColor: string | null;
+  /** Text-size multiplier for the section (0.9–1.25); null = 1. */
+  fontScale: number | null;
 }
 
 /** Whether a homepage section is enabled (CMS visibility). */

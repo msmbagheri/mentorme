@@ -16,9 +16,11 @@ export function HeroSection({ data, locale }: HeroSectionProps) {
     <section
       id="hero"
       aria-label="Hero"
-      className="section-spacing bg-gradient-soft"
+      // Tighter spacing than the shared section rhythm: the hero (text, CTAs,
+      // trust row AND image) must fit a desktop viewport without scrolling (#2).
+      className="bg-gradient-soft py-10 md:py-12"
     >
-      <div className="container-page grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
+      <div className="container-page grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-10">
         <div className="flex flex-col gap-6">
           {data.eyebrow && (
             <span className="text-small font-semibold uppercase tracking-wide text-[var(--brand-primary)]">
@@ -63,7 +65,9 @@ export function HeroSection({ data, locale }: HeroSectionProps) {
         </div>
 
         {data.imageUrl && (
-          <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)]">
+          // Height-capped to the viewport (minus header + hero padding) so a
+          // tall 4:5 art never pushes the copy or CTAs below the fold.
+          <div className="relative aspect-[4/5] max-h-[45svh] w-full overflow-hidden rounded-[var(--radius-xl)] shadow-[var(--shadow-lg)] lg:max-h-[calc(100svh-16rem)]">
             <SiteMediaServer
               src={data.imageUrl}
               alt={data.imageAlt ?? data.headline}

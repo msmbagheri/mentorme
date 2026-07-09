@@ -44,6 +44,10 @@ const headerSchema = z.object({
   accentColor: optionalHex,
   // Optional per-section font family override ("" to clear).
   fontFamily: z.string().trim().max(120).optional(),
+  // Optional card background override ("" to clear).
+  cardBgColor: optionalHex,
+  // Optional per-section text-size multiplier (1 = default).
+  fontScale: z.number().min(0.8).max(1.5).optional(),
   pageSlug: z.string().min(1).optional(),
 });
 
@@ -69,11 +73,30 @@ export async function PATCH(req: NextRequest) {
 
     // Header copy update (eyebrow/title/description, both locales).
     if (body && typeof body === "object" && "header" in body) {
-      const { sectionType, header, cardsPerRow, bgColor, textColor, accentColor, fontFamily, pageSlug } =
-        headerSchema.parse(body);
+      const {
+        sectionType,
+        header,
+        cardsPerRow,
+        bgColor,
+        textColor,
+        accentColor,
+        fontFamily,
+        cardBgColor,
+        fontScale,
+        pageSlug,
+      } = headerSchema.parse(body);
       const section = await updateSectionHeader(
         sectionType,
-        { ...header, cardsPerRow, bgColor, textColor, accentColor, fontFamily },
+        {
+          ...header,
+          cardsPerRow,
+          bgColor,
+          textColor,
+          accentColor,
+          fontFamily,
+          cardBgColor,
+          fontScale,
+        },
         {
           userId: ctx.userId,
           ipAddress: ctx.ipAddress,

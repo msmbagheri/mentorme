@@ -11,6 +11,26 @@ interface SocialLink {
   url: string;
 }
 
+interface FooterBadge {
+  imageUrl: string;
+  linkUrl: string;
+  alt: string;
+}
+
+function asBadges(value: unknown): FooterBadge[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter(
+      (v): v is Record<string, unknown> =>
+        !!v && typeof v === "object" && typeof (v as Record<string, unknown>).imageUrl === "string",
+    )
+    .map((v) => ({
+      imageUrl: String(v.imageUrl),
+      linkUrl: typeof v.linkUrl === "string" ? v.linkUrl : "",
+      alt: typeof v.alt === "string" ? v.alt : "",
+    }));
+}
+
 function asSocialLinks(value: unknown): SocialLink[] {
   if (!Array.isArray(value)) return [];
   return value
@@ -51,6 +71,8 @@ export default async function FooterAdminPage() {
         servicesMenuId: footer?.servicesMenuId ?? "",
         servicesHeading_en: footer?.servicesHeading_en ?? "",
         servicesHeading_fa: footer?.servicesHeading_fa ?? "",
+        showServices: footer?.showServices ?? true,
+        badges: asBadges(footer?.badges),
       }}
     />
   );

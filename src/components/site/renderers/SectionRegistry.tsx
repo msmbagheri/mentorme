@@ -150,6 +150,11 @@ export function sectionVars(s?: SectionLayoutDTO): CSSProperties | undefined {
     vars["--color-text-secondary"] = s.textColor;
   }
   if (s.accentColor) vars["--brand-primary"] = s.accentColor;
+  // Cards read bg-[var(--card-surface,var(--color-surface))], so this stays
+  // independent of the section background above.
+  if (s.cardBgColor) vars["--card-surface"] = s.cardBgColor;
+  // Type-scale tokens are calc(base * var(--font-scale, 1)) in globals.css.
+  if (s.fontScale && s.fontScale !== 1) vars["--font-scale"] = String(s.fontScale);
   const font = sectionFontVars(s.fontFamily);
   if (font) Object.assign(vars, font);
   return Object.keys(vars).length ? (vars as CSSProperties) : undefined;

@@ -8,10 +8,18 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { apiClient, runMutation } from "@/lib/admin-client";
 import { PageHeader, Field, BilingualField, ReadOnlyNotice } from "@/components/admin/shared";
+import { MediaPicker } from "@/components/admin/MediaPicker";
+import { Switch } from "@/components/ui/switch";
 
 interface SocialLink {
   platform: string;
   url: string;
+}
+
+interface FooterBadge {
+  imageUrl: string;
+  linkUrl: string;
+  alt: string;
 }
 
 export interface FooterState {
@@ -33,6 +41,8 @@ export interface FooterState {
   servicesMenuId: string;
   servicesHeading_en: string;
   servicesHeading_fa: string;
+  showServices: boolean;
+  badges: FooterBadge[];
 }
 
 interface MenuOption {
@@ -78,6 +88,9 @@ export function FooterEditor({
       servicesMenuId: state.servicesMenuId || null,
       servicesHeading_en: state.servicesHeading_en,
       servicesHeading_fa: state.servicesHeading_fa,
+      showServices: state.showServices,
+      // Drop rows without an image; the badge is its image.
+      badges: state.badges.filter((b) => b.imageUrl),
     };
 
     const res = await runMutation(
@@ -217,6 +230,17 @@ export function FooterEditor({
             <CardTitle className="text-h4">Related services column</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-small font-semibold text-[var(--color-text-secondary)]">
+                Show the services column
+              </span>
+              <Switch
+                checked={state.showServices}
+                disabled={!canWrite}
+                onCheckedChange={(v) => set("showServices", v)}
+                aria-label="Show the services column"
+              />
+            </div>
             <Field
               label="Services menu"
               htmlFor="f-services-menu"
@@ -244,6 +268,87 @@ export function FooterEditor({
               valueFa={state.servicesHeading_fa}
               onChange={(k, v) => set(k as keyof FooterState, v)}
             />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex-row items-center justify-between">
+            <CardTitle className="text-h4">Trust badges</CardTitle>
+            {canWrite ? (
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() =>
+                  set("badges", [...state.badges, { imageUrl: "", linkUrl: "", alt: "" }])
+                }
+              >
+                <Plus className="size-4" /> Add
+              </Button>
+            ) : null}
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            <p className="text-caption text-[var(--color-text-muted)]">
+              اینماد، ساماندهی یا هر مجوز دیگر — تصویر نماد + لینک تأییدیه. در نوار پایین فوتر نمایش داده می‌شود.
+            </p>
+            {state.badges.map((badge, i) => (
+              <div
+                key={i}
+                className="flex flex-col gap-3 rounded-[var(--radius-md)] border border-[var(--color-border)] p-3"
+              >
+                <MediaPicker
+                  label="Badge image"
+                  accept="image"
+                  value={badge.imageUrl}
+                  onChange={(url) => {
+                    const next = [...state.badges];
+                    next[i] = { ...next[i], imageUrl: url };
+                    set("badges", next);
+                  }}
+                />
+                <div className="flex items-end gap-2">
+                  <Field label="Verification link (optional)" htmlFor={`fbl-${i}`}>
+                    <Input
+                      id={`fbl-${i}`}
+                      dir="ltr"
+                      value={badge.linkUrl}
+                      disabled={!canWrite}
+                      placeholder="https://trustseal.enamad.ir/…"
+                      onChange={(e) => {
+                        const next = [...state.badges];
+                        next[i] = { ...next[i], linkUrl: e.target.value };
+                        set("badges", next);
+                      }}
+                    />
+                  </Field>
+                  <Field label="Alt text" htmlFor={`fba-${i}`}>
+                    <Input
+                      id={`fba-${i}`}
+                      value={badge.alt}
+                      disabled={!canWrite}
+                      placeholder="eNAMAD"
+                      onChange={(e) => {
+                        const next = [...state.badges];
+                        next[i] = { ...next[i], alt: e.target.value };
+                        set("badges", next);
+                      }}
+                    />
+                  </Field>
+                  {canWrite ? (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label="Remove badge"
+                      onClick={() => set("badges", state.badges.filter((_, j) => j !== i))}
+                    >
+                      <Trash2 className="size-4 text-[var(--color-error)]" />
+                    </Button>
+                  ) : null}
+                </div>
+              </div>
+            ))}
+            {state.badges.length === 0 ? (
+              <p className="text-small text-[var(--color-text-muted)]">No badges added.</p>
+            ) : null}
           </CardContent>
         </Card>
 

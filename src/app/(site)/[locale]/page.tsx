@@ -4,6 +4,7 @@ import { isLocale, type AppLocale } from "@/types/locale";
 import { getHomepage } from "@/services/homepage.service";
 import { getTheme } from "@/services/theme.service";
 import { getSeoForPage } from "@/services/seo.service";
+import { getPwaBranding, pwaOgHref } from "@/lib/pwa";
 import {
   buildPageMetadata,
   organizationLd,
@@ -27,9 +28,10 @@ export async function generateMetadata({
   if (!isLocale(rawLocale)) return {};
   const locale: AppLocale = rawLocale;
 
-  const [seo, theme] = await Promise.all([
+  const [seo, theme, branding] = await Promise.all([
     getSeoForPage("home", locale),
     getTheme(locale),
+    getPwaBranding(),
   ]);
 
   return buildPageMetadata({
@@ -37,7 +39,9 @@ export async function generateMetadata({
     description: seo.metaDescription ?? theme.tagline,
     locale,
     path: "/",
-    ogImage: seo.ogImageUrl,
+    // Share previews always get an image: the admin-set OG image when present,
+    // otherwise a banner generated live from the CMS logo (#18).
+    ogImage: seo.ogImageUrl ?? pwaOgHref(branding.version),
     noIndex: seo.noIndex,
     noFollow: seo.noFollow,
   });

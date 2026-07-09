@@ -10,6 +10,7 @@ import type {
   SocialLink,
   ContactInfo,
   FooterDTO,
+  FooterBadge,
 } from "@/types/cms";
 
 /** Design-system fallbacks used when no ThemeSetting row exists yet. */
@@ -33,6 +34,23 @@ function parseSocialLinks(value: unknown): SocialLink[] {
         typeof (v as Record<string, unknown>).url === "string",
     )
     .map((v) => ({ platform: v.platform, url: v.url }));
+}
+
+function parseBadges(value: unknown): FooterBadge[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter(
+      (v): v is { imageUrl: string; linkUrl?: unknown; alt?: unknown } =>
+        !!v &&
+        typeof v === "object" &&
+        typeof (v as Record<string, unknown>).imageUrl === "string" &&
+        !!(v as Record<string, unknown>).imageUrl,
+    )
+    .map((v) => ({
+      imageUrl: v.imageUrl,
+      linkUrl: typeof v.linkUrl === "string" && v.linkUrl ? v.linkUrl : null,
+      alt: typeof v.alt === "string" && v.alt ? v.alt : null,
+    }));
 }
 
 function parseContact(value: unknown): ContactInfo {
@@ -150,6 +168,8 @@ export async function getFooter(locale: AppLocale): Promise<FooterDTO> {
       navItems,
       serviceLinks,
       servicesHeading,
+      showServices: true,
+      badges: [],
     };
   }
 
@@ -165,6 +185,8 @@ export async function getFooter(locale: AppLocale): Promise<FooterDTO> {
     navItems,
     serviceLinks,
     servicesHeading,
+    showServices: setting.showServices,
+    badges: parseBadges(setting.badges),
   };
 }
 

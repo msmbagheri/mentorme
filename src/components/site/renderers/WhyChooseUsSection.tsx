@@ -114,7 +114,7 @@ export function WhyChooseUsSection({
               return (
                 <li
                   key={vp.id}
-                  className="flex h-full flex-col gap-4 rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-[var(--shadow-sm)]"
+                  className="flex h-full flex-col gap-4 rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--card-surface,var(--color-surface))] p-6 shadow-[var(--shadow-sm)]"
                 >
                   <span className="flex size-12 items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-surface-alt)] text-[var(--brand-primary)]">
                     <Icon className="size-6" aria-hidden="true" />

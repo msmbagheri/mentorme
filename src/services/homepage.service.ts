@@ -88,6 +88,8 @@ export async function listHomepageSections(pageSlug: string = HOME_SLUG) {
       textColor: row?.textColor ?? "",
       accentColor: row?.accentColor ?? "",
       fontFamily: row?.fontFamily ?? "",
+      cardBgColor: row?.cardBgColor ?? "",
+      fontScale: row?.fontScale ?? 1,
       header: {
         eyebrow_en: row?.eyebrow_en ?? "",
         eyebrow_fa: row?.eyebrow_fa ?? "",
@@ -122,6 +124,8 @@ export async function getSectionStyle(
       textColor: true,
       accentColor: true,
       fontFamily: true,
+      cardBgColor: true,
+      fontScale: true,
     },
   });
   if (!row) return null;
@@ -131,6 +135,8 @@ export async function getSectionStyle(
     textColor: row.textColor,
     accentColor: row.accentColor,
     fontFamily: row.fontFamily,
+    cardBgColor: row.cardBgColor,
+    fontScale: row.fontScale,
   };
 }
 
@@ -150,6 +156,10 @@ export interface SectionHeaderInput {
   accentColor?: string | null;
   /** Per-section font family override ("" to clear). */
   fontFamily?: string | null;
+  /** Card background override (hex or "" to clear). */
+  cardBgColor?: string | null;
+  /** Text-size multiplier (0.9–1.25; null/1 = default). */
+  fontScale?: number | null;
 }
 
 function normalize(value: string | null | undefined): string | null {
@@ -210,6 +220,11 @@ export async function updateSectionHeader(
     ...(input.textColor !== undefined ? { textColor: normalizeHex(input.textColor) } : {}),
     ...(input.accentColor !== undefined ? { accentColor: normalizeHex(input.accentColor) } : {}),
     ...(input.fontFamily !== undefined ? { fontFamily: normalize(input.fontFamily) } : {}),
+    ...(input.cardBgColor !== undefined ? { cardBgColor: normalizeHex(input.cardBgColor) } : {}),
+    // 1 is the neutral scale — store it as null so the row means "no override".
+    ...(input.fontScale !== undefined
+      ? { fontScale: input.fontScale && input.fontScale !== 1 ? input.fontScale : null }
+      : {}),
   };
 
   const section = await prisma.homepageSection.upsert({
@@ -307,6 +322,8 @@ export async function getRenderablePage(slug: string) {
       meta_description_en: true,
       meta_description_fa: true,
       ogImageUrl: true,
+      body_en: true,
+      body_fa: true,
     },
   });
 }
@@ -384,6 +401,8 @@ export async function getHomepage(
           textColor: section.textColor,
           accentColor: section.accentColor,
           fontFamily: section.fontFamily,
+          cardBgColor: section.cardBgColor,
+          fontScale: section.fontScale,
         };
       }
       if (section.sectionType === "why_choose_us") {

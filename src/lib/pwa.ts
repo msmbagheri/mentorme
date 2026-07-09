@@ -215,6 +215,77 @@ export async function renderPwaIcon(
   return png;
 }
 
+/** Href for the generated Open Graph banner (1200×630, from the CMS logo). */
+export function pwaOgHref(version: string): string {
+  return `/api/pwa/og?v=${version}`;
+}
+
+const OG_WIDTH = 1200;
+const OG_HEIGHT = 630;
+
+/**
+ * 1200×630 Open Graph banner: the CMS logo centered on a background sampled
+ * from the logo's own corner. Default share image for link previews (#18) —
+ * pages/SEO settings with an explicit ogImageUrl still take precedence.
+ */
+export async function renderOgImage(): Promise<Buffer> {
+  const branding = await getPwaBranding();
+  const key = `og|${branding.iconSource}|${branding.version}`;
+  const hit = iconCache.get(key);
+  if (hit) return hit;
+
+  let png: Buffer | null = null;
+  if (branding.iconSource) {
+    const source = await readIconSource(branding.iconSource);
+    if (source) {
+      try {
+        const flat = await sharp(source, { density: 256 })
+          .flatten({ background: "#ffffff" })
+          .png()
+          .toBuffer();
+        const { data } = await sharp(flat)
+          .extract({ left: 0, top: 0, width: 1, height: 1 })
+          .raw()
+          .toBuffer({ resolveWithObject: true });
+        const background = { r: data[0], g: data[1], b: data[2] };
+        const inner = await sharp(flat)
+          .resize(Math.round(OG_WIDTH * 0.5), Math.round(OG_HEIGHT * 0.82), {
+            fit: "contain",
+            background,
+          })
+          .png()
+          .toBuffer();
+        png = await sharp({
+          create: { width: OG_WIDTH, height: OG_HEIGHT, channels: 3, background },
+        })
+          .composite([{ input: inner, gravity: "centre" }])
+          .png()
+          .toBuffer();
+      } catch {
+        png = null;
+      }
+    }
+  }
+  if (!png) {
+    // No usable logo: brand-gradient banner (mirrors the icon fallback).
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${OG_WIDTH}" height="${OG_HEIGHT}">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="${branding.themeColor}"/>
+      <stop offset="1" stop-color="${branding.accentColor}"/>
+    </linearGradient>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#g)"/>
+  <text x="50%" y="50%" dy="0.36em" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-weight="700" font-size="110" fill="#ffffff">${escapeXml(branding.name)}</text>
+</svg>`;
+    png = await sharp(Buffer.from(svg)).png().toBuffer();
+  }
+
+  if (iconCache.size >= ICON_CACHE_MAX) iconCache.clear();
+  iconCache.set(key, png);
+  return png;
+}
+
 /** Standard success response for icon routes. */
 export function pngResponse(png: Buffer): Response {
   return new Response(new Uint8Array(png), {

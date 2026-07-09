@@ -199,6 +199,13 @@ export const CONTENT_MODULES: Record<string, ContentModuleConfig> = {
     fields: [
       { name: "slug", label: "Slug", type: "text", required: true, tab: "content" },
       { name: "title", label: "Title", type: "bilingual-text", required: true, tab: "content" },
+      {
+        name: "body",
+        label: "Page body",
+        type: "bilingual-textarea",
+        tab: "content",
+        hint: "Optional free text (e.g. Privacy Policy). Shown above any composed sections; line breaks are preserved.",
+      },
       { name: "meta_title", label: "Meta title", type: "bilingual-text", tab: "seo" },
       { name: "meta_description", label: "Meta description", type: "bilingual-textarea", tab: "seo" },
       { name: "canonicalUrl", label: "Canonical URL", type: "url", tab: "seo" },

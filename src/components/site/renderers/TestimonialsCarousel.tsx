@@ -42,7 +42,7 @@ export function TestimonialsCarousel({ testimonials, perRow, locale }: Testimoni
     <CardCarousel perRow={columns} itemCount={testimonials.length} locale={locale}>
       {testimonials.map((t) => (
         <li key={t.id} className={basis}>
-          <figure className="flex h-full w-full flex-col gap-4 rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-[var(--shadow-sm)]">
+          <figure className="flex h-full w-full flex-col gap-4 rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--card-surface,var(--color-surface))] p-6 shadow-[var(--shadow-sm)]">
             <Stars rating={t.rating} />
             <blockquote className="flex-1 text-body text-[var(--color-text-primary)]">
               “{t.content}”

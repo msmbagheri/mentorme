@@ -181,6 +181,11 @@ model Page {
   meta_description_fa String?       @db.Text
   ogImageUrl          String?
   canonicalUrl        String?
+  // Optional free-text page body (plain text, rendered with preserved line
+  // breaks) — lets standalone pages like Privacy Policy / Terms carry real
+  // content without composing homepage sections.
+  body_en             String?       @db.Text
+  body_fa             String?       @db.Text
   status              ContentStatus @default(DRAFT)
   isIndexed           Boolean       @default(true)
   createdAt           DateTime      @default(now())
@@ -224,6 +229,12 @@ model HomepageSection {
   // Per-section font override (CSS family name, e.g. "Vazirmatn"). Applied to
   // both --font-en and --font-fa for the section; null = inherit the theme font.
   fontFamily  String?
+  // Card background override (hex) for card-bearing sections — independent of
+  // the section background. Injected as --card-surface; null = theme surface.
+  cardBgColor String?
+  // Per-section text-size multiplier (e.g. 0.9 / 1 / 1.1 / 1.25). Injected as
+  // --font-scale, which every type-scale token multiplies; null = inherit (1).
+  fontScale   Float?
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 
@@ -449,6 +460,10 @@ model FooterSetting {
   servicesMenuId   String?
   servicesHeading_en String?
   servicesHeading_fa String?
+  // Hide the services column entirely (independent of what the menu holds).
+  showServices Boolean  @default(true)
+  // Trust badges (اینماد / ساماندهی / licenses): [{ imageUrl, linkUrl?, alt? }].
+  badges       Json?
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt

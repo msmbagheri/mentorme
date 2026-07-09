@@ -45,10 +45,24 @@ export default async function CmsPage({ params }: { params: Params }) {
 
   const homepage = await getHomepage(locale, slug);
   const name = (locale === "fa" ? page.title_fa : page.title_en) || slug;
+  // Free-text body (e.g. Privacy Policy / Terms). Falls back to the other
+  // locale so a half-translated page never renders empty.
+  const body =
+    (locale === "fa" ? page.body_fa || page.body_en : page.body_en || page.body_fa) || null;
 
   return (
     <>
       <JsonLd data={[webPageLd({ name, url: localeUrl(locale, `/${slug}`) })]} />
+      {body && (
+        <article className="container-page section-spacing">
+          <div className="mx-auto flex max-w-3xl flex-col gap-6">
+            <h1 className="text-h1 font-bold text-[var(--color-text-primary)]">{name}</h1>
+            <div className="whitespace-pre-line text-body-lg leading-relaxed text-[var(--color-text-secondary)]">
+              {body}
+            </div>
+          </div>
+        </article>
+      )}
       <HomeSections homepage={homepage} />
     </>
   );

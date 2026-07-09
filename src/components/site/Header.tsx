@@ -62,7 +62,7 @@ export function Header({ locale, theme, navItems, cta }: HeaderProps) {
             autoPlay
             loop
             playsInline
-            className="h-11 w-auto max-w-[220px] object-contain md:h-14"
+            className="h-12 w-auto max-w-[240px] object-contain md:h-20"
           />
         ) : (
           // Height-normalized so a wide, square OR tall brand logo all render at
@@ -71,7 +71,7 @@ export function Header({ locale, theme, navItems, cta }: HeaderProps) {
           <img
             src={logoUrl}
             alt={theme.brandName}
-            className="h-11 w-auto max-w-[220px] object-contain md:h-14"
+            className="h-12 w-auto max-w-[240px] object-contain md:h-20"
           />
         )
       ) : (
@@ -114,7 +114,8 @@ export function Header({ locale, theme, navItems, cta }: HeaderProps) {
           : "bg-transparent",
       )}
     >
-      <div className="container-page flex h-16 items-center justify-between gap-4 md:h-20">
+      {/* Taller bar so square/portrait logos render at a readable size (#1). */}
+      <div className="container-page flex h-16 items-center justify-between gap-4 md:h-24">
         {Logo}
 
         {/* Desktop nav */}

@@ -23,7 +23,7 @@ export function EventCard({ event, locale }: EventCardProps) {
   const time = formatTime(event.startDate, locale, event.timezone ?? undefined);
 
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-sm)] transition-shadow hover:shadow-[var(--shadow-md)]">
+    <article className="flex h-full flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--card-surface,var(--color-surface))] shadow-[var(--shadow-sm)] transition-shadow hover:shadow-[var(--shadow-md)]">
       <div className="relative aspect-video w-full overflow-hidden bg-[var(--color-surface-alt)]">
         {event.imageUrl && (
           <SiteMediaServer

@@ -102,8 +102,8 @@ export function Footer({ locale, footer, theme }: FooterProps) {
             </nav>
           )}
 
-          {/* Col 3 — services */}
-          {footer.serviceLinks.length > 0 && (
+          {/* Col 3 — services (admin can hide the column entirely) */}
+          {footer.showServices && footer.serviceLinks.length > 0 && (
             <nav aria-label={footer.servicesHeading ?? t.relatedServices} className="flex flex-col gap-3">
               <h2 className="text-small font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">
                 {footer.servicesHeading ?? t.relatedServices}
@@ -155,6 +155,42 @@ export function Footer({ locale, footer, theme }: FooterProps) {
           </div>
         </div>
       </div>
+
+      {/* Trust badges (اینماد / licences) — admin-managed in Footer settings */}
+      {footer.badges.length > 0 && (
+        <div className="border-t border-[var(--color-border)]">
+          <ul className="container-page flex flex-wrap items-center justify-center gap-6 py-6">
+            {footer.badges.map((b, i) => {
+              const img = (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={b.imageUrl}
+                  alt={b.alt ?? "trust badge"}
+                  loading="lazy"
+                  className="h-20 w-auto max-w-[140px] object-contain"
+                />
+              );
+              return (
+                <li key={`${b.imageUrl}-${i}`} className="flex items-center">
+                  {b.linkUrl ? (
+                    <a
+                      href={b.linkUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      referrerPolicy="origin"
+                      aria-label={b.alt ?? "trust badge"}
+                    >
+                      {img}
+                    </a>
+                  ) : (
+                    img
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
 
       {/* Bottom bar */}
       <div className="border-t border-[var(--color-border)]">

@@ -36,6 +36,8 @@ interface SectionRow {
   textColor: string;
   accentColor: string;
   fontFamily: string;
+  cardBgColor: string;
+  fontScale: number;
   header: SectionHeader;
 }
 
@@ -48,6 +50,24 @@ const CARDS_PER_ROW_SECTIONS = new Set([
   "events",
 ]);
 const CARDS_PER_ROW_OPTIONS = [1, 2, 3, 4] as const;
+
+/** Sections that render cards and expose an independent card-background color. */
+const CARD_BG_SECTIONS = new Set([
+  "methodology",
+  "why_choose_us",
+  "services",
+  "success_stories",
+  "team",
+  "events",
+]);
+
+/** Per-section text-size multiplier choices (1 = theme default). */
+const FONT_SCALE_OPTIONS = [
+  { value: 0.9, label: "Small (90%)" },
+  { value: 1, label: "Default (100%)" },
+  { value: 1.1, label: "Large (110%)" },
+  { value: 1.25, label: "Extra large (125%)" },
+] as const;
 
 /** Sections whose CMS header copy (eyebrow/title/description) is editable here. */
 const HEADER_EDITABLE = new Set([
@@ -146,6 +166,8 @@ function SectionHeaderForm({
   initialCardsPerRow,
   initialColors,
   initialFont,
+  initialCardBg,
+  initialFontScale,
   showHeaderCopy,
   canWrite,
   onSaved,
@@ -156,6 +178,8 @@ function SectionHeaderForm({
   initialCardsPerRow: number;
   initialColors: { bgColor: string; textColor: string; accentColor: string };
   initialFont: string;
+  initialCardBg: string;
+  initialFontScale: number;
   /** Whether this section's eyebrow/title/description copy lives on HomepageSection. */
   showHeaderCopy: boolean;
   canWrite: boolean;
@@ -166,8 +190,11 @@ function SectionHeaderForm({
   const [cardsPerRow, setCardsPerRow] = React.useState<number>(initialCardsPerRow);
   const [colors, setColors] = React.useState(initialColors);
   const [font, setFont] = React.useState(initialFont);
+  const [cardBg, setCardBg] = React.useState(initialCardBg);
+  const [fontScale, setFontScale] = React.useState<number>(initialFontScale);
   const [saving, setSaving] = React.useState(false);
   const showCardsPerRow = CARDS_PER_ROW_SECTIONS.has(sectionType);
+  const showCardBg = CARD_BG_SECTIONS.has(sectionType);
 
   React.useEffect(() => {
     setForm(initial);
@@ -181,6 +208,12 @@ function SectionHeaderForm({
   React.useEffect(() => {
     setFont(initialFont);
   }, [initialFont]);
+  React.useEffect(() => {
+    setCardBg(initialCardBg);
+  }, [initialCardBg]);
+  React.useEffect(() => {
+    setFontScale(initialFontScale);
+  }, [initialFontScale]);
 
   function change(key: string, value: string) {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -210,6 +243,8 @@ function SectionHeaderForm({
           textColor: colors.textColor,
           accentColor: colors.accentColor,
           fontFamily: font,
+          ...(showCardBg ? { cardBgColor: cardBg } : {}),
+          fontScale,
         }),
       { success: "Section updated", error: "Could not update section" },
     );
@@ -309,6 +344,13 @@ function SectionHeaderForm({
                 value={colors.accentColor}
                 onChange={(v) => setColors((c) => ({ ...c, accentColor: v }))}
               />
+              {showCardBg ? (
+                <ColorPick
+                  label="Card background"
+                  value={cardBg}
+                  onChange={setCardBg}
+                />
+              ) : null}
             </div>
           </div>
           <label className="flex flex-col gap-1.5 text-small font-semibold text-[var(--color-text-secondary)]">
@@ -321,6 +363,20 @@ function SectionHeaderForm({
               {SECTION_FONT_OPTIONS.map((f) => (
                 <option key={f.value} value={f.value}>
                   {f.label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="flex flex-col gap-1.5 text-small font-semibold text-[var(--color-text-secondary)]">
+            Text size (scales all text in this section)
+            <select
+              value={fontScale}
+              onChange={(e) => setFontScale(Number(e.target.value))}
+              className="h-10 w-full max-w-[16rem] rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-body text-[var(--color-text-primary)]"
+            >
+              {FONT_SCALE_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
                 </option>
               ))}
             </select>
@@ -503,6 +559,8 @@ export function HomepageBuilder({
                       accentColor: s.accentColor,
                     }}
                     initialFont={s.fontFamily}
+                    initialCardBg={s.cardBgColor}
+                    initialFontScale={s.fontScale}
                     showHeaderCopy={HEADER_EDITABLE.has(s.sectionType)}
                     canWrite={canWrite}
                     onSaved={() => router.refresh()}

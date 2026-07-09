@@ -294,6 +294,19 @@ export const footerCreateSchema = z.object({
   servicesMenuId: cuid.optional().nullable(),
   servicesHeading_en: optShort,
   servicesHeading_fa: optShort,
+  // Hide the services column entirely (independent of the chosen menu).
+  showServices: z.boolean().optional(),
+  // Trust badges (اینماد / licences): image + optional link + alt text.
+  badges: z
+    .array(
+      z.object({
+        imageUrl: z.string().min(1).max(500),
+        linkUrl: z.string().url().optional().or(z.literal("")).nullable(),
+        alt: z.string().max(200).optional().or(z.literal("")).nullable(),
+      }),
+    )
+    .max(8)
+    .optional(),
   isActive: z.boolean().default(true),
 });
 export const footerUpdateSchema = withId(footerCreateSchema.partial().shape);
@@ -335,6 +348,10 @@ export const pageCreateSchema = z.object({
   meta_description_fa: optStr,
   ogImageUrl: url,
   canonicalUrl: url,
+  // Optional free-text body (plain text, line breaks preserved) — used by
+  // standalone pages like Privacy Policy / Terms.
+  body_en: z.string().max(50000).optional().or(z.literal("")).nullable(),
+  body_fa: z.string().max(50000).optional().or(z.literal("")).nullable(),
   status: z.enum(CONTENT_STATUS).default("DRAFT"),
   isIndexed: z.boolean().default(true),
 });

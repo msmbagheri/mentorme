@@ -79,25 +79,27 @@
   --font-fa: var(--font-vazirmatn), "IRANSansX", sans-serif;
   --font-sans: var(--font-inter), "Segoe UI", sans-serif;
 
-  /* type scale */
-  --text-h1: 3.5rem;
+  /* type scale — every size multiplies --font-scale (default 1). Tailwind
+     inlines these calc() values into its utilities, so a wrapper that sets
+     --font-scale (the admin's per-section "Text size") scales all text in it. */
+  --text-h1: calc(3.5rem * var(--font-scale, 1));
   --text-h1--line-height: 1.1;
   --text-h1--letter-spacing: -0.01em;
   --text-h1--font-weight: 700;
-  --text-h2: 2.5rem;
+  --text-h2: calc(2.5rem * var(--font-scale, 1));
   --text-h2--line-height: 1.2;
   --text-h2--font-weight: 600;
-  --text-h3: 1.5rem;
+  --text-h3: calc(1.5rem * var(--font-scale, 1));
   --text-h3--line-height: 1.3;
   --text-h3--font-weight: 600;
-  --text-h4: 1.25rem;
+  --text-h4: calc(1.25rem * var(--font-scale, 1));
   --text-h4--line-height: 1.35;
   --text-h4--font-weight: 600;
-  --text-body-lg: 1.125rem;
+  --text-body-lg: calc(1.125rem * var(--font-scale, 1));
   --text-body-lg--line-height: 1.6;
-  --text-body: 1rem;
+  --text-body: calc(1rem * var(--font-scale, 1));
   --text-body--line-height: 1.6;
-  --text-small: 0.875rem;
+  --text-small: calc(0.875rem * var(--font-scale, 1));
   --text-small--line-height: 1.4;
 
   /* spacing (8px grid, named) */
@@ -232,6 +234,30 @@
     to {
       opacity: 1;
       transform: translateY(0);
+    }
+  }
+
+  /* As-Seen-In logo marquee: the track holds the logo list twice and slides
+     by half its own width, so the loop is seamless. The duration comes from
+     --marquee-duration (~1s per brand, set inline). Track is rendered dir=ltr
+     so the translate direction is locale-independent. Pauses on hover. */
+  .logo-marquee {
+    overflow: hidden;
+  }
+  .logo-marquee-track {
+    display: flex;
+    width: max-content;
+    animation: logo-marquee var(--marquee-duration, 12s) linear infinite;
+  }
+  .logo-marquee:hover .logo-marquee-track {
+    animation-play-state: paused;
+  }
+  @keyframes logo-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
     }
   }
 }

@@ -42,7 +42,7 @@ export function ServicesSection({ data, locale, header, cardsPerRow }: ServicesS
             <li key={s.id} className={basis}>
               <Link
                 href={`/${locale}/services/${s.slug}`}
-                className="group flex h-full flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-sm)] transition-shadow hover:shadow-[var(--shadow-md)]"
+                className="group flex h-full flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--card-surface,var(--color-surface))] shadow-[var(--shadow-sm)] transition-shadow hover:shadow-[var(--shadow-md)]"
               >
                 {s.imageUrl && (
                   <div className="relative aspect-[16/10] w-full overflow-hidden">
