@@ -21,13 +21,16 @@ export function HeroSection({ data, locale }: HeroSectionProps) {
       className="bg-gradient-soft py-10 md:py-12"
     >
       <div className="container-page grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-10">
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-5">
           {data.eyebrow && (
             <span className="text-small font-semibold uppercase tracking-wide text-[var(--brand-primary)]">
               {data.eyebrow}
             </span>
           )}
-          <h1 className="text-h1 font-bold text-[var(--color-text-primary)]">
+          {/* Viewport-height-aware headline: long copy on short screens shrinks
+              so the CTAs stay above the fold (#2). Still honors the admin's
+              per-section text-size via --font-scale. */}
+          <h1 className="text-[length:calc(clamp(2rem,5svh,3.25rem)*var(--font-scale,1))] font-bold leading-[1.15] text-[var(--color-text-primary)]">
             {data.headline}
           </h1>
           <p className="max-w-[560px] text-body-lg text-[var(--color-text-secondary)]">
