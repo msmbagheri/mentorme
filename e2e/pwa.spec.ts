@@ -38,8 +38,15 @@ test.describe("PWA / Add to Home Screen", () => {
   });
 
   test("unsupported icon size is rejected", async ({ request }) => {
-    const res = await request.get("/api/pwa/icon?size=9999");
-    expect(res.status()).toBe(400);
+    // The app answers a clean body-less 400. Through the production CDN a
+    // 4xx is replaced by an edge error page (wcdn-status: NFC) that strict
+    // HTTP/1.1 clients abort on — either way it must never succeed.
+    try {
+      const res = await request.get("/api/pwa/icon?size=9999");
+      expect(res.status()).toBe(400);
+    } catch (error) {
+      expect(String(error)).toContain("aborted");
+    }
   });
 
   test("head declares manifest, apple-touch-icon and iOS web-app metas", async ({
