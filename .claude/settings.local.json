@@ -18,7 +18,10 @@
       "Bash(fuser -k 3100/tcp)",
       "Bash(git commit -m 'fix: viewport-height-aware hero headline so long copy keeps CTAs above the fold \\(#2\\) *)",
       "Bash(git commit -m 'fix: hero 55/45 split + tighter padding — long copy wraps fewer lines \\(#2\\) *)",
-      "Bash(./scripts/deploy.sh)"
+      "Bash(./scripts/deploy.sh)",
+      "Bash(git commit -m 'chore: session permissions + QA issues doc \\(ایرادات #1-#19 source for wave 5\\) *)",
+      "Bash(git commit -m 'feat: apply senior UI/UX rules — WCAG AA token fixes + project design contract *)",
+      "Bash(git commit -m 'test: PW_NO_PROXY=1 bypasses desktop proxy for prod E2E runs *)"
     ],
     "deny": [
       "Bash(rm -rf /:*)",
