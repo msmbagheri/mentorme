@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
 import { Inter, Vazirmatn } from "next/font/google";
-import { isLocale, dirFor, type AppLocale } from "@/types/locale";
+import { isLocale, dirFor, DEFAULT_LOCALE, type AppLocale } from "@/types/locale";
 import { ChunkErrorReloader } from "@/components/system/ChunkErrorReloader";
 import { PwaRegister } from "@/components/system/PwaRegister";
 import { ThemeStyle } from "@/components/site/ThemeStyle";
@@ -69,8 +69,8 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const headerLocale = (await headers()).get("x-locale") ?? "en";
-  const locale: AppLocale = isLocale(headerLocale) ? headerLocale : "en";
+  const headerLocale = (await headers()).get("x-locale") ?? DEFAULT_LOCALE;
+  const locale: AppLocale = isLocale(headerLocale) ? headerLocale : DEFAULT_LOCALE;
 
   return (
     <html

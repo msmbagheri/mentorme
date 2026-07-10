@@ -1,6 +1,8 @@
 export const LOCALES = ["en", "fa"] as const;
 export type AppLocale = (typeof LOCALES)[number];
-export const DEFAULT_LOCALE: AppLocale = "en";
+// Persian is the primary audience: bare URLs (/, /privacy, …) land on /fa;
+// English stays fully available under /en and via the header switcher.
+export const DEFAULT_LOCALE: AppLocale = "fa";
 
 export function isLocale(value: string): value is AppLocale {
   return (LOCALES as readonly string[]).includes(value);

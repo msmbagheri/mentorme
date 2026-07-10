@@ -1,9 +1,9 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Public homepage", () => {
-  test("/ redirects to /en", async ({ page }) => {
+  test("/ redirects to /fa (default locale)", async ({ page }) => {
     const res = await page.goto("/");
-    expect(page.url()).toContain("/en");
+    expect(page.url()).toContain("/fa");
     expect(res?.status()).toBeLessThan(400);
   });
 
