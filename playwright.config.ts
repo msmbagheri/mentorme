@@ -25,6 +25,13 @@ export default defineConfig({
     trace: "on-first-retry",
     screenshot: "only-on-failure",
     locale: "en-US",
+    // PW_NO_PROXY=1 makes Chrome ignore the desktop proxy/VPN. Needed for
+    // production runs from this dev machine when its VPN is up: mentorme.ir's
+    // origin is domestic-only, so a foreign egress gets CDN 504 upstream
+    // errors in the browser while direct (curl/API) requests still pass.
+    launchOptions: process.env.PW_NO_PROXY
+      ? { args: ["--no-proxy-server"] }
+      : {},
   },
   projects: [
     {
