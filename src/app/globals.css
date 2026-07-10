@@ -6,10 +6,10 @@
    utilities stay stable while values change.
    ============================================================ */
 :root {
-  /* text */
+  /* text — every text token ≥4.5:1 (WCAG 2.2 AA) on bg/surface/surface-alt */
   --color-text-primary: #09122c;
   --color-text-secondary: #5b6475;
-  --color-text-muted: #8a94a6;
+  --color-text-muted: #60708a;
   --color-text-inverse: #ffffff;
   /* surfaces */
   --color-white: #ffffff;
@@ -17,10 +17,16 @@
   --color-surface: #ffffff;
   --color-surface-alt: #f1f4f9;
   --color-border: #e6eaf0;
-  --color-border-strong: #cdd4e0;
+  /* Functional boundaries (inputs, selects) need ≥3:1 — border-strong is the
+     token for those; --color-border stays subtle for decorative card edges. */
+  --color-border-strong: #8593aa;
   /* semantic */
-  --color-success: #16a34a;
+  --color-success: #15803d;
   --color-warning: #f59e0b;
+  /* Text-on-soft-surface variants for status copy/badges (AA on their softs;
+     the base warning stays for icons/graphics like rating stars). */
+  --color-warning-text: #b45309;
+  --color-error-text: #b91c1c;
   --color-error: #dc2626;
   --color-info: #2563eb;
   --color-success-soft: #e8f6ee;
@@ -63,6 +69,8 @@
   --color-border-strong: var(--color-border-strong);
   --color-success: var(--color-success);
   --color-warning: var(--color-warning);
+  --color-warning-text: var(--color-warning-text);
+  --color-error-text: var(--color-error-text);
   --color-error: var(--color-error);
   --color-info: var(--color-info);
   --color-success-soft: var(--color-success-soft);
@@ -101,6 +109,10 @@
   --text-body--line-height: 1.6;
   --text-small: calc(0.875rem * var(--font-scale, 1));
   --text-small--line-height: 1.4;
+  /* Was referenced by admin components but never defined — 12px per the
+     design rules' type scale (the minimum readable label size). */
+  --text-caption: calc(0.75rem * var(--font-scale, 1));
+  --text-caption--line-height: 1.35;
 
   /* spacing (8px grid, named) */
   --spacing-section: 7.5rem;

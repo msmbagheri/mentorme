@@ -14,7 +14,11 @@ export default defineConfig({
   reporter: [["list"], ["html", { open: "never", outputFolder: "playwright-report" }]],
   // Purge E2E fixtures after the run (set E2E_PURGE=1; required for production).
   globalTeardown: "./e2e/global-teardown.ts",
-  timeout: 30_000,
+  // Admin CRUD lifecycle tests measure ~25s in ISOLATION under `next dev`
+  // (verified with and without app changes — not a regression), so 30s left
+  // no headroom for parallel-worker interleaving and caused flaky timeouts
+  // whose leftover fixtures then cascaded into homepage-overflow failures.
+  timeout: 45_000,
   expect: { timeout: 10_000 },
   use: {
     baseURL: BASE_URL,
