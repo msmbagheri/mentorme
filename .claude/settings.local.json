@@ -21,7 +21,10 @@
       "Bash(./scripts/deploy.sh)",
       "Bash(git commit -m 'chore: session permissions + QA issues doc \\(ایرادات #1-#19 source for wave 5\\) *)",
       "Bash(git commit -m 'feat: apply senior UI/UX rules — WCAG AA token fixes + project design contract *)",
-      "Bash(git commit -m 'test: PW_NO_PROXY=1 bypasses desktop proxy for prod E2E runs *)"
+      "Bash(git commit -m 'test: PW_NO_PROXY=1 bypasses desktop proxy for prod E2E runs *)",
+      "Bash(git commit -m 'docs: senior UI/UX rules source \\(referenced as binding by CLAUDE.md\\) + session permissions *)",
+      "Bash(git commit -m 'feat: Persian is the default locale *)",
+      "Bash(git commit -m 'feat: justified prose for multi-line fa/en text across the public site *)"
     ],
     "deny": [
       "Bash(rm -rf /:*)",
