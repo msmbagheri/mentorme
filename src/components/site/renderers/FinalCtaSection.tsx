@@ -43,7 +43,7 @@ export function FinalCtaSection({ data }: FinalCtaSectionProps) {
           {data.headline}
         </h2>
         {data.subheadline && (
-          <p className="max-w-[700px] text-body-lg text-white/85">
+          <p className="prose-justify-center max-w-[700px] text-body-lg text-white/85">
             {data.subheadline}
           </p>
         )}

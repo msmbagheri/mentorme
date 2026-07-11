@@ -38,7 +38,7 @@ export function BrandPhilosophySection({ data }: BrandPhilosophySectionProps) {
           <h2 className="text-h2 font-bold text-[var(--color-text-primary)]">
             {data.title}
           </h2>
-          <div className="max-w-[600px] whitespace-pre-line text-body-lg text-[var(--color-text-secondary)]">
+          <div className="prose-justify max-w-[600px] whitespace-pre-line text-body-lg text-[var(--color-text-secondary)]">
             {data.content}
           </div>
           {data.cta && (

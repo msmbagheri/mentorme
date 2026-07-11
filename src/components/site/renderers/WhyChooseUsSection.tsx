@@ -87,7 +87,7 @@ export function WhyChooseUsSection({
                   {featuredTestimonial.name}
                 </p>
                 {(featuredTestimonial.role || featuredTestimonial.company) && (
-                  <p className="text-small text-[var(--color-text-secondary)]">
+                  <p className="prose-justify text-small text-[var(--color-text-secondary)]">
                     {[featuredTestimonial.role, featuredTestimonial.company]
                       .filter(Boolean)
                       .join(" · ")}

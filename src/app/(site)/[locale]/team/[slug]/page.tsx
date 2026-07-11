@@ -158,7 +158,7 @@ export default async function TeamMemberPage({
           </header>
 
           {member.fullBio && (
-            <div className="max-w-3xl whitespace-pre-line text-body-lg leading-relaxed text-[var(--color-text-secondary)]">
+            <div className="prose-justify max-w-3xl whitespace-pre-line text-body-lg leading-relaxed text-[var(--color-text-secondary)]">
               {member.fullBio}
             </div>
           )}

@@ -219,6 +219,20 @@
     color: transparent;
   }
 
+  /* Justified prose for multi-line fa/en body text (#UX request). inter-word
+     spacing only — no letter stretching; the last line keeps the block's
+     natural alignment. */
+  .prose-justify {
+    text-align: justify;
+    text-justify: inter-word;
+  }
+  /* Centered section intros: justified body, centered last line. */
+  .prose-justify-center {
+    text-align: justify;
+    text-justify: inter-word;
+    text-align-last: center;
+  }
+
   .section-spacing {
     padding-block: 4.5rem;
   }

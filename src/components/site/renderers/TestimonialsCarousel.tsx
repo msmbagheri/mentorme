@@ -44,7 +44,7 @@ export function TestimonialsCarousel({ testimonials, perRow, locale }: Testimoni
         <li key={t.id} className={basis}>
           <figure className="flex h-full w-full flex-col gap-4 rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--card-surface,var(--color-surface))] p-6 shadow-[var(--shadow-sm)]">
             <Stars rating={t.rating} />
-            <blockquote className="flex-1 text-body text-[var(--color-text-primary)]">
+            <blockquote className="prose-justify flex-1 text-body text-[var(--color-text-primary)]">
               “{t.content}”
             </blockquote>
             <figcaption className="flex items-center gap-3">

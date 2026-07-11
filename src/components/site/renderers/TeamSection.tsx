@@ -92,7 +92,7 @@ export function TeamSection({ data, locale, header, cardsPerRow }: TeamSectionPr
                         <p className="text-small text-[var(--color-text-muted)]">
                           {m.role}
                         </p>
-                        <p className="mt-1 flex-1 text-small text-[var(--color-text-secondary)]">
+                        <p className="prose-justify mt-1 flex-1 text-small text-[var(--color-text-secondary)]">
                           {m.bio}
                         </p>
                       </div>

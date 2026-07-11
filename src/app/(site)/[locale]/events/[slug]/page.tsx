@@ -123,7 +123,7 @@ export default async function EventDetailPage({
           </header>
 
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-[60fr_40fr]">
-            <div className="max-w-3xl whitespace-pre-line text-body-lg leading-relaxed text-[var(--color-text-secondary)]">
+            <div className="prose-justify max-w-3xl whitespace-pre-line text-body-lg leading-relaxed text-[var(--color-text-secondary)]">
               {ev.content}
             </div>
 

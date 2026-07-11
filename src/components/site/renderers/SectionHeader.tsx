@@ -39,7 +39,7 @@ export function SectionHeader({
         <p
           className={cn(
             "max-w-2xl text-body-lg text-[var(--color-text-secondary)]",
-            align === "center" && "mx-auto",
+            align === "center" ? "prose-justify-center mx-auto" : "prose-justify",
           )}
         >
           {description}

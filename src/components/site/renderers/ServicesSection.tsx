@@ -59,7 +59,7 @@ export function ServicesSection({ data, locale, header, cardsPerRow }: ServicesS
                   <h3 className="text-h4 font-semibold text-[var(--color-text-primary)]">
                     {s.title}
                   </h3>
-                  <p className="flex-1 text-body text-[var(--color-text-secondary)]">
+                  <p className="prose-justify flex-1 text-body text-[var(--color-text-secondary)]">
                     {s.shortDescription}
                   </p>
                   <span className="inline-flex items-center gap-1 text-body font-semibold text-[var(--brand-primary)]">

@@ -57,7 +57,7 @@ export default async function CmsPage({ params }: { params: Params }) {
         <article className="container-page section-spacing">
           <div className="mx-auto flex max-w-3xl flex-col gap-6">
             <h1 className="text-h1 font-bold text-[var(--color-text-primary)]">{name}</h1>
-            <div className="whitespace-pre-line text-body-lg leading-relaxed text-[var(--color-text-secondary)]">
+            <div className="prose-justify whitespace-pre-line text-body-lg leading-relaxed text-[var(--color-text-secondary)]">
               {body}
             </div>
           </div>

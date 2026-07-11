@@ -63,7 +63,7 @@ export function Footer({ locale, footer, theme }: FooterProps) {
                 </span>
               )}
             </Link>
-            <p className="max-w-xs text-body text-[var(--color-text-secondary)]">
+            <p className="prose-justify max-w-xs text-body text-[var(--color-text-secondary)]">
               {footer.description ?? footer.tagline ?? theme.tagline}
             </p>
           </div>

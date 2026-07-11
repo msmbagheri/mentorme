@@ -74,7 +74,7 @@ export default async function ContactPage({ params }: { params: Params }) {
             <h1 className="text-h1 font-bold text-[var(--color-text-primary)]">
               {t.contact.title}
             </h1>
-            <p className="max-w-2xl text-body-lg text-[var(--color-text-secondary)]">
+            <p className="prose-justify max-w-2xl text-body-lg text-[var(--color-text-secondary)]">
               {theme.tagline}
             </p>
           </header>

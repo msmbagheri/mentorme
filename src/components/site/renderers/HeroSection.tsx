@@ -35,7 +35,7 @@ export function HeroSection({ data, locale }: HeroSectionProps) {
           <h1 className="text-[length:calc(clamp(2rem,5svh,3.25rem)*var(--font-scale,1))] font-bold leading-[1.15] text-[var(--color-text-primary)]">
             {data.headline}
           </h1>
-          <p className="max-w-[560px] text-body-lg text-[var(--color-text-secondary)]">
+          <p className="prose-justify max-w-[560px] text-body-lg text-[var(--color-text-secondary)]">
             {data.subheadline}
           </p>
 

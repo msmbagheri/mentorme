@@ -59,7 +59,7 @@ export function MethodologySection({
                 <h3 className="text-h4 font-semibold text-[var(--color-text-primary)]">
                   {step.title}
                 </h3>
-                <p className="text-body text-[var(--color-text-secondary)]">
+                <p className="prose-justify text-body text-[var(--color-text-secondary)]">
                   {step.description}
                 </p>
               </li>

@@ -37,7 +37,7 @@ export function FounderMessageSection({ data }: FounderMessageSectionProps) {
               {data.title}
             </p>
           </div>
-          <blockquote className="whitespace-pre-line text-body-lg leading-relaxed text-[var(--color-text-primary)]">
+          <blockquote className="prose-justify whitespace-pre-line text-body-lg leading-relaxed text-[var(--color-text-primary)]">
             {data.message}
           </blockquote>
           {data.signatureUrl && (

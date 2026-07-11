@@ -98,7 +98,7 @@ export default async function ServiceDetailPage({
             )}
           </header>
 
-          <div className="prose-content max-w-3xl whitespace-pre-line text-body-lg leading-relaxed text-[var(--color-text-secondary)]">
+          <div className="prose-content prose-justify max-w-3xl whitespace-pre-line text-body-lg leading-relaxed text-[var(--color-text-secondary)]">
             {service.fullDescription}
           </div>
 
